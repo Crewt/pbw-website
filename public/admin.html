@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · PBW - Beatrice Czekalla</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      background: var(--bg);
+      min-height: 100vh;
+    }
+
+    /* ---------- LOGIN ---------- */
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(216, 227, 247, 0.5), transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(210, 228, 255, 0.45), transparent 40%),
+        var(--bg);
+      padding: 40px 20px;
+    }
+
+    .login-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 48px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 31, 60, 0.08), 0 4px 16px rgba(38, 38, 38, 0.04);
+    }
+
+    .login-card .brand {
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--navy);
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+
+    .login-card .sub {
+      color: var(--text);
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+
+    .login-card h1 {
+      font-size: 26px;
+      color: var(--ink);
+      margin: 0 0 8px;
+    }
+
+    .login-card .lead {
+      color: var(--text);
+      font-size: 15px;
+      margin-bottom: 32px;
+    }
+
+    .login-card .field {
+      margin-bottom: 16px;
+    }
+
+    .login-card label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      color: var(--navy);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .login-card input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--bg);
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--ink);
+      transition: border-color .15s, box-shadow .15s, background .15s;
+    }
+
+    .login-card input:focus {
+      outline: none;
+      border-color: var(--navy);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(0, 31, 60, 0.10);
+    }
+
+    .login-card .submit {
+      width: 100%;
+      margin-top: 12px;
+      background: var(--navy);
+      color: #fff;
+      padding: 14px;
+      border: 0;
+      border-radius: 6px;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background .15s;
+    }
+
+    .login-card .submit:hover {
+      background: var(--navy-deep);
+    }
+
+    .login-card .hint {
+      margin-top: 24px;
+      padding: 12px 14px;
+      background: var(--bg-alt);
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .login-card .hint b {
+      color: var(--navy);
+    }
+
+    .login-card .err {
+      background: #fdecec;
+      color: #9b1f1f;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .login-card .err.show {
+      display: block;
+    }
+
+    /* ---------- ADMIN SHELL ---------- */
+    .admin-nav {
+      background: var(--navy);
+      color: #fff;
+      border-bottom: 1px solid var(--navy-deep);
+      position: sticky;
+      top: 0;
+      z-index: 60;
+    }
+
+    .admin-nav .nav-inner {
+      height: 64px;
+    }
+
+    .admin-nav .nav-brand {
+      color: #fff;
+      font-size: 18px;
+    }
+
+    .admin-nav .nav-brand small {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .admin-nav .nav-links a {
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .admin-nav .nav-links a:hover,
+    .admin-nav .nav-links a.active {
+      color: #fff;
+      border-bottom-color: #fff;
+    }
+
+    .admin-nav .logout-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: rgba(255, 255, 255, 0.9);
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background .15s, border-color .15s;
+    }
+
+    .admin-nav .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .admin-body {
+      padding: 40px 0 96px;
+    }
+
+    /* layout: sidebar + main */
+    .admin-layout {
+      display: grid;
+      grid-template-columns: 248px 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    /* ---------- SIDEBAR ---------- */
+    .admin-side {
+      position: sticky;
+      top: 88px;
+    }
+
+    .side-group+.side-group {
+      margin-top: 24px;
+    }
+
+    .side-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--slate);
+      padding: 0 12px;
+      margin-bottom: 8px;
+    }
+
+    .side-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .side-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+
+    .side-item svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: var(--slate);
+      transition: color .15s;
+    }
+
+    .side-item .count {
+      margin-left: auto;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--bg-alt);
+      color: var(--slate);
+      border-radius: 999px;
+      padding: 1px 8px;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    .side-item:hover {
+      background: var(--bg-alt);
+      color: var(--navy);
+    }
+
+    .side-item:hover svg {
+      color: var(--navy);
+    }
+
+    .side-item.active {
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .side-item.active svg {
+      color: #fff;
+    }
+
+    .side-item.active .count {
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+    }
+
+    /* ---------- PANELS ---------- */
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 28px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .panel-head h1 {
+      font-size: 28px;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .panel-head .desc {
+      color: var(--text);
+      margin: 6px 0 0;
+      font-size: 14.5px;
+      max-width: 560px;
+    }
+
+    .panel-head .where {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--navy);
+      background: var(--accent-soft);
+      border-radius: 999px;
+      padding: 4px 12px;
+    }
+
+    .panel-head .where svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .head-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* ---------- LIST ROWS (courses + content) ---------- */
+    .row-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .item-row {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 18px;
+      align-items: center;
+      transition: border-color .15s, box-shadow .15s;
+    }
+
+    .item-row:hover {
+      border-color: var(--navy);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .item-row .thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+      background: var(--bg-alt);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--navy);
+      flex-shrink: 0;
+    }
+
+    .item-row .thumb.circle {
+      border-radius: 999px;
+    }
+
+    .item-row .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .item-row h3 {
+      font-size: 16px;
+      margin: 0 0 3px;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .item-row .meta {
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .item-row .meta span {
+      margin-right: 12px;
+    }
+
+    .item-row .quote {
+      font-size: 14.5px;
+      color: var(--ink);
+      font-style: italic;
+      line-height: 1.5;
+      margin: 0 0 4px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .pill {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      background: var(--accent-soft);
+      color: var(--navy);
+      border-radius: 999px;
+      padding: 2px 9px;
+    }
+
+    .pill.star {
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .pill.muted {
+      background: var(--bg-alt);
+      color: var(--slate);
+    }
+
+    .item-row .acts {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--slate);
+      transition: background .15s, color .15s, border-color .15s;
+    }
+
+    .icon-btn:hover {
+      color: var(--navy);
+      border-color: var(--navy);
+    }
+
+    .icon-btn:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+
+    .icon-btn:disabled:hover {
+      color: var(--slate);
+      border-color: var(--line);
+    }
+
+    .icon-btn svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .icon-btn.danger:hover {
+      color: #b3261e;
+      border-color: #b3261e;
+      background: #fdecec;
+    }
+
+    /* ---------- SINGLETON PANELS ---------- */
+    .single-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 32px;
+      max-width: 640px;
+    }
+
+    .single-card .field {
+      margin-bottom: 22px;
+    }
+
+    .single-card .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .single-card label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      color: var(--navy);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .single-card input[type="text"],
+    .single-card input[type="email"],
+    .single-card input[type="tel"] {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--ink);
+      transition: border-color .15s, box-shadow .15s;
+    }
+
+    .single-card input:focus {
+      outline: none;
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(0, 31, 60, 0.10);
+    }
+
+    .single-card .field-hint {
+      font-size: 12px;
+      color: var(--text);
+      margin: 6px 0 0;
+    }
+
+    .single-foot {
+      margin-top: 28px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .saved-flag {
+      color: #1f7a4d;
+      font-size: 13px;
+      opacity: 0;
+      transition: opacity .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .saved-flag.show {
+      opacity: 1;
+    }
+
+    /* ---------- EDITOR (drawer) — shared ---------- */
+    .editor-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 31, 60, 0.40);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: stretch;
+      justify-content: flex-end;
+      z-index: 100;
+    }
+
+    .editor-overlay.open {
+      display: flex;
+    }
+
+    .editor {
+      width: 100%;
+      max-width: 680px;
+      background: var(--bg);
+      border-left: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      box-shadow: -20px 0 60px rgba(0, 31, 60, 0.2);
+    }
+
+    .editor-head {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      padding: 20px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .editor-head h2 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--ink);
+    }
+
+    .editor-body {
+      padding: 32px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .editor-foot {
+      border-top: 1px solid var(--line);
+      background: #fff;
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .editor-foot .left-actions {
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .editor .field {
+      margin-bottom: 20px;
+    }
+
+    .editor label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      color: var(--navy);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .editor input[type="text"],
+    .editor input[type="date"],
+    .editor input[type="number"],
+    .editor input[type="url"],
+    .editor input[type="email"],
+    .editor input[type="tel"],
+    .editor textarea,
+    .editor select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--ink);
+      transition: border-color .15s, box-shadow .15s;
+    }
+
+    .editor input:focus,
+    .editor textarea:focus,
+    .editor select:focus {
+      outline: none;
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(0, 31, 60, 0.10);
+    }
+
+    .editor textarea {
+      min-height: 96px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    .editor .hint {
+      font-size: 12px;
+      color: var(--text);
+      margin: 4px 0 0;
+    }
+
+    .editor .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* toggle row */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+
+    .toggle-row .tg-text {
+      flex: 1;
+    }
+
+    .toggle-row .tg-text strong {
+      display: block;
+      font-size: 14px;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .toggle-row .tg-text span {
+      font-size: 12.5px;
+      color: var(--text);
+    }
+
+    .switch {
+      position: relative;
+      width: 44px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .switch .slider {
+      position: absolute;
+      inset: 0;
+      cursor: pointer;
+      background: var(--line);
+      border-radius: 999px;
+      transition: background .15s;
+    }
+
+    .switch .slider::before {
+      content: "";
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      top: 3px;
+      background: #fff;
+      border-radius: 999px;
+      transition: transform .15s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .switch input:checked+.slider {
+      background: var(--navy);
+    }
+
+    .switch input:checked+.slider::before {
+      transform: translateX(18px);
+    }
+
+    /* repeater rows (courses) */
+    .repeater {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .repeater-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px;
+    }
+
+    .repeater-row input {
+      border: 0;
+      padding: 6px 8px;
+      background: transparent;
+      flex: 1;
+    }
+
+    .repeater-row input:focus {
+      box-shadow: none;
+    }
+
+    .repeater-row .drag {
+      color: var(--slate);
+      cursor: grab;
+      padding: 0 6px;
+    }
+
+    .repeater-row .grow {
+      flex: 1;
+    }
+
+    .repeater .term-row {
+      display: grid;
+      grid-template-columns: auto 160px 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .repeater .term-row input[type="date"] {
+      font-family: inherit;
+    }
+
+    .repeater-add {
+      background: transparent;
+      border: 1px dashed var(--line);
+      color: var(--navy);
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      transition: background .15s, border-color .15s;
+    }
+
+    .repeater-add:hover {
+      background: var(--bg-alt);
+      border-color: var(--navy);
+      border-style: solid;
+    }
+
+    /* image upload */
+    .image-uploader {
+      background: #fff;
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .image-uploader.has-image {
+      border-style: solid;
+    }
+
+    .image-uploader .preview {
+      width: 120px;
+      height: 80px;
+      border-radius: 6px;
+      background: var(--bg-alt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      color: var(--slate);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .image-uploader .preview.circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 999px;
+    }
+
+    .image-uploader .preview.portrait {
+      width: 90px;
+      height: 120px;
+    }
+
+    .image-uploader .preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .image-uploader .controls {
+      flex: 1;
+    }
+
+    .image-uploader .controls p {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .image-uploader .controls input[type="file"] {
+      display: none;
+    }
+
+    .image-uploader .controls .file-label {
+      display: inline-block;
+      background: var(--bg-alt);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--navy);
+      padding: 8px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 500;
+      margin: 0 8px 0 0;
+      transition: background .15s, border-color .15s;
+    }
+
+    .image-uploader .controls .file-label:hover {
+      background: #fff;
+      border-color: var(--navy);
+    }
+
+    .image-uploader .controls .clear {
+      background: transparent;
+      border: 0;
+      color: var(--slate);
+      font-size: 13px;
+      cursor: pointer;
+      padding: 8px 4px;
+    }
+
+    .image-uploader .controls .clear:hover {
+      color: #b3261e;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 0;
+      color: var(--slate);
+      padding: 10px 16px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .btn-ghost:hover {
+      color: var(--navy);
+    }
+
+    .btn-danger {
+      background: transparent;
+      border: 1px solid #e0c2c2;
+      color: #b3261e;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      transition: background .15s, border-color .15s;
+    }
+
+    .btn-danger:hover {
+      background: #fdecec;
+      border-color: #b3261e;
+    }
+
+    .btn-admin-primary {
+      background: var(--navy);
+      color: #fff;
+      padding: 11px 22px;
+      border: 0;
+      border-radius: 6px;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background .15s;
+    }
+
+    .btn-admin-primary:hover {
+      background: var(--navy-deep);
+    }
+
+    .btn-admin-primary svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .btn-admin-ghost {
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--slate);
+      padding: 10px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+
+    .btn-admin-ghost:hover {
+      color: var(--navy);
+      border-color: var(--navy);
+    }
+
+    .btn-admin-ghost svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .empty-state {
+      background: #fff;
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      padding: 48px;
+      text-align: center;
+      color: var(--text);
+    }
+
+    .empty-state h3 {
+      color: var(--navy);
+      margin: 0 0 8px;
+    }
+
+    .empty-state p {
+      margin: 0 0 20px;
+      font-size: 14px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--navy);
+      color: #fff;
+      padding: 14px 20px;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0, 31, 60, 0.25);
+      transform: translateY(20px);
+      opacity: 0;
+      transition: transform .2s ease, opacity .2s ease;
+      z-index: 200;
+      font-size: 14px;
+    }
+
+    .toast.show {
+      transform: none;
+      opacity: 1;
+    }
+
+    @media (max-width: 920px) {
+      .admin-layout {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .admin-side {
+        position: static;
+      }
+
+      .side-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .side-item {
+        width: auto;
+      }
+
+      .side-item .count {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ====================== LOGIN VIEW ====================== -->
+  <div id="loginView" class="login-wrap" style="display:none;">
+    <form id="loginForm" class="login-card">
+      <div class="brand">PBW - Beatrice Czekalla<small>Admin · CMS</small></div>
+      <h1 style="margin-top:32px;">Anmelden</h1>
+      <p class="lead">Bitte melden Sie sich an, um die Website-Inhalte zu verwalten.</p>
+
+      <div id="loginErr" class="err">Benutzername oder Passwort falsch.</div>
+
+      <div class="field">
+        <label for="lUser">Benutzername</label>
+        <input id="lUser" type="text" autocomplete="username" required>
+      </div>
+
+      <div class="field">
+        <label for="lPass">Passwort</label>
+        <input id="lPass" type="password" autocomplete="current-password" required>
+      </div>
+
+      <button class="submit" type="submit">Anmelden</button>
+    </form>
+  </div>
+
+  <!-- ====================== ADMIN VIEW ====================== -->
+  <div id="adminView" style="display:none;">
+    <header class="nav admin-nav">
+      <div class="container nav-inner">
+        <a href="admin.html" class="nav-brand">PBW - Beatrice Czekalla<small>Admin · CMS</small></a>
+        <nav>
+          <ul class="nav-links">
+            <li><a href="MainPage.html" target="_blank">Website ansehen</a></li>
+          </ul>
+        </nav>
+        <button class="logout-btn" id="logoutBtn">Abmelden</button>
+      </div>
+    </header>
+
+    <main class="admin-body">
+      <div class="container admin-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="admin-side">
+          <div class="side-group">
+            <div class="side-label">Inhalte</div>
+            <nav class="side-nav" id="sideNav">
+              <button class="side-item active" data-panel="kurse">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                </svg>
+                Kursangebote <span class="count" data-count="kurse">0</span>
+              </button>
+              <button class="side-item" data-panel="kollegen">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                Kolleg:innen <span class="count" data-count="kollegen">0</span>
+              </button>
+              <button class="side-item" data-panel="zertifikate">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="6" />
+                  <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+                </svg>
+                Zertifikate &amp; Institute <span class="count" data-count="zertifikate">0</span>
+              </button>
+              <button class="side-item" data-panel="referenzen">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+                Referenzen <span class="count" data-count="referenzen">0</span>
+              </button>
+              <button class="side-item" data-panel="ressourcen">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                </svg>
+                Weiterführende Ressourcen <span class="count" data-count="ressourcen">0</span>
+              </button>
+            </nav>
+          </div>
+          <div class="side-group">
+            <div class="side-label">Seiten</div>
+            <nav class="side-nav">
+              <button class="side-item" data-panel="ueber-mich">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                  <circle cx="9" cy="9" r="2" />
+                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                </svg>
+                Über mich
+              </button>
+              <button class="side-item" data-panel="kontakt">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path
+                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+                Kontakt
+              </button>
+            </nav>
+          </div>
+          <div class="side-group">
+            <button class="btn-admin-ghost" id="resetBtn" style="width:100%;justify-content:center;"
+              title="Alle Beispieldaten wiederherstellen">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10" />
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+              </svg>
+              Beispieldaten zurücksetzen
+            </button>
+          </div>
+        </aside>
+
+        <!-- MAIN -->
+        <div class="admin-main">
+
+          <!-- ===== KURSE ===== -->
+          <section class="panel active" data-panel="kurse">
+            <div class="panel-head">
+              <div>
+                <h1>Kursangebote</h1>
+                <p class="desc">Termine, Beschreibungen, Inhalte und Bilder Ihrer Kurse pflegen.</p>
+                <span class="where"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M2 12h20" />
+                  </svg> Kurstermine &amp; Seminarseiten</span>
+              </div>
+              <div class="head-actions">
+                <button class="btn-admin-primary" id="newCourseBtn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                  Neuer Kurs
+                </button>
+              </div>
+            </div>
+            <div id="courseList" class="row-list"></div>
+          </section>
+
+          <!-- ===== KOLLEG:INNEN ===== -->
+          <section class="panel" data-panel="kollegen">
+            <div class="panel-head">
+              <div>
+                <h1>Kolleg:innen</h1>
+                <p class="desc">Ihr empfohlenes Netzwerk. Jeder Eintrag kann ein Foto und einen Link erhalten.</p>
+                <span class="where"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg> Startseite &amp; Empfehlungen-Seite</span>
+              </div>
+              <div class="head-actions">
+                <button class="btn-admin-primary" data-new="kollegen">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                  Kolleg:in hinzufügen
+                </button>
+              </div>
+            </div>
+            <div id="kollegenList" class="row-list"></div>
+          </section>
+
+          <!-- ===== ZERTIFIKATE ===== -->
+          <section class="panel" data-panel="zertifikate">
+            <div class="panel-head">
+              <div>
+                <h1>Zertifikate &amp; Institute</h1>
+                <p class="desc">Verbände, Zertifizierungen und Institute. Jeder Eintrag kann ein Logo/Bild und einen
+                  Link erhalten.</p>
+                <span class="where"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg> Empfehlungen-Seite &amp; Über mich</span>
+              </div>
+              <div class="head-actions">
+                <button class="btn-admin-primary" data-new="zertifikate">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                  Eintrag hinzufügen
+                </button>
+              </div>
+            </div>
+            <div id="zertifikateList" class="row-list"></div>
+          </section>
+
+          <!-- ===== REFERENZEN ===== -->
+          <section class="panel" data-panel="referenzen">
+            <div class="panel-head">
+              <div>
+                <h1>Referenzen</h1>
+                <p class="desc">Stimmen &amp; Testimonials, die auf der Startseite im Karussell erscheinen.</p>
+                <span class="where"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg> Startseite</span>
+              </div>
+              <div class="head-actions">
+                <button class="btn-admin-primary" data-new="referenzen">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                  Referenz hinzufügen
+                </button>
+              </div>
+            </div>
+            <div id="referenzenList" class="row-list"></div>
+          </section>
+
+          <!-- ===== WEITERFÜHRENDE RESSOURCEN ===== -->
+          <section class="panel" data-panel="ressourcen">
+            <div class="panel-head">
+              <div>
+                <h1>Weiterführende Ressourcen</h1>
+                <p class="desc">Externe Links und herunterladbare Dokumente. Pro Eintrag entweder ein Link oder eine
+                  Datei (z. B. PDF).</p>
+                <span class="where"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg> Empfehlungen-Seite</span>
+              </div>
+              <div class="head-actions">
+                <button class="btn-admin-primary" data-new="ressourcen">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                  Ressource hinzufügen
+                </button>
+              </div>
+            </div>
+            <div id="ressourcenList" class="row-list"></div>
+          </section>
+
+          <!-- ===== ÜBER MICH ===== -->
+          <section class="panel" data-panel="ueber-mich">
+            <div class="panel-head">
+              <div>
+                <h1>Über mich</h1>
+                <p class="desc">Das Porträtbild, das auf der „Über mich“-Seite angezeigt wird.</p>
+                <span class="where"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg> Über-mich-Seite</span>
+              </div>
+            </div>
+            <div class="single-card">
+              <div class="field">
+                <label>Porträtbild</label>
+                <div class="image-uploader" id="aboutUploader">
+                  <div class="preview portrait" id="aboutPreview">Kein Bild</div>
+                  <div class="controls">
+                    <p>Hochformat (3:4) empfohlen. JPG oder PNG.</p>
+                    <label class="file-label" for="aboutImage">Bild wählen</label>
+                    <input id="aboutImage" type="file" accept="image/*">
+                    <button type="button" class="clear" id="aboutClear">Entfernen</button>
+                  </div>
+                </div>
+              </div>
+              <div class="single-foot">
+                <button class="btn-admin-primary" id="aboutSave">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                    <polyline points="17 21 17 13 7 13 7 21" />
+                    <polyline points="7 3 7 8 15 8" />
+                  </svg>
+                  Speichern
+                </button>
+                <span class="saved-flag" id="aboutSaved"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg> Gespeichert</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===== KONTAKT ===== -->
+          <section class="panel" data-panel="kontakt">
+            <div class="panel-head">
+              <div>
+                <h1>Kontakt</h1>
+                <p class="desc">E-Mail-Adresse und Telefonnummer, die auf der Kontakt-Seite angezeigt werden.</p>
+                <span class="where"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg> Kontakt-Seite</span>
+              </div>
+            </div>
+            <div class="single-card">
+              <div class="field">
+                <label for="ctEmail">E-Mail-Adresse</label>
+                <input id="ctEmail" type="email" placeholder="info@pbw-ta.de">
+                <p class="field-hint">Wird als anklickbarer Kontakt angezeigt.</p>
+              </div>
+              <div class="field">
+                <label for="ctPhone">Telefonnummer</label>
+                <input id="ctPhone" type="tel" placeholder="+49 (0) 261 671234">
+              </div>
+              <div class="single-foot">
+                <button class="btn-admin-primary" id="ctSave">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                    <polyline points="17 21 17 13 7 13 7 21" />
+                    <polyline points="7 3 7 8 15 8" />
+                  </svg>
+                  Speichern
+                </button>
+                <span class="saved-flag" id="ctSaved"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg> Gespeichert</span>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </main>
+
+    <!-- ===== COURSE EDITOR DRAWER ===== -->
+    <div id="editorOverlay" class="editor-overlay" aria-hidden="true">
+      <aside class="editor" role="dialog" aria-labelledby="editorTitle">
+        <div class="editor-head">
+          <h2 id="editorTitle">Kurs bearbeiten</h2>
+          <button class="icon-btn" id="closeEditor" aria-label="Schließen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <form id="editorForm" class="editor-body">
+          <input type="hidden" name="courseId">
+
+          <div class="field">
+            <label for="fTitle">Titel</label>
+            <input id="fTitle" name="title" type="text" required placeholder="z.B. Von der Angst zum Mut">
+          </div>
+
+          <div class="field">
+            <label for="fSubtitle">Untertitel</label>
+            <input id="fSubtitle" name="subtitle" type="text" placeholder="Kurzer Untertitel für die Listenansicht">
+          </div>
+
+          <div class="field">
+            <label for="fDescription">Beschreibung</label>
+            <textarea id="fDescription" name="description"
+              placeholder="Ausführliche Beschreibung des Kurses…"></textarea>
+            <p class="hint">Mehrere Absätze mit Leerzeile trennen.</p>
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="fCost">Kosten</label>
+              <input id="fCost" name="cost" type="text" placeholder="z.B. 280,00 €">
+            </div>
+            <div class="field">
+              <label for="fSlug">URL-Slug (optional)</label>
+              <input id="fSlug" name="slug" type="text" placeholder="von-der-angst-zum-mut">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Bild</label>
+            <div class="image-uploader" id="imgUploader">
+              <div class="preview" id="imgPreview">Kein Bild</div>
+              <div class="controls">
+                <p>JPG oder PNG. Wird zur Vorschau gespeichert.</p>
+                <label class="file-label" for="fImage">Datei wählen</label>
+                <input id="fImage" type="file" accept="image/*">
+                <button type="button" class="clear" id="imgClear">Bild entfernen</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Termine</label>
+            <div class="repeater" id="termineRep"></div>
+            <button type="button" class="repeater-add" id="addTermin">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Termin hinzufügen
+            </button>
+          </div>
+
+          <div class="field">
+            <label>Im Seminar erhalten Sie…</label>
+            <div class="repeater" id="includesRep"></div>
+            <button type="button" class="repeater-add" id="addInclude">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Punkt hinzufügen
+            </button>
+          </div>
+
+          <div class="field">
+            <label>Das Seminar ermöglicht Ihnen…</label>
+            <div class="repeater" id="enablesRep"></div>
+            <button type="button" class="repeater-add" id="addEnable">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Punkt hinzufügen
+            </button>
+          </div>
+        </form>
+
+        <div class="editor-foot">
+          <div class="left-actions">
+            <button type="button" class="btn-danger" id="deleteBtn" style="display:none;">Kurs löschen</button>
+          </div>
+          <div>
+            <button type="button" class="btn-ghost" id="cancelEditor">Abbrechen</button>
+            <button type="submit" form="editorForm" class="btn-admin-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                <polyline points="17 21 17 13 7 13 7 21" />
+                <polyline points="7 3 7 8 15 8" />
+              </svg>
+              Speichern
+            </button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ===== GENERIC CONTENT EDITOR DRAWER ===== -->
+    <div id="contentOverlay" class="editor-overlay" aria-hidden="true">
+      <aside class="editor" role="dialog" aria-labelledby="contentTitle">
+        <div class="editor-head">
+          <h2 id="contentTitle">Eintrag bearbeiten</h2>
+          <button class="icon-btn" id="closeContent" aria-label="Schließen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <form id="contentForm" class="editor-body"></form>
+        <div class="editor-foot">
+          <div class="left-actions">
+            <button type="button" class="btn-danger" id="contentDelete" style="display:none;">Löschen</button>
+          </div>
+          <div>
+            <button type="button" class="btn-ghost" id="cancelContent">Abbrechen</button>
+            <button type="submit" form="contentForm" class="btn-admin-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                <polyline points="17 21 17 13 7 13 7 21" />
+                <polyline points="7 3 7 8 15 8" />
+              </svg>
+              Speichern
+            </button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <script src="js/admin-store.js"></script>
+  <script src="js/admin-shell.js"></script>
+  <script src="js/admin-courses.js"></script>
+  <script src="js/admin-content.js"></script>
+
+  <template id="__bundler_thumbnail" data-bg-color="#001f3c">
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="800" fill="#001f3c" />
+      <text x="600" y="430" font-family="Georgia, serif" font-size="150" fill="#ffffff" text-anchor="middle"
+        font-weight="700">PBW</text>
+      <text x="600" y="510" font-family="Helvetica, Arial, sans-serif" font-size="38" fill="#9bb4cf"
+        text-anchor="middle" letter-spacing="6">ADMIN · CMS</text>
+    </svg>
+  </template>
+
+</body>
+
+</html>

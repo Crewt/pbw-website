@@ -33,3 +33,10 @@ npm-debug.log*
 # OS files
 .DS_Store
 Thumbs.db
+
+
+
+# Special Stuff
+ClaudeDesignExport
+db
+.playwright-mcp

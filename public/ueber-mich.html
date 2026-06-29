@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Über mich - PBW - Beatrice Czekalla</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .about-wrap {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 64px;
+      align-items: start;
+      position: relative;
+      padding: 80px 0;
+    }
+
+    .about-bg {
+      position: absolute;
+      left: -40px;
+      top: 0;
+      width: 70%;
+      height: 100%;
+      background: url("assets/header-bg.png") center/cover no-repeat;
+      opacity: 0.10;
+      pointer-events: none;
+    }
+
+    .about-bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, var(--bg) 0%, rgba(249, 249, 249, 0.4) 50%, rgba(249, 249, 249, 1) 100%);
+    }
+
+    .about-text {
+      position: relative;
+      z-index: 1;
+    }
+
+    .about-text .kicker {
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .about-text h1 {
+      font-size: 56px;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      color: var(--ink);
+      margin: 0 0 24px;
+    }
+
+    .about-text p {
+      color: var(--text);
+      margin: 0;
+    }
+
+    .about-text .lead {
+      font-size: 19px;
+      line-height: 1.65;
+      margin-bottom: 32px;
+    }
+
+    .about-text h2 {
+      font-size: 24px;
+      margin: 32px 0 12px;
+      color: var(--ink);
+    }
+
+    .about-text .body p {
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    .pflanz {
+      margin-top: 40px;
+      background: var(--bg-alt);
+      border: 1px solid var(--navy);
+      border-radius: 12px;
+      padding: 32px;
+    }
+
+    .pflanz h3 {
+      color: var(--navy);
+      font-size: 20px;
+      margin: 0 0 12px;
+    }
+
+    .pflanz p {
+      color: var(--text);
+      font-size: 17px;
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    .pflanz .keim {
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    .pflanz .invite {
+      margin: 16px 0 12px;
+    }
+
+    .pflanz ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .pflanz li {
+      position: relative;
+      padding-left: 24px;
+      color: var(--text);
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    .pflanz li::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 9px;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--navy);
+    }
+
+    .signature {
+      margin-top: 32px;
+      color: var(--ink);
+      font-style: italic;
+      font-weight: 700;
+      font-size: 19px;
+    }
+
+    .portrait-wrap {
+      position: relative;
+      padding: 32px 64px;
+    }
+
+    .portrait-bg-1 {
+      position: absolute;
+      top: -16px;
+      right: 16px;
+      width: 240px;
+      height: 240px;
+      border-radius: 999px;
+      background: rgba(216, 227, 247, 0.45);
+      z-index: 0;
+    }
+
+    .portrait-bg-2 {
+      position: absolute;
+      bottom: -32px;
+      left: -16px;
+      width: 180px;
+      height: 180px;
+      border-radius: 999px;
+      background: rgba(210, 228, 255, 0.45);
+      z-index: 0;
+    }
+
+    .portrait {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 31, 60, 0.10), 0 4px 24px rgba(38, 38, 38, 0.06);
+      aspect-ratio: 3/4;
+      background: var(--line-soft);
+      z-index: 1;
+    }
+
+    .portrait img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* facts row below */
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 80px;
+    }
+
+    .fact {
+      position: relative;
+      display: block;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 24px;
+      text-decoration: none;
+      transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+
+    .fact:hover {
+      border-color: var(--navy);
+      box-shadow: 0 8px 24px rgba(15, 30, 60, .08);
+      transform: translateY(-2px);
+    }
+
+    .fact .arrow {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      color: var(--navy);
+      background: rgba(15, 30, 60, .05);
+      transition: background .2s ease, color .2s ease, transform .2s ease;
+    }
+
+    .fact:hover .arrow {
+      background: var(--navy);
+      color: #fff;
+      transform: translate(2px, -2px);
+    }
+
+    .fact .num {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -1px;
+      margin-bottom: 4px;
+    }
+
+    .fact .lbl {
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    @media (max-width: 960px) {
+      .about-wrap {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        padding: 48px 0;
+      }
+
+      .portrait-wrap {
+        padding: 16px 0;
+      }
+
+      .about-text h1 {
+        font-size: 44px;
+      }
+
+      .facts {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="MainPage.html" class="nav-brand"><img src="assets/logo.png" alt="PBW - Beatrice Czekalla"
+          class="nav-logo" /></a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="MainPage.html">Home</a></li>
+          <li><a href="ueber-mich.html" class="active">Über mich</a></li>
+          <li><a href="kurstermine.html">Kurstermine</a></li>
+          <li><a href="empfehlungen.html">Empfehlungen</a></li>
+        </ul>
+      </nav>
+      <a href="kontakt.html" class="nav-cta">Kontakt</a>
+    </div>
+  </header>
+
+  <main data-screen-label="02 Über mich">
+    <div class="container">
+      <section class="about-wrap">
+        <div class="about-bg"></div>
+
+        <div class="about-text">
+          <span class="kicker">Persönlich</span>
+          <h1>Über mich</h1>
+          <p class="lead">Seit vielen Jahren begleite und unterstütze ich Menschen auf ihrem beruflichen und privaten
+            Lebensweg und in Organisationen. Meine Arbeit ist geprägt von Wertschätzung, Neugier und der tiefen
+            Überzeugung, dass jeder Mensch die Fähigkeit zur positiven Veränderung in sich trägt.</p>
+
+          <div class="body">
+            <h2>Weg &amp; Motivation</h2>
+            <p>Was mich in meiner Arbeit antreibt, ist die Verbindung von fundiertem akademischem Denken mit dem
+              lebendigen, klaren
+              Handwerkszeug der Transaktionsanalyse:
+              Mein Master im Coaching stärkt meinen wissenschaftlichen Anspruch und vertieft meinen systemischen Blick
+              auf Menschen und ihre
+              Entwicklungswege. Als transaktionsanalytische Lehrtrainerin und Lehrsupervisorin (u. S.) liebe ich die
+              Klarheit und Praxisnähe der TA:
+              Sie macht Veränderung greifbar, eröffnet neue Handlungsoptionen und unterstützt Menschen dabei, sich
+              selbst aus einer reflektierten,
+              stärkenden Perspektive zu betrachten und zu handeln.</p>
+            <p>Was mich in meiner Arbeit antreibt, ist die Verbindung von fundiertem akademischem Denken mit dem
+              lebendigen, klaren Handwerkszeug der Transaktionsanalyse: Mein Master im Coaching stärkt meinen
+              wissenschaftlichen Anspruch und vertieft meinen systemischen Blick auf Menschen und ihre Entwicklungswege.
+              Als transaktionsanalytische Lehrtrainerin und Lehrsupervisorin (u. S.) liebe ich die Klarheit und
+              Praxisnähe der TA: Sie macht Veränderung greifbar, eröffnet neue Handlungsoptionen und unterstützt
+              Menschen dabei, sich selbst aus einer reflektierten, stärkenden Perspektive zu betrachten und zu handeln.
+            </p>
+          </div>
+
+          <div class="pflanz">
+            <h3>Philosophie</h3>
+            <p class="keim">Ich verstehe meine Arbeit als eine „Pflanzschule“: ein geschützter Raum, in dem Ideen keimen
+              und erste Schritte wie „Setzlinge“ entwickelt und kultiviert werden können.</p>
+            <p class="invite">Dieser Rahmen lädt Sie ein,</p>
+            <ul>
+              <li>zu wachsen,</li>
+              <li>zu lernen,</li>
+              <li>zu experimentieren,</li>
+              <li>zu reflektieren und</li>
+              <li>dabei Ihr Potenzial zu entfalten und weiterzuentwickeln.</li>
+            </ul>
+          </div>
+
+          <div class="signature">- Ihre Beatrice Czekalla</div>
+        </div>
+
+        <div class="portrait-wrap">
+          <div class="portrait-bg-1"></div>
+          <div class="portrait-bg-2"></div>
+          <div class="portrait">
+            <img src="assets/portrait.jpg" alt="Beatrice Czekalla, Porträtaufnahme" />
+          </div>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="Eckdaten">
+        <a class="fact" href="#">
+          <span class="arrow" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="7" y1="17" x2="17" y2="7" />
+              <polyline points="7 7 17 7 17 17" />
+            </svg>
+          </span>
+          <div class="num">15+</div>
+          <div class="lbl">Jahre Erfahrung in Beratung &amp; Begleitung</div>
+        </a>
+        <a class="fact" href="#">
+          <span class="arrow" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="7" y1="17" x2="17" y2="7" />
+              <polyline points="7 7 17 7 17 17" />
+            </svg>
+          </span>
+          <div class="num">DGTA</div>
+          <div class="lbl">Zertifizierte Lehrtrainerin &amp; Supervisorin (TA)</div>
+        </a>
+        <a class="fact" href="#">
+          <span class="arrow" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="7" y1="17" x2="17" y2="7" />
+              <polyline points="7 7 17 7 17 17" />
+            </svg>
+          </span>
+          <div class="num">EATA</div>
+          <div class="lbl">Mitglied der European Association for Transactional Analysis</div>
+        </a>
+        <a class="fact" href="#">
+          <span class="arrow" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="7" y1="17" x2="17" y2="7" />
+              <polyline points="7 7 17 7 17 17" />
+            </svg>
+          </span>
+          <div class="num">TA-Wege</div>
+          <div class="lbl">Ausbildungsinstitut für Transaktionsanalyse</div>
+        </a>
+        <a class="fact" href="#">
+          <span class="arrow" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="7" y1="17" x2="17" y2="7" />
+              <polyline points="7 7 17 7 17 17" />
+            </svg>
+          </span>
+          <div class="num">EASC</div>
+          <div class="lbl">European Association for Supervision and Coaching</div>
+        </a>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer" style="margin-top:96px;">
+    <div class="container footer-row">
+      <div>
+        <div class="footer-brand">PBW - Beatrice Czekalla</div>
+        <p class="footer-copy">Psychologische Beratung &amp; Weiterbildung auf Basis der Transaktionsanalyse.
+          © 2026 PBW - Beatrice Czekalla. Alle Rechte vorbehalten.</p>
+      </div>
+      <div>
+        <h4>Navigation</h4>
+        <ul class="footer-links">
+          <li><a href="#">Impressum</a></li>
+          <li><a href="#">Datenschutz</a></li>
+          <li><a href="kontakt.html">Kontakt</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Mehr</h4>
+        <ul class="footer-links">
+          <li><a href="#">AGB</a></li>
+          <li><a href="#">Newsletter</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <template id="__bundler_thumbnail" data-bg-color="#0e2a47">
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="800" fill="#0e2a47" />
+      <text x="600" y="430" font-family="Georgia, serif" font-size="160" fill="#ffffff" text-anchor="middle"
+        font-weight="700">PBW</text>
+      <text x="600" y="510" font-family="Helvetica, Arial, sans-serif" font-size="40" fill="#9bb4cf"
+        text-anchor="middle" letter-spacing="6">ÜBER MICH</text>
+    </svg>
+  </template>
+
+</body>
+
+</html>

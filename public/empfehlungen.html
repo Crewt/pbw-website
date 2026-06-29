@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Empfehlungen &amp; Links - PBW - Beatrice Czekalla</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .emp-hero {
+      position: relative;
+      overflow: hidden;
+      padding: 80px 0;
+      text-align: center;
+    }
+
+    .emp-hero-bg {
+      position: absolute;
+      inset: 0;
+      background: url("assets/header-bg.png") center/cover no-repeat;
+      opacity: 0.18;
+    }
+
+    .emp-hero-bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(249, 249, 249, 0.7) 0%, rgba(249, 249, 249, 1) 100%);
+    }
+
+    .emp-hero-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .emp-hero h1 {
+      font-size: 48px;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      color: var(--ink);
+      margin: 16px 0 16px;
+    }
+
+    .emp-hero p {
+      color: var(--text);
+      font-size: 17px;
+      line-height: 1.55;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .section-title-divider {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin: 0 0 32px;
+      color: var(--ink);
+    }
+
+    .section-title-divider::before,
+    .section-title-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .section-title-divider h2 {
+      font-size: 26px;
+      margin: 0;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    /* Institution cards */
+    .inst-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .inst {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 28px 32px;
+      transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .inst:hover {
+      transform: translateY(-2px);
+      border-color: var(--navy);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .inst-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .inst-head .badge {
+      background: rgba(216, 227, 247, 0.6);
+      color: var(--navy);
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: 999px;
+      margin: 0;
+    }
+
+    .inst h3 {
+      font-size: 18px;
+      color: var(--navy);
+      margin: 0 0 12px;
+      line-height: 1.35;
+    }
+
+    .inst p {
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.55;
+      margin: 0 0 20px;
+    }
+
+    /* People cards */
+    .people-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .person {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 32px 24px;
+      text-align: center;
+      transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .person:hover {
+      transform: translateY(-2px);
+      border-color: var(--navy);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .person.featured {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy);
+    }
+
+    .person.featured h3 {
+      color: #fff;
+    }
+
+    .person.featured .role {
+      color: var(--accent);
+    }
+
+    .person.featured p {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 999px;
+      background: var(--line-soft);
+      margin: 0 auto 16px;
+      overflow: hidden;
+      border: 3px solid #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .person.featured .avatar {
+      border-color: var(--accent);
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .person h3 {
+      font-size: 18px;
+      margin: 0 0 4px;
+    }
+
+    .person .role {
+      font-size: 13px;
+      color: var(--navy);
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      margin-bottom: 12px;
+    }
+
+    .person p {
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+      margin: 0 0 20px;
+    }
+
+    .person .btn {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--navy);
+    }
+
+    .person .btn:hover {
+      border-color: var(--navy);
+      background: var(--bg-alt);
+    }
+
+    .person.featured .btn {
+      background: #fff;
+      color: var(--navy);
+      border: 0;
+    }
+
+    /* Resources */
+    .resources {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .resource {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .resource:hover {
+      transform: translateY(-1px);
+      border-color: var(--navy);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .resource .ico {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: rgba(216, 227, 247, 0.5);
+      color: var(--navy);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .resource .ico svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .resource h4 {
+      font-size: 16px;
+      color: var(--navy);
+      margin: 0 0 4px;
+    }
+
+    .resource p {
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    .resource .grow {
+      flex: 1;
+    }
+
+    .resource .go {
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .resource .go svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .resource .ico.circle {
+      border-radius: 999px;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .resource .ico img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .resource .ico .initials {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--navy);
+    }
+
+    .resource .grow h4 {
+      margin: 0 0 4px;
+    }
+
+    a.resource {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .resource .go {
+      background: none;
+      border: 0;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    @media (max-width: 960px) {
+
+      .inst-grid,
+      .people-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .emp-hero h1 {
+        font-size: 36px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="MainPage.html" class="nav-brand"><img src="assets/logo.png" alt="PBW - Beatrice Czekalla"
+          class="nav-logo" /></a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="MainPage.html">Home</a></li>
+          <li><a href="ueber-mich.html">Über mich</a></li>
+          <li><a href="kurstermine.html">Kurstermine</a></li>
+          <li><a href="empfehlungen.html" class="active">Empfehlungen</a></li>
+        </ul>
+      </nav>
+      <a href="kontakt.html" class="nav-cta">Kontakt</a>
+    </div>
+  </header>
+
+  <main data-screen-label="05 Empfehlungen">
+    <section class="emp-hero">
+      <div class="emp-hero-bg"></div>
+      <div class="container emp-hero-inner">
+        <span class="badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="6" cy="6" r="3" />
+            <circle cx="18" cy="6" r="3" />
+            <circle cx="6" cy="18" r="3" />
+            <circle cx="18" cy="18" r="3" />
+            <path d="M9 6h6M9 18h6M6 9v6M18 9v6" />
+          </svg>
+          Netzwerk &amp; Austausch
+        </span>
+        <h1>Empfehlungen &amp; Links</h1>
+        <p>Ein vertrauensvolles Netzwerk ist das Fundament professioneller Begleitung. Hier finden Sie Institutionen,
+          geschätzte Kolleg:innen und wertvolle Ressourcen, die ich aufgrund ihrer fachlichen Qualität und menschlichen
+          Integrität empfehle.</p>
+      </div>
+    </section>
+
+    <!-- Institutionen -->
+    <section class="container" style="padding-bottom:80px;">
+      <div class="section-title-divider">
+        <h2>Therapeutische Einrichtungen &amp; Institute</h2>
+      </div>
+      <div class="inst-grid">
+        <article class="inst">
+          <div class="inst-head">
+            <span class="icon-chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M3 22h18M5 22V10M19 22V10M9 22V14h6v8M2 10h20L12 3z" />
+              </svg>
+            </span>
+            <span class="badge">Zertifiziert</span>
+          </div>
+          <h3>DGTA - Deutsche Gesellschaft für Transaktionsanalyse</h3>
+          <p>Mein primärer Fachverband für den Austausch über moderne Konzepte der Transaktionsanalyse und
+            Qualitätssicherung in der therapeutischen Arbeit.</p>
+          <a href="https://www.dgta.de/" target="_blank" rel="noopener" class="link-arrow"
+            style="color:var(--navy);">Website besuchen
+            <svg viewBox="0 0 12 12" fill="currentColor">
+              <path d="M2.5 1.5h7M9.5 1.5v7M9.5 1.5l-8 8" stroke="currentColor" stroke-width="1.5" fill="none"
+                stroke-linecap="round" />
+            </svg>
+          </a>
+        </article>
+
+        <article class="inst">
+          <div class="inst-head">
+            <span class="icon-chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+              </svg>
+            </span>
+          </div>
+          <h3>EATA - European Association for Transactional Analysis</h3>
+          <p>Die europäische Ebene unseres Netzwerks. Hier fließen internationale Standards und wissenschaftliche
+            Erkenntnisse aus ganz Europa zusammen.</p>
+          <a href="https://www.eatanews.org/" target="_blank" rel="noopener" class="link-arrow"
+            style="color:var(--navy);">Website besuchen
+            <svg viewBox="0 0 12 12" fill="currentColor">
+              <path d="M2.5 1.5h7M9.5 1.5v7M9.5 1.5l-8 8" stroke="currentColor" stroke-width="1.5" fill="none"
+                stroke-linecap="round" />
+            </svg>
+          </a>
+        </article>
+
+        <article class="inst">
+          <div class="inst-head">
+            <span class="icon-chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <circle cx="9" cy="7" r="4" />
+                <path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2M16 3.13a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85" />
+              </svg>
+            </span>
+          </div>
+          <h3>EASC - European Association for Supervision and Coaching</h3>
+          <p>Als Mitglied bin ich Teil eines europäischen
+            Fachnetzwerks, das für professionelle Haltung,
+            Transparenz und verantwortungsvolle Begleitung
+            steht.</p>
+          <a href="https://www.easc-online.eu/" target="_blank" rel="noopener" class="link-arrow"
+            style="color:var(--navy);">Website besuchen
+            <svg viewBox="0 0 12 12" fill="currentColor">
+              <path d="M2.5 1.5h7M9.5 1.5v7M9.5 1.5l-8 8" stroke="currentColor" stroke-width="1.5" fill="none"
+                stroke-linecap="round" />
+            </svg>
+          </a>
+        </article>
+
+        <article class="inst">
+          <div class="inst-head">
+            <span class="icon-chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M12 2v20M2 12h20M4.5 4.5l15 15M19.5 4.5l-15 15" />
+              </svg>
+            </span>
+          </div>
+          <h3>TA-Wege</h3>
+          <p>Meine Möglichkeit zum fachlichen kollegialen Austausch und der Gestaltung von (Groß-)Veranstaltungen zur
+            Verfeinerung der Kompetenzen mit der Transaktionsanalyse.</p>
+          <a href="https://www.ta-wege.de/#xl_xr_page_index" target="_blank" rel="noopener" class="link-arrow"
+            style="color:var(--navy);">Website besuchen
+            <svg viewBox="0 0 12 12" fill="currentColor">
+              <path d="M2.5 1.5h7M9.5 1.5v7M9.5 1.5l-8 8" stroke="currentColor" stroke-width="1.5" fill="none"
+                stroke-linecap="round" />
+            </svg>
+          </a>
+        </article>
+      </div>
+
+      <!-- Menschen -->
+      <div class="section-title-divider" style="margin-top:80px;">
+        <h2>Kolleginnen &amp; Kollegen</h2>
+      </div>
+      <div class="resources" id="kollegenList"></div>
+
+      <!-- Weiterführende Ressourcen -->
+      <div class="section-title-divider" style="margin-top:80px;">
+        <h2>Weiterführende Ressourcen</h2>
+      </div>
+      <div class="resources" id="ressourcenList"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <div class="footer-brand">PBW - Beatrice Czekalla</div>
+        <p class="footer-copy">Psychologische Beratung &amp; Weiterbildung auf Basis der Transaktionsanalyse.</p>
+      </div>
+      <div>
+        <h4>Navigation</h4>
+        <ul class="footer-links">
+          <li><a href="#">Impressum</a></li>
+          <li><a href="#">Datenschutz</a></li>
+          <li><a href="kontakt.html">Kontakt</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Mitgliedschaften</h4>
+        <ul class="footer-links">
+          <li><a href="#">DGTA Zertifizierung</a></li>
+          <li><a href="#">EATA Zertifizierung</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container"
+      style="margin-top:32px;color:var(--text);font-size:14px;text-align:center;border-top:1px solid var(--line);padding-top:24px;">
+      © 2026 PBW - Beatrice Czekalla. Alle Rechte vorbehalten.
+    </div>
+  </footer>
+
+  <script src="js/store.js"></script>
+  <script>
+    (function () {
+      if (!window.PBW) return;
+      const { Content } = window.PBW;
+      const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+      const initials = n => String(n || "?").trim().split(/\s+/).slice(0, 2).map(w => w[0] || "").join("").toUpperCase();
+      const arrow = '<svg viewBox="0 0 12 12" fill="none"><path d="M2.5 1.5h7M9.5 1.5v7M9.5 1.5l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+      const dlIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
+      const linkIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+      const emptyRow = msg => '<div class="resource"><div class="grow"><p>' + esc(msg) + '</p></div></div>';
+
+      // ── Kolleg:innen (kompakte Liste) ──
+      const kEl = document.getElementById("kollegenList");
+      if (kEl) {
+        const items = Content.list("kollegen");
+        kEl.innerHTML = items.length ? items.map(k => {
+          const ico = k.image
+            ? '<span class="ico circle"><img src="' + esc(k.image) + '" alt=""></span>'
+            : '<span class="ico circle"><span class="initials">' + esc(initials(k.name)) + '</span></span>';
+          const meta = [k.role, k.bio].filter(Boolean).map(esc).join(" — ");
+          const body = '<div class="grow"><h4>' + esc(k.name) + '</h4>' + (meta ? '<p>' + meta + '</p>' : '') + '</div>';
+          return k.link
+            ? '<a class="resource" href="' + esc(k.link) + '" target="_blank" rel="noopener">' + ico + body + '<span class="go">Profil ansehen ' + arrow + '</span></a>'
+            : '<div class="resource">' + ico + body + '</div>';
+        }).join("") : emptyRow("Aktuell sind keine Einträge vorhanden.");
+      }
+
+      // ── Weiterführende Ressourcen (kompakte Liste, CMS-gespeist) ──
+      const rEl = document.getElementById("ressourcenList");
+      if (rEl) {
+        const items = Content.list("ressourcen");
+        rEl.innerHTML = items.length ? items.map(r => {
+          const isDl = r.type === "download";
+          const ico = '<span class="ico">' + (isDl ? dlIcon : linkIcon) + '</span>';
+          const body = '<div class="grow"><h4>' + esc(r.title) + '</h4>' + (r.description ? '<p>' + esc(r.description) + '</p>' : '') + '</div>';
+          if (isDl) {
+            const href = r.file && r.file.data ? r.file.data : null;
+            return href
+              ? '<a class="resource" href="' + esc(href) + '" download="' + esc((r.file && r.file.name) || "download") + '">' + ico + body + '<span class="go">Download ' + dlIcon + '</span></a>'
+              : '<div class="resource">' + ico + body + '<span class="go" style="opacity:0.5;">Download folgt</span></div>';
+          }
+          return r.url
+            ? '<a class="resource" href="' + esc(r.url) + '" target="_blank" rel="noopener">' + ico + body + '<span class="go">Öffnen ' + arrow + '</span></a>'
+            : '<div class="resource">' + ico + body + '<span class="go" style="opacity:0.5;">Link folgt</span></div>';
+        }).join("") : emptyRow("Aktuell sind keine Ressourcen vorhanden.");
+      }
+    })();
+  </script>
+
+  <template id="__bundler_thumbnail" data-bg-color="#0e2a47">
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="800" fill="#0e2a47" />
+      <text x="600" y="430" font-family="Georgia, serif" font-size="160" fill="#ffffff" text-anchor="middle"
+        font-weight="700">PBW</text>
+      <text x="600" y="510" font-family="Helvetica, Arial, sans-serif" font-size="40" fill="#9bb4cf"
+        text-anchor="middle" letter-spacing="6">EMPFEHLUNGEN</text>
+    </svg>
+  </template>
+
+</body>
+
+</html>

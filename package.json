@@ -5,16 +5,25 @@
   "main": "dist/server.js",
   "scripts": {
     "build:ts": "tsc",
-    "build:css": "npx tailwindcss -i ./src/styles/input.css -o ./public/styles.css --minify",
+    "build:css": "npx tailwindcss -i ./src/styles/input.css -o ./public/tailwind.css --minify",
     "build": "npm run build:ts && npm run build:css",
-    "dev": "concurrently \"tsc --watch\" \"npx tailwindcss -i ./src/styles/input.css -o ./public/styles.css --watch\" \"nodemon dist/server.js\"",
-    "start": "node dist/server.js"
+    "dev": "concurrently \"tsc --watch\" \"npx tailwindcss -i ./src/styles/input.css -o ./public/tailwind.css --watch\" \"nodemon dist/server.js\"",
+    "start": "node dist/server.js",
+    "seed": "node dist/scripts/seed.js",
+    "admin:create": "node dist/scripts/create-admin.js",
+    "deploy": "npm run build && pm2 restart pbw-website --update-env"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.6.1",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.22.5"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/express": "^4.17.21",
+    "@types/multer": "^2.1.0",
     "@types/node": "^22.0.0",
     "concurrently": "^9.0.0",
     "nodemon": "^3.1.4",
