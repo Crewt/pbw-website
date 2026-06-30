@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+/* Platzhalter für spätere Design-Tokens (Farben, Fonts) aus dem Figma-Design.
+   In Tailwind v4 werden Theme-Werte CSS-first hier definiert, z. B.:
+     --color-brand: #1f3a5f;
+     --font-sans: "Inter", sans-serif;
+   Bewusst noch leer — kommt im Design-Schritt. */
+@theme {
+}
