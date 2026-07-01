@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -24,13 +25,15 @@ type FormValues = z.infer<typeof schema>;
 export function ContactForm() {
   const toast = useToast();
   const [sent, setSent] = useState(false);
+  const [params] = useSearchParams();
+  const kurs = params.get("kurs");
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { name: "", email: "", phone: "", subject: "", message: "" },
+    defaultValues: { name: "", email: "", phone: "", subject: kurs ? `Anmeldung: ${kurs}` : "", message: "" },
   });
 
   async function onSubmit(values: FormValues) {

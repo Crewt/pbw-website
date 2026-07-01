@@ -153,3 +153,36 @@ export const IconArrowUpRight = (p: IconProps) => (
     <polyline points="7 7 17 7 17 17" />
   </Icon>
 );
+export const IconCheckCircle = (p: IconProps) => (
+  <Icon {...p}>
+    <circle cx="12" cy="12" r="10" />
+    <path d="m9 12 2 2 4-4" />
+  </Icon>
+);
+export const IconCreditCard = (p: IconProps) => (
+  <Icon {...p}>
+    <rect x="2" y="6" width="20" height="12" rx="2" />
+    <circle cx="12" cy="12" r="2" />
+    <path d="M6 12h.01M18 12h.01" />
+  </Icon>
+);
+export const IconNetwork = (p: IconProps) => (
+  <Icon {...p}>
+    <circle cx="6" cy="6" r="3" />
+    <circle cx="18" cy="6" r="3" />
+    <circle cx="6" cy="18" r="3" />
+    <circle cx="18" cy="18" r="3" />
+    <path d="M9 6h6M9 18h6M6 9v6M18 9v6" />
+  </Icon>
+);
+export const IconInstitute = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M3 22h18M5 22V10M19 22V10M9 22V14h6v8M2 10h20L12 3z" />
+  </Icon>
+);
+export const IconLink = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+  </Icon>
+);

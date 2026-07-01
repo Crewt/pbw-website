@@ -9,6 +9,8 @@ import { SiteLayout } from "./site/SiteLayout";
 import { HomePage } from "./site/home/HomePage";
 import { UeberMichPage } from "./site/ueber-mich/UeberMichPage";
 import { KursterminePage } from "./site/kurstermine/KursterminePage";
+import { SeminarPage } from "./site/seminar/SeminarPage";
+import { EmpfehlungenPage } from "./site/empfehlungen/EmpfehlungenPage";
 import { KontaktPage } from "./site/kontakt/KontaktPage";
 
 // Single SPA served at the domain root: the public website at /, the admin
@@ -21,6 +23,8 @@ export const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "ueber-mich", element: <UeberMichPage /> },
       { path: "kurstermine", element: <KursterminePage /> },
+      { path: "seminar/:slug", element: <SeminarPage /> },
+      { path: "empfehlungen", element: <EmpfehlungenPage /> },
       { path: "kontakt", element: <KontaktPage /> },
     ],
   },

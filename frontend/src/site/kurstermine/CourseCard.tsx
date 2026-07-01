@@ -1,24 +1,15 @@
+import { Link } from "react-router-dom";
 import type { Course, Termin } from "../../lib/types";
+import { fmtDateShort } from "../lib/date";
+import { resolveImg } from "../lib/img";
 import { IconCalendar, IconEducation } from "../components/Icons";
 
-// yyyy-mm-dd -> dd.mm.yyyy (matches legacy fmtDateShort)
-function short(iso: string): string {
-  const [y, m, d] = iso.split("-").map(Number);
-  if (!y || !m || !d) return iso;
-  return `${String(d).padStart(2, "0")}.${String(m).padStart(2, "0")}.${y}`;
-}
-
 function termineSummary(termine: Termin[]): string {
-  const dates = (termine || []).map((t) => short(t.date)).filter(Boolean);
+  const dates = (termine || []).map((t) => fmtDateShort(t.date)).filter(Boolean);
   if (!dates.length) return "";
   return dates.length > 3
     ? `${dates[0]} - ${dates[dates.length - 1]} · ${dates.length} Termine`
     : dates.join(" · ");
-}
-
-function resolveImg(src: string): string {
-  if (!src) return "";
-  return src.startsWith("/") || src.startsWith("http") ? src : `/${src}`;
 }
 
 export function CourseCard({ course, year }: { course: Course; year?: number }) {
@@ -28,8 +19,8 @@ export function CourseCard({ course, year }: { course: Course; year?: number }) 
   const img = resolveImg(course.image);
 
   return (
-    <a
-      href={`/seminar.html?id=${encodeURIComponent(course.id)}`}
+    <Link
+      to={`/seminar/${course.slug || course.id}`}
       className="group flex flex-col overflow-hidden rounded-xl border border-line bg-white transition hover:-translate-y-0.5 hover:border-navy hover:shadow-soft"
     >
       {img ? (
@@ -54,6 +45,6 @@ export function CourseCard({ course, year }: { course: Course; year?: number }) 
           {course.cost && <span className="font-semibold text-navy">{course.cost}</span>}
         </div>
       </div>
-    </a>
+    </Link>
   );
 }

@@ -61,6 +61,8 @@ export const logout = () => request<{ ok: boolean }>("POST", "/api/auth/logout")
 
 // ---- Courses ----
 export const getCourses = () => request<Course[]>("GET", "/api/courses");
+export const getCourse = (idOrSlug: string) =>
+  request<Course>("GET", `/api/courses/${encodeURIComponent(idOrSlug)}`);
 export const saveCourse = (c: CoursePayload) =>
   c.id ? request<Course>("PUT", `/api/courses/${c.id}`, c) : request<Course>("POST", "/api/courses", c);
 export const deleteCourse = (id: string) => request<{ ok: boolean }>("DELETE", `/api/courses/${id}`);

@@ -35,12 +35,12 @@ export function Testimonials() {
             <span className="kicker">STIMMEN &amp; EMPFEHLUNGEN</span>
             <h2 className="mt-2 text-[34px] font-bold tracking-[-0.6px] text-ink">Empfehlungen</h2>
           </div>
-          <a
-            href="/empfehlungen.html"
+          <Link
+            to="/empfehlungen"
             className="inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-navy transition-all hover:gap-2.5 [&_svg]:size-4"
           >
             Weiter zu den Empfehlungen <ArrowRight />
-          </a>
+          </Link>
         </div>
 
         <div className="grid grid-cols-2 items-start gap-12 max-[960px]:grid-cols-1">

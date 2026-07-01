@@ -1,12 +1,13 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { Container } from "./Container";
 
-// Migrated pages use client-side routing; Empfehlungen + the seminar detail are
-// still legacy static HTML, linked directly so the site stays navigable.
-const navLinks: { to: string; label: string; end?: boolean }[] = [
+// Migrated pages use client-side routing; Empfehlungen is still legacy static
+// HTML, linked directly so the site stays navigable.
+const navLinks: { to: string; label: string; end?: boolean; alsoActiveOn?: string }[] = [
   { to: "/", label: "Home", end: true },
   { to: "/ueber-mich", label: "Über mich" },
-  { to: "/kurstermine", label: "Kurstermine" },
+  { to: "/kurstermine", label: "Kurstermine", alsoActiveOn: "/seminar" },
+  { to: "/empfehlungen", label: "Empfehlungen" },
 ];
 
 const linkBase =
@@ -14,6 +15,7 @@ const linkBase =
 const linkActive = "border-navy font-semibold text-navy";
 
 export function Navbar() {
+  const { pathname } = useLocation();
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-bg/90 backdrop-blur-[20px] backdrop-saturate-[1.8]">
       <Container className="flex h-[72px] items-center justify-between">
@@ -22,19 +24,19 @@ export function Navbar() {
         </NavLink>
 
         <nav className="hidden items-center gap-7 min-[980px]:flex">
-          {navLinks.map((l) => (
-            <NavLink
-              key={l.to}
-              to={l.to}
-              end={l.end}
-              className={({ isActive }) => `${linkBase} ${isActive ? linkActive : ""}`}
-            >
-              {l.label}
-            </NavLink>
-          ))}
-          <a href="/empfehlungen.html" className={linkBase}>
-            Empfehlungen
-          </a>
+          {navLinks.map((l) => {
+            const prefixActive = !!l.alsoActiveOn && pathname.startsWith(l.alsoActiveOn);
+            return (
+              <NavLink
+                key={l.to}
+                to={l.to}
+                end={l.end}
+                className={({ isActive }) => `${linkBase} ${isActive || prefixActive ? linkActive : ""}`}
+              >
+                {l.label}
+              </NavLink>
+            );
+          })}
         </nav>
 
         <NavLink
