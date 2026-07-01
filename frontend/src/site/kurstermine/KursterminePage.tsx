@@ -7,33 +7,98 @@ import type { Course } from "../../lib/types";
 import { CourseCard } from "./CourseCard";
 import { IconCalendar, IconChat, IconDownload } from "../components/Icons";
 
+// Latest termin of a course — ISO date strings sort chronologically.
+function lastDate(c: Course): string {
+  return (c.termine ?? []).reduce((max, t) => (t.date > max ? t.date : max), "");
+}
+
+// Distinct years across a course's termine.
+function yearsOf(c: Course): number[] {
+  return [...new Set((c.termine ?? []).map((t) => Number(t.date.slice(0, 4))).filter(Boolean))];
+}
+
 function GridMessage({ children }: { children: ReactNode }) {
   return <div className="mb-12 rounded-xl bg-bg-alt p-12 text-center text-text">{children}</div>;
 }
 
-function CoursesGrid({
-  courses,
-  isLoading,
-  isError,
-}: {
-  courses: Course[] | undefined;
-  isLoading: boolean;
-  isError: boolean;
-}) {
-  if (isLoading) return <GridMessage>Kurse werden geladen…</GridMessage>;
-  if (isError) return <GridMessage>Die Kurse konnten derzeit nicht geladen werden.</GridMessage>;
-  if (!courses || courses.length === 0) return <GridMessage>Aktuell sind keine Kurse veröffentlicht.</GridMessage>;
+function EmptyYearNotice({ year }: { year: number }) {
   return (
-    <div className="mb-12 grid grid-cols-2 gap-5 max-[800px]:grid-cols-1">
-      {courses.map((c) => (
-        <CourseCard key={c.id} course={c} />
-      ))}
+    <div className="mb-12 flex items-center gap-4 rounded-lg border border-line bg-bg-alt px-6 py-5 text-sm leading-[1.55] text-ink">
+      <span className="shrink-0 text-navy [&_svg]:size-5">
+        <IconCalendar />
+      </span>
+      <div className="flex-1">
+        <strong className="text-navy">Termine {year} in Vorbereitung.</strong> Sobald die Jahresübersicht feststeht,
+        stellen wir Ihnen hier das Programm als Download bereit.{" "}
+      </div>
+      <span aria-disabled className="btn-outline pointer-events-none whitespace-nowrap opacity-55 [&_svg]:size-3.5">
+        <IconDownload /> Programm {year} (folgt)
+      </span>
     </div>
+  );
+}
+
+function YearSection({ year, courses, first }: { year: number; courses: Course[]; first: boolean }) {
+  const hasCourses = courses.length > 0;
+  return (
+    <>
+      <div
+        className={`mb-8 flex items-end justify-between border-b border-line pb-4 ${first ? "" : "mt-2"}`}
+      >
+        <div>
+          <h2 className="text-[28px] font-bold text-ink">Termine {year}</h2>
+          <p className="mt-1 text-sm text-text">
+            {hasCourses
+              ? `Übersicht aller geplanten Kurse und Seminare im Jahr ${year}.`
+              : `Die Planung für das Jahr ${year} läuft - eine vollständige Übersicht folgt in Kürze.`}
+          </p>
+        </div>
+      </div>
+      {hasCourses ? (
+        <div className="mb-12 grid grid-cols-2 gap-5 max-[800px]:grid-cols-1">
+          {courses.map((c) => (
+            <CourseCard key={c.id} course={c} year={year} />
+          ))}
+        </div>
+      ) : (
+        <EmptyYearNotice year={year} />
+      )}
+    </>
   );
 }
 
 export function KursterminePage() {
   const { data: courses, isLoading, isError } = useQuery({ queryKey: ["courses"], queryFn: getCourses });
+
+  // --- visibility + grouping (client-side, against the real date) ---
+  const today0 = new Date();
+  today0.setHours(0, 0, 0, 0);
+  const currentYear = today0.getFullYear();
+  const currentMonth = today0.getMonth(); // 0-based, June = 5
+
+  // Show a course only while its LAST termin (+7 days) is not yet past.
+  const visible = (courses ?? []).filter((c) => {
+    const last = lastDate(c);
+    if (!last) return false;
+    const cutoff = new Date(`${last}T00:00:00`);
+    cutoff.setDate(cutoff.getDate() + 7);
+    return cutoff >= today0;
+  });
+
+  // Every visible course appears under each year it has a termin in.
+  const byYear = new Map<number, Course[]>();
+  for (const c of visible) {
+    for (const y of yearsOf(c)) {
+      if (!byYear.has(y)) byYear.set(y, []);
+      byYear.get(y)!.push(c);
+    }
+  }
+
+  // Years with courses (current year onward), plus next year from June on.
+  const yearSet = new Set<number>();
+  for (const y of byYear.keys()) if (y >= currentYear) yearSet.add(y);
+  if (currentMonth >= 5) yearSet.add(currentYear + 1);
+  const shownYears = [...yearSet].sort((a, b) => a - b);
 
   return (
     <>
@@ -57,37 +122,17 @@ export function KursterminePage() {
       </section>
 
       <Container>
-        <div className="mb-8 flex items-end justify-between border-b border-line pb-4">
-          <div>
-            <h2 className="text-[28px] font-bold text-ink">Termine 2026</h2>
-            <p className="mt-1 text-sm text-text">Übersicht aller geplanten Kurse und Seminare im Jahr 2026.</p>
-          </div>
-        </div>
-
-        <CoursesGrid courses={courses} isLoading={isLoading} isError={isError} />
-
-        <div className="mb-8 mt-2 flex items-end justify-between border-b border-line pb-4">
-          <div>
-            <h2 className="text-[28px] font-bold text-ink">Termine 2027</h2>
-            <p className="mt-1 text-sm text-text">
-              Die Planung für das Jahr 2027 läuft - eine vollständige Übersicht folgt in Kürze.
-            </p>
-          </div>
-        </div>
-
-        <div className="mb-12 flex items-center gap-4 rounded-lg border border-line bg-bg-alt px-6 py-5 text-sm leading-[1.55] text-ink">
-          <span className="shrink-0 text-navy [&_svg]:size-5">
-            <IconCalendar />
-          </span>
-          <div className="flex-1">
-            <strong className="text-navy">Termine 2027 in Vorbereitung.</strong> Sobald die Jahresübersicht feststeht,
-            stellen wir Ihnen hier das Programm als Download bereit.{" "}
-            <span className="text-text">(Platzhalter - wird über das CMS gepflegt.)</span>
-          </div>
-          <span aria-disabled className="btn-outline pointer-events-none whitespace-nowrap opacity-55 [&_svg]:size-3.5">
-            <IconDownload /> Programm 2027 (folgt)
-          </span>
-        </div>
+        {isLoading ? (
+          <GridMessage>Kurse werden geladen…</GridMessage>
+        ) : isError ? (
+          <GridMessage>Die Kurse konnten derzeit nicht geladen werden.</GridMessage>
+        ) : shownYears.length === 0 ? (
+          <GridMessage>Aktuell sind keine Kurse veröffentlicht.</GridMessage>
+        ) : (
+          shownYears.map((y, i) => (
+            <YearSection key={y} year={y} courses={byYear.get(y) ?? []} first={i === 0} />
+          ))
+        )}
 
         <div className="mt-16 flex flex-wrap items-center justify-between gap-6 rounded-xl border border-line bg-bg-alt p-8 max-[800px]:flex-col max-[800px]:items-start">
           <div>

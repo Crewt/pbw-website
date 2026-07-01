@@ -21,8 +21,10 @@ function resolveImg(src: string): string {
   return src.startsWith("/") || src.startsWith("http") ? src : `/${src}`;
 }
 
-export function CourseCard({ course }: { course: Course }) {
-  const summary = termineSummary(course.termine);
+export function CourseCard({ course, year }: { course: Course; year?: number }) {
+  // In a year section, only that year's termine are summarised on the card.
+  const termine = year == null ? course.termine : course.termine.filter((t) => t.date.slice(0, 4) === String(year));
+  const summary = termineSummary(termine);
   const img = resolveImg(course.image);
 
   return (
