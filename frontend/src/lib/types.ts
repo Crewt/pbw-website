@@ -1,6 +1,5 @@
 // Mirror of the backend domain types (../../../src/types.ts). Intentionally
-// duplicated to keep the frontend package self-contained; a shared types package
-// is an option later if drift becomes a concern.
+// duplicated to keep the frontend package self-contained.
 
 export interface Termin {
   date: string; // ISO yyyy-mm-dd
@@ -21,6 +20,9 @@ export interface Course {
   createdAt?: string;
   updatedAt?: string;
 }
+
+// Payload for POST/PUT /api/courses — server fields omitted, id optional (create).
+export type CoursePayload = Omit<Course, "id" | "createdAt" | "updatedAt"> & { id?: string };
 
 export interface Kollege {
   id: string;
@@ -71,8 +73,10 @@ export interface About {
   image: string;
 }
 
-// Aggregated response of GET /api/content (note: courses are NOT included here —
-// they are served separately via GET /api/courses).
+export type CollectionName = "kollegen" | "zertifikate" | "referenzen" | "ressourcen";
+export type SingletonName = "kontakt" | "about";
+
+// Aggregated response of GET /api/content (courses are served separately).
 export interface Content {
   kollegen: Kollege[];
   zertifikate: Zertifikat[];
@@ -80,4 +84,13 @@ export interface Content {
   ressourcen: Ressource[];
   kontakt: Kontakt;
   about: About;
+}
+
+// Payload for POST /api/contact (mirrors backend ContactPayload).
+export interface ContactPayload {
+  name: string;
+  email: string;
+  phone?: string;
+  subject?: string;
+  message: string;
 }

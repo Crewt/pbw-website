@@ -18,6 +18,8 @@ export const config = {
   // dist/ sits next to public/ at the project root, so ".." from __dirname.
   publicDir: path.join(__dirname, "..", "public"),
   uploadsDir: path.join(__dirname, "..", "public", "uploads"),
+  // Built React SPA (Vite output) — serves the whole site (public + /admin).
+  spaDir: path.join(__dirname, "..", "frontend", "dist"),
 } as const;
 
 if (!config.sessionSecret) {

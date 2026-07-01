@@ -78,3 +78,18 @@ export interface AdminUser {
   username: string;
   password_hash: string;
 }
+
+// Public contact-form submission (POST /api/contact). phone/subject optional.
+export interface ContactPayload {
+  name: string;
+  email: string;
+  phone?: string;
+  subject?: string;
+  message: string;
+}
+
+// A stored Kontakt-Anfrage as read back from the DB.
+export interface ContactMessage extends ContactPayload {
+  id: number;
+  createdAt: string;
+}

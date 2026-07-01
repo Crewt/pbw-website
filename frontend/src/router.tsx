@@ -1,13 +1,45 @@
-import { createBrowserRouter } from "react-router-dom";
-import App from "./App";
-import Home from "./pages/Home";
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import { RequireAuth } from "./admin/auth/RequireAuth";
+import { AdminLayout } from "./admin/AdminLayout";
+import { CoursesPanel } from "./admin/courses/CoursesPanel";
+import { CollectionPanel } from "./admin/content/CollectionPanel";
+import { KontaktPanel } from "./admin/singletons/KontaktPanel";
+import { AboutPanel } from "./admin/singletons/AboutPanel";
+import { SiteLayout } from "./site/SiteLayout";
+import { HomePage } from "./site/home/HomePage";
+import { UeberMichPage } from "./site/ueber-mich/UeberMichPage";
+import { KursterminePage } from "./site/kurstermine/KursterminePage";
+import { KontaktPage } from "./site/kontakt/KontaktPage";
 
-// Root layout (App) wraps all routes via <Outlet/>. Add further pages as children
-// here when the real screens are built from the design.
+// Single SPA served at the domain root: the public website at /, the admin
+// shell under /admin (RequireAuth gates the whole admin subtree).
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
-    children: [{ index: true, element: <Home /> }],
+    element: <SiteLayout />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: "ueber-mich", element: <UeberMichPage /> },
+      { path: "kurstermine", element: <KursterminePage /> },
+      { path: "kontakt", element: <KontaktPage /> },
+    ],
+  },
+  {
+    path: "/admin",
+    element: (
+      <RequireAuth>
+        <AdminLayout />
+      </RequireAuth>
+    ),
+    children: [
+      { index: true, element: <Navigate to="kurse" replace /> },
+      { path: "kurse", element: <CoursesPanel /> },
+      { path: "kollegen", element: <CollectionPanel coll="kollegen" /> },
+      { path: "zertifikate", element: <CollectionPanel coll="zertifikate" /> },
+      { path: "referenzen", element: <CollectionPanel coll="referenzen" /> },
+      { path: "ressourcen", element: <CollectionPanel coll="ressourcen" /> },
+      { path: "ueber-mich", element: <AboutPanel /> },
+      { path: "kontakt", element: <KontaktPanel /> },
+    ],
   },
 ]);

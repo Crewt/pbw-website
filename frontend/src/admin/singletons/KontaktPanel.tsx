@@ -1,0 +1,65 @@
+import { useEffect, useState } from "react";
+import { useContent } from "../hooks/useContent";
+import { useSingletonMutations } from "../hooks/useSingletons";
+import { useToast } from "../components/ToastProvider";
+import { PanelHeader, SavedFlag } from "../components/ui";
+
+export function KontaktPanel() {
+  const { data } = useContent();
+  const { kontakt } = useSingletonMutations();
+  const toast = useToast();
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    if (data?.kontakt) {
+      setEmail(data.kontakt.email ?? "");
+      setPhone(data.kontakt.phone ?? "");
+    }
+  }, [data]);
+
+  async function handleSave() {
+    try {
+      await kontakt.mutateAsync({ email: email.trim(), phone: phone.trim() });
+      setSaved(true);
+      window.setTimeout(() => setSaved(false), 1800);
+    } catch (e) {
+      toast(e instanceof Error ? e.message : "Speichern fehlgeschlagen", "error");
+    }
+  }
+
+  return (
+    <div>
+      <PanelHeader title="Kontakt" description="E-Mail-Adresse und Telefonnummer für die Kontakt-Seite." />
+      <div className="max-w-lg space-y-4 rounded-lg border border-line-soft bg-white p-6">
+        <div>
+          <label className="field-label">E-Mail-Adresse</label>
+          <input
+            type="email"
+            className="field-input"
+            placeholder="info@pbw-ta.de"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="field-label">Telefonnummer</label>
+          <input
+            type="tel"
+            className="field-input"
+            placeholder="+49 (0) 261 671234"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+        </div>
+        <div className="flex items-center gap-3">
+          <button className="btn-primary" onClick={handleSave} disabled={kontakt.isPending}>
+            Speichern
+          </button>
+          <SavedFlag show={saved} />
+        </div>
+      </div>
+    </div>
+  );
+}
