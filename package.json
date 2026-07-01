@@ -6,7 +6,7 @@
   "scripts": {
     "build:ts": "tsc",
     "build:css": "npx tailwindcss -i ./src/styles/input.css -o ./public/tailwind.css --minify",
-    "build": "npm run build:ts && npm run build:css",
+    "build": "npm run build:ts && npm run build:css && npm run build:web",
     "dev": "concurrently \"tsc --watch\" \"npx tailwindcss -i ./src/styles/input.css -o ./public/tailwind.css --watch\" \"nodemon dist/server.js\"",
     "dev:web": "npm --prefix frontend run dev",
     "dev:all": "concurrently \"npm run dev\" \"npm run dev:web\"",
