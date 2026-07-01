@@ -65,7 +65,7 @@ export function CoursesPanel() {
             <div className="flex items-center gap-2">
               <a
                 className="icon-btn"
-                href={`/seminar.html?id=${encodeURIComponent(c.id)}`}
+                href={`/seminar/${c.slug || c.id}`}
                 target="_blank"
                 rel="noreferrer"
                 title="Ansehen"

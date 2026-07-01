@@ -5,6 +5,7 @@ import { getContent } from "../../lib/api";
 import type { Kollege, Ressource, Zertifikat } from "../../lib/types";
 import { resolveImg } from "../lib/img";
 import { IconArrowUpRight, IconDownload, IconInstitute, IconLink, IconNetwork } from "../components/Icons";
+import { Seo, SITE_NAME } from "../lib/Seo";
 
 function initials(name: string): string {
   return String(name || "?")
@@ -173,6 +174,10 @@ export function EmpfehlungenPage() {
 
   return (
     <>
+      <Seo
+        title={`Empfehlungen & Netzwerk | ${SITE_NAME}`}
+        description="Empfehlungen, Kolleg:innen und Zertifizierungen im Netzwerk von PBW – Beatrice Czekalla."
+      />
       <section className="relative overflow-hidden py-20 text-center">
         <div className="absolute inset-0 bg-[url(/assets/header-bg.png)] bg-cover bg-center opacity-[0.18]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(249,249,249,0.7)_0%,rgba(249,249,249,1)_100%)]" />

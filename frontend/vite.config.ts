@@ -17,6 +17,10 @@ export default defineConfig({
       "/api": "http://localhost:3042",
       "/uploads": "http://localhost:3042",
       "/assets": "http://localhost:3042",
+      // Root-level generated icons/manifest + dynamic SEO routes live on the
+      // backend; proxy them so they resolve during dev too (regex key).
+      "^/(favicon\\.ico|favicon\\.svg|favicon-\\d+x\\d+\\.png|apple-touch-icon\\.png|web-app-manifest-\\d+x\\d+\\.png|site\\.webmanifest|og-default\\.png|robots\\.txt|sitemap\\.xml|llms\\.txt|llms-full\\.txt)$":
+        "http://localhost:3042",
     },
   },
 });

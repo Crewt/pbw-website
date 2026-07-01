@@ -2,10 +2,15 @@ import { Container } from "../components/Container";
 import { ContactForm } from "./ContactForm";
 import { ContactInfo } from "./ContactInfo";
 import { MapCard } from "./MapCard";
+import { Seo, SITE_NAME } from "../lib/Seo";
 
 export function KontaktPage() {
   return (
     <>
+      <Seo
+        title={`Kontakt | ${SITE_NAME}`}
+        description="Kontakt zu Beatrice Czekalla (PBW) – Psychologische Beratung & Weiterbildung. Nachricht schreiben oder Termin vereinbaren."
+      />
       <section className="relative overflow-hidden bg-bg-alt pb-[72px] pt-24 text-center">
         <div className="absolute inset-0 bg-[url(/assets/contact-bg.jpg)] bg-cover bg-center opacity-30 saturate-[.85]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(243,244,244,0.4)_0%,rgba(243,244,244,0.95)_100%)]" />

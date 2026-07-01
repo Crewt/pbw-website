@@ -9,6 +9,8 @@ import { contentRouter } from "./routes/content.routes";
 import { uploadsRouter } from "./routes/uploads.routes";
 import { adminRouter } from "./routes/admin.routes";
 import { contactRouter } from "./routes/contact.routes";
+import { seoRouter } from "./routes/seo.routes";
+import { renderShell } from "./seo/shell";
 
 const app = express();
 app.use(express.json({ limit: "2mb" }));
@@ -29,18 +31,30 @@ app.use("/api", (_req, res) => {
   res.status(404).json({ error: "Nicht gefunden." });
 });
 
+// ---- SEO/GEO (dynamic, DB-backed) ----
+// robots.txt, sitemap.xml, llms.txt, llms-full.txt — must come before the static
+// middleware and SPA catch-all so these non-file paths aren't served the shell.
+app.use(seoRouter);
+
 // ---- Static files ----
-// Built SPA (index.html + hashed bundles under /app/). Then the legacy public/
-// dir for /assets, /uploads and any not-yet-migrated .html pages. index:false
-// so "/" falls through to the SPA shell below instead of public/index.html.
-app.use(express.static(config.spaDir));
+// Built SPA bundles under /app/, then the public/ dir for /assets, /uploads and
+// the generated favicons/manifest. Both use index:false so "/" (and any dir)
+// falls through to the SPA catch-all below, where renderShell injects SEO meta —
+// otherwise express.static would serve the raw dist/index.html for "/".
+app.use(express.static(config.spaDir, { index: false }));
 app.use(express.static(config.publicDir, { index: false }));
 
 // ---- SPA fallback ----
-// Any non-API path without a matching static file gets the SPA shell, so React
-// Router can render it (public pages at / and admin deep links under /admin).
-app.get("*", (_req, res) => {
-  res.sendFile(path.join(config.spaDir, "index.html"));
+// Any non-API path without a matching static file gets the SPA shell (so React
+// Router can render it), with per-route SEO meta injected server-side. If meta
+// injection fails for any reason, fall back to the raw shell so the app loads.
+app.get("*", async (req, res) => {
+  try {
+    res.type("html").send(await renderShell(req.path));
+  } catch (e) {
+    console.error("[shell]", e);
+    res.sendFile(path.join(config.spaDir, "index.html"));
+  }
 });
 
 // ---- Error handler: DB-connection problems -> 503, else 500 ----

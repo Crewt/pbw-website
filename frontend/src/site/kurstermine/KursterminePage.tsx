@@ -6,6 +6,7 @@ import { getCourses } from "../../lib/api";
 import type { Course } from "../../lib/types";
 import { CourseCard } from "./CourseCard";
 import { IconCalendar, IconChat, IconDownload } from "../components/Icons";
+import { Seo, SITE_NAME } from "../lib/Seo";
 
 // Latest termin of a course — ISO date strings sort chronologically.
 function lastDate(c: Course): string {
@@ -102,6 +103,10 @@ export function KursterminePage() {
 
   return (
     <>
+      <Seo
+        title={`Kurstermine & Seminare | ${SITE_NAME}`}
+        description="Aktuelle Kurstermine und Seminare von PBW – Beatrice Czekalla. Themen, Termine und Anmeldung im Überblick."
+      />
       <section className="relative mb-16 overflow-hidden border-b border-line bg-bg-alt pb-16 pt-20">
         <div className="absolute inset-0 bg-[url(/assets/header-bg.png)] bg-cover bg-center opacity-20" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(243,244,244,0.7)_0%,rgba(243,244,244,0.95)_100%)]" />

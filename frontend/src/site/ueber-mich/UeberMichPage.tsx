@@ -1,5 +1,6 @@
 import { Container } from "../components/Container";
 import { IconArrowUpRight } from "../components/Icons";
+import { Seo, SITE_NAME } from "../lib/Seo";
 
 const facts = [
   { num: "15+", lbl: "Jahre Erfahrung in Beratung & Begleitung" },
@@ -23,6 +24,10 @@ const pflanzList = [
 export function UeberMichPage() {
   return (
     <Container>
+      <Seo
+        title={`Über mich | ${SITE_NAME}`}
+        description="Beatrice Czekalla – Psychologische Beratung & Weiterbildung. Mehr über Ansatz, Haltung und Werdegang."
+      />
       <section className="relative grid grid-cols-[1.1fr_1fr] items-start gap-16 py-20 max-[960px]:grid-cols-1 max-[960px]:gap-8 max-[960px]:py-12">
         {/* decorative background */}
         <div aria-hidden className="pointer-events-none absolute -left-10 top-0 h-full w-[70%] overflow-hidden">

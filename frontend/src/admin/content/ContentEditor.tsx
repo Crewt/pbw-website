@@ -138,7 +138,12 @@ function FieldControl({
           control={control}
           name={f.key}
           render={({ field }) => (
-            <ImageUpload value={field.value || ""} onChange={field.onChange} shape={f.imageShape ?? "rect"} />
+            <ImageUpload
+              value={field.value || ""}
+              onChange={field.onChange}
+              shape={f.imageShape ?? "rect"}
+              aspect={f.imageAspect}
+            />
           )}
         />
       );

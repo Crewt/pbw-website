@@ -5,6 +5,7 @@ import { getCourse } from "../../lib/api";
 import { fmtDateLong } from "../lib/date";
 import { ChevronLeft, IconCalendar, IconCheckCircle, IconCreditCard } from "../components/Icons";
 import { resolveImg } from "../lib/img";
+import { Seo, SITE_NAME } from "../lib/Seo";
 
 function Description({ text }: { text: string }) {
   const paras = text
@@ -65,6 +66,11 @@ export function SeminarPage() {
 
   return (
     <>
+      <Seo
+        title={`${course.title} | ${SITE_NAME}`}
+        description={(course.subtitle || course.description || "").replace(/\s+/g, " ").trim().slice(0, 160)}
+        image={course.image}
+      />
       <section className="relative overflow-hidden border-b border-line bg-bg-alt pb-12 pt-16">
         <div className="absolute inset-0 bg-[url(/assets/header-bg.png)] bg-cover bg-center opacity-20" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(243,244,244,0.4)_0%,rgba(243,244,244,0.85)_100%)]" />

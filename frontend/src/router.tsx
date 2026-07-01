@@ -26,6 +26,7 @@ export const router = createBrowserRouter([
       { path: "seminar/:slug", element: <SeminarPage /> },
       { path: "empfehlungen", element: <EmpfehlungenPage /> },
       { path: "kontakt", element: <KontaktPage /> },
+      { path: "*", element: <Navigate to="/" replace /> },
     ],
   },
   {

@@ -12,6 +12,7 @@ export interface FieldDef {
   required?: boolean;
   options?: [string, string][]; // select: [value, label]
   imageShape?: "rect" | "circle" | "portrait";
+  imageAspect?: number; // crop aspect (w/h); defaults per shape if omitted
   showIf?: { key: string; value: string };
   requiredIf?: { key: string; value: string };
 }
@@ -50,7 +51,7 @@ export const SCHEMAS: Record<string, CollectionSchema> = {
       { key: "badge", label: "Kennzeichnung", type: "text", hint: "z. B. Zertifiziert, Mitglied, Netzwerk" },
       { key: "description", label: "Beschreibung", type: "textarea" },
       { key: "link", label: "Website", type: "url" },
-      { key: "image", label: "Logo / Bild", type: "image", imageShape: "rect" },
+      { key: "image", label: "Logo / Bild", type: "image", imageShape: "rect", imageAspect: 1 },
     ],
     rowTitle: (it) => it.name || "(ohne Name)",
     rowMeta: (it) => [it.badge, it.description].filter(Boolean).join(" · "),

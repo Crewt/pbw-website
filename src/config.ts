@@ -15,6 +15,9 @@ export const config = {
   },
   sessionSecret: process.env.SESSION_SECRET ?? "",
   cookieSecure: (process.env.COOKIE_SECURE ?? "false") === "true",
+  // Absolute site origin used for canonical/OG URLs, sitemap.xml and llms.txt.
+  // Override on the dev box via SITE_URL so those URLs point at the right host.
+  siteUrl: (process.env.SITE_URL ?? "https://pbw-ta.de").replace(/\/+$/, ""),
   // dist/ sits next to public/ at the project root, so ".." from __dirname.
   publicDir: path.join(__dirname, "..", "public"),
   uploadsDir: path.join(__dirname, "..", "public", "uploads"),
