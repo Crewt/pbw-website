@@ -283,5 +283,5 @@ export const KONTAKT_DEFAULT: Kontakt = {
 };
 
 export const ABOUT_DEFAULT: About = {
-  image: "/assets/portrait.jpg",
+  image: "/assets/portrait.webp",
 };

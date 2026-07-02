@@ -108,7 +108,7 @@ export function KursterminePage() {
         description="Aktuelle Kurstermine und Seminare von PBW – Beatrice Czekalla. Themen, Termine und Anmeldung im Überblick."
       />
       <section className="relative mb-16 overflow-hidden border-b border-line bg-bg-alt pb-16 pt-20">
-        <div className="absolute inset-0 bg-[url(/assets/header-bg.png)] bg-cover bg-center opacity-20" />
+        <div className="absolute inset-0 bg-[url(/assets/header-bg.webp)] bg-cover bg-center opacity-20" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(243,244,244,0.7)_0%,rgba(243,244,244,0.95)_100%)]" />
         <Container>
           <div className="relative z-[1] max-w-[720px]">
@@ -154,7 +154,7 @@ export function KursterminePage() {
 
         <div className="mt-16 mb-24 aspect-[21/9] overflow-hidden rounded-xl bg-bg-alt">
           <img
-            src="/assets/kurstermine-office.jpg"
+            src="/assets/kurstermine-office.webp"
             alt="Seminarraum / Praxisflur"
             className="h-full w-full object-cover"
           />

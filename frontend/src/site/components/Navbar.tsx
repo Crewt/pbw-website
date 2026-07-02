@@ -20,7 +20,7 @@ export function Navbar() {
     <header className="sticky top-0 z-50 border-b border-line bg-bg/90 backdrop-blur-[20px] backdrop-saturate-[1.8]">
       <Container className="flex h-[72px] items-center justify-between">
         <NavLink to="/" className="inline-flex items-center">
-          <img src="/assets/logo.png" alt="PBW - Beatrice Czekalla" className="h-10 w-auto sm:h-[50px]" />
+          <img src="/assets/logo.webp" alt="PBW - Beatrice Czekalla" className="h-10 w-auto sm:h-[50px]" />
         </NavLink>
 
         <nav className="hidden items-center gap-7 min-[980px]:flex">

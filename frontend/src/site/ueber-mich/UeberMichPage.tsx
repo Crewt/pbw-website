@@ -31,7 +31,7 @@ export function UeberMichPage() {
       <section className="relative grid grid-cols-[1.1fr_1fr] items-start gap-16 py-20 max-[960px]:grid-cols-1 max-[960px]:gap-8 max-[960px]:py-12">
         {/* decorative background */}
         <div aria-hidden className="pointer-events-none absolute -left-10 top-0 h-full w-[70%] overflow-hidden">
-          <div className="absolute inset-0 bg-[url(/assets/header-bg.png)] bg-cover bg-center opacity-10" />
+          <div className="absolute inset-0 bg-[url(/assets/header-bg.webp)] bg-cover bg-center opacity-10" />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,#f9f9f9_0%,rgba(249,249,249,0.4)_50%,rgba(249,249,249,1)_100%)]" />
         </div>
 
@@ -80,7 +80,7 @@ export function UeberMichPage() {
           <div className="absolute -bottom-8 -left-4 h-44 w-44 rounded-full bg-[rgba(210,228,255,0.45)]" />
           <div className="relative z-[1] aspect-[3/4] overflow-hidden rounded-xl bg-line-soft shadow-[0_20px_60px_rgba(0,31,60,0.10),0_4px_24px_rgba(38,38,38,0.06)]">
             <img
-              src="/assets/portrait.jpg"
+              src="/assets/portrait.webp"
               alt="Beatrice Czekalla, Porträtaufnahme"
               className="h-full w-full object-cover"
             />

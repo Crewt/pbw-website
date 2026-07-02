@@ -15,6 +15,16 @@ import { renderShell } from "./seo/shell";
 const app = express();
 app.use(express.json({ limit: "2mb" }));
 
+// Staging/dev: keep the whole mirror out of every index (search + AI). An HTTP
+// header can't be stripped by the SPA's client-side meta reconciliation the way
+// a <meta robots> tag can, so this reliably noindexes pbw.barhelper.de.
+if (config.seoNoindex) {
+  app.use((_req, res, next) => {
+    res.setHeader("X-Robots-Tag", "noindex");
+    next();
+  });
+}
+
 // Uploaded files land here; make sure it exists before multer writes to it.
 fs.mkdirSync(config.uploadsDir, { recursive: true });
 
@@ -50,7 +60,11 @@ app.use(express.static(config.publicDir, { index: false }));
 // injection fails for any reason, fall back to the raw shell so the app loads.
 app.get("*", async (req, res) => {
   try {
-    res.type("html").send(await renderShell(req.path));
+    const { html, noindex } = await renderShell(req.path);
+    // Per-route noindex (admin, past events) via header so it survives client
+    // rendering — Googlebot honours X-Robots-Tag regardless of JS execution.
+    if (noindex) res.setHeader("X-Robots-Tag", "noindex");
+    res.type("html").send(html);
   } catch (e) {
     console.error("[shell]", e);
     res.sendFile(path.join(config.spaDir, "index.html"));

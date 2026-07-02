@@ -63,3 +63,13 @@ export function courseMeta(c: Course): PageMeta {
     image: c.image || DEFAULT_OG_IMAGE,
   };
 }
+
+// A course is "expired" once every dated Termin lies in the past. Courses with
+// no dated Termin (ongoing programmes, "auf Anfrage") are never treated as
+// expired. Used to drop past events from the sitemap/llms feeds and noindex them.
+export function isCourseExpired(c: Course, now: Date = new Date()): boolean {
+  const dates = c.termine.map((t) => t.date).filter(Boolean);
+  if (!dates.length) return false;
+  const today = now.toISOString().slice(0, 10);
+  return dates.every((d) => d < today);
+}

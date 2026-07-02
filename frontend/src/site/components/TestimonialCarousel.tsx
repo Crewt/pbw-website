@@ -59,10 +59,14 @@ export function TestimonialCarousel({
               aria-label={`Zu Stimme ${i + 1}`}
               aria-current={i === index}
               onClick={() => setIndex(i)}
-              className={`h-2 w-2 rounded-full transition ${
-                i === index ? "scale-[1.3] bg-navy" : "bg-navy/20 hover:bg-navy/40"
-              }`}
-            />
+              className="group flex h-6 w-6 items-center justify-center rounded-full"
+            >
+              <span
+                className={`h-2 w-2 rounded-full transition ${
+                  i === index ? "scale-[1.3] bg-navy" : "bg-navy/20 group-hover:bg-navy/40"
+                }`}
+              />
+            </button>
           ))}
         </div>
         <button type="button" className={arrowCls} aria-label="Nächstes Testimonial" onClick={() => go(1)}>

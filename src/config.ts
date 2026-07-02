@@ -4,6 +4,12 @@ import path from "path";
 // Centralised, typed view of the environment. Loaded once at import time.
 // Defaults are dev-friendly; secrets (DB password, SESSION_SECRET) must come
 // from .env — see .env.example.
+// Absolute site origin for canonical/OG URLs, sitemap.xml and llms.txt. Guard the
+// scheme so a bare host in SITE_URL (e.g. "pbw.barhelper.de") can't silently
+// produce scheme-less, relative URLs across every SEO surface.
+const rawSiteUrl = (process.env.SITE_URL ?? "https://pbw-ta.de").trim().replace(/\/+$/, "");
+const resolvedSiteUrl = /^https?:\/\//i.test(rawSiteUrl) ? rawSiteUrl : `https://${rawSiteUrl}`;
+
 export const config = {
   port: Number(process.env.PORT ?? 3042),
   db: {
@@ -15,9 +21,11 @@ export const config = {
   },
   sessionSecret: process.env.SESSION_SECRET ?? "",
   cookieSecure: (process.env.COOKIE_SECURE ?? "false") === "true",
-  // Absolute site origin used for canonical/OG URLs, sitemap.xml and llms.txt.
-  // Override on the dev box via SITE_URL so those URLs point at the right host.
-  siteUrl: (process.env.SITE_URL ?? "https://pbw-ta.de").replace(/\/+$/, ""),
+  // Absolute site origin (scheme-guarded above). Override per host via SITE_URL.
+  siteUrl: resolvedSiteUrl,
+  // Staging/dev flag: when true, every response gets X-Robots-Tag: noindex so a
+  // mirror like pbw.barhelper.de can't get indexed and compete with production.
+  seoNoindex: (process.env.SEO_NOINDEX ?? "false") === "true",
   // dist/ sits next to public/ at the project root, so ".." from __dirname.
   publicDir: path.join(__dirname, "..", "public"),
   uploadsDir: path.join(__dirname, "..", "public", "uploads"),

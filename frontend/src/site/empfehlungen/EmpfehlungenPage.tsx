@@ -179,7 +179,7 @@ export function EmpfehlungenPage() {
         description="Empfehlungen, Kolleg:innen und Zertifizierungen im Netzwerk von PBW – Beatrice Czekalla."
       />
       <section className="relative overflow-hidden py-20 text-center">
-        <div className="absolute inset-0 bg-[url(/assets/header-bg.png)] bg-cover bg-center opacity-[0.18]" />
+        <div className="absolute inset-0 bg-[url(/assets/header-bg.webp)] bg-cover bg-center opacity-[0.18]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(249,249,249,0.7)_0%,rgba(249,249,249,1)_100%)]" />
         <Container>
           <div className="relative z-[1]">
