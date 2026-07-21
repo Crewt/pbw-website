@@ -36,6 +36,16 @@ export const ChevronRight = (p: IconProps) => (
     <path d="M9 18l6-6-6-6" />
   </Icon>
 );
+export const Menu = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M4 6h16M4 12h16M4 18h16" />
+  </Icon>
+);
+export const Close = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M6 6l12 12M18 6l-12 12" />
+  </Icon>
+);
 
 // --- service icons ---
 export const IconIndividual = (p: IconProps) => (
