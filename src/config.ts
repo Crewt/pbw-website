@@ -10,6 +10,13 @@ import path from "path";
 const rawSiteUrl = (process.env.SITE_URL ?? "https://pbw-ta.de").trim().replace(/\/+$/, "");
 const resolvedSiteUrl = /^https?:\/\//i.test(rawSiteUrl) ? rawSiteUrl : `https://${rawSiteUrl}`;
 
+// Browser origins allowed to call /api (CORS). Staging runs on pbw.barhelper.de
+// until production goes live on pbw-ta.de — both must stay allowed.
+const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? "https://pbw-ta.de,https://pbw.barhelper.de")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+
 export const config = {
   port: Number(process.env.PORT ?? 3042),
   db: {
@@ -19,6 +26,17 @@ export const config = {
     password: process.env.DB_PASSWORD ?? "",
     database: process.env.DB_NAME ?? "pbw",
   },
+  // SMTP for contact-form notifications. `to` falls back to the From address
+  // when CONTACT_TO is empty. See .env.example.
+  mail: {
+    host: process.env.SMTP_HOST ?? "",
+    port: Number(process.env.SMTP_PORT ?? 587),
+    user: process.env.SMTP_USER ?? "",
+    pass: process.env.SMTP_PASS ?? "",
+    from: process.env.SMTP_FROM ?? "",
+    to: (process.env.CONTACT_TO || process.env.SMTP_FROM) ?? "",
+  },
+  allowedOrigins,
   sessionSecret: process.env.SESSION_SECRET ?? "",
   cookieSecure: (process.env.COOKIE_SECURE ?? "false") === "true",
   // Absolute site origin (scheme-guarded above). Override per host via SITE_URL.
@@ -36,5 +54,11 @@ export const config = {
 if (!config.sessionSecret) {
   console.warn(
     "[config] SESSION_SECRET is empty — set it in .env (openssl rand -hex 32). Admin sessions are insecure until you do."
+  );
+}
+
+if (!config.mail.host || !config.mail.from) {
+  console.warn(
+    "[config] SMTP_HOST/SMTP_FROM not set — contact-form submissions will fail with 502 until you configure SMTP in .env."
   );
 }

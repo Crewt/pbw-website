@@ -1,17 +1,24 @@
 import { Router } from "express";
 import { wrap } from "../http";
-import { createMessage } from "../repositories/messages.repo";
+import { sendContactNotification } from "../mail/mailer";
+import { rateLimit } from "../middleware/rateLimit";
 
 export const contactRouter = Router();
 
-// Length caps mirror the column sizes in db/schema.sql.
+// Length caps mirror the original DB column sizes; kept as sane input bounds.
 const MAX = { name: 200, email: 320, phone: 80, subject: 300, message: 5000 } as const;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Public endpoint: the website contact form posts here (no auth). Stores the
-// message so nothing is lost; emitting an email notification is a follow-up.
+// Public, unauthenticated endpoint — throttle per IP so it can't be used to
+// spray notification mail. 5 submissions per 10 minutes is plenty for a human.
+const contactRateLimit = rateLimit({ windowMs: 10 * 60_000, max: 5 });
+
+// Public endpoint: the website contact form posts here (no auth). The submission
+// is delivered by email only (no DB), so a send failure returns 502 rather than
+// silently swallowing the request.
 contactRouter.post(
   "/",
+  contactRateLimit,
   wrap(async (req, res) => {
     const body = (req.body ?? {}) as Record<string, unknown>;
     const str = (v: unknown) => (typeof v === "string" ? v.trim() : "");
@@ -40,8 +47,16 @@ contactRouter.post(
       return;
     }
 
-    await createMessage({ name, email, phone, subject, message });
-    console.log(`[contact] Anfrage gespeichert von ${email} (${name})`);
+    try {
+      await sendContactNotification({ name, email, phone, subject, message });
+    } catch (err) {
+      console.error("[contact] Mail-Versand fehlgeschlagen:", err);
+      res.status(502).json({
+        error: "Nachricht konnte nicht gesendet werden. Bitte kontaktieren Sie uns direkt per E-Mail.",
+      });
+      return;
+    }
+    console.log(`[contact] Anfrage per Mail versandt von ${email} (${name})`);
     res.status(201).json({ ok: true });
   })
 );

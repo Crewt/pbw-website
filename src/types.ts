@@ -80,16 +80,11 @@ export interface AdminUser {
 }
 
 // Public contact-form submission (POST /api/contact). phone/subject optional.
+// Delivered by email only — no longer persisted to the DB.
 export interface ContactPayload {
   name: string;
   email: string;
   phone?: string;
   subject?: string;
   message: string;
-}
-
-// A stored Kontakt-Anfrage as read back from the DB.
-export interface ContactMessage extends ContactPayload {
-  id: number;
-  createdAt: string;
 }

@@ -12,9 +12,14 @@ import { contactRouter } from "./routes/contact.routes";
 import { seoRouter } from "./routes/seo.routes";
 import { renderShell } from "./seo/shell";
 import { apiLogger } from "./middleware/log";
+import { cors } from "./middleware/cors";
 
 const app = express();
+// Behind pm2/Nginx: trust the first proxy so req.ip is the real client IP
+// (used by the contact-form rate limiter).
+app.set("trust proxy", 1);
 app.use(express.json({ limit: "2mb" }));
+app.use("/api", cors);
 app.use("/api", apiLogger);
 
 // Staging/dev: keep the whole mirror out of every index (search + AI). An HTTP
