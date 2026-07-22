@@ -41,6 +41,7 @@ contactRouter.post(
     }
 
     await createMessage({ name, email, phone, subject, message });
+    console.log(`[contact] Anfrage gespeichert von ${email} (${name})`);
     res.status(201).json({ ok: true });
   })
 );

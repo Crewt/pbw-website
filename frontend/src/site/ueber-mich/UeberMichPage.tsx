@@ -1,6 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
 import { Container } from "../components/Container";
 import { IconArrowUpRight } from "../components/Icons";
 import { Seo, SITE_NAME } from "../lib/Seo";
+import { getContent } from "../../lib/api";
+
+const FALLBACK_PORTRAIT = "/assets/portrait.webp";
 
 const facts = [
   { num: "15+", lbl: "Jahre Erfahrung in Beratung & Begleitung" },
@@ -22,6 +26,11 @@ const pflanzList = [
 ];
 
 export function UeberMichPage() {
+  // The portrait is maintained in the admin (settings key "about.image");
+  // fall back to the static asset while loading or if the value is empty.
+  const { data } = useQuery({ queryKey: ["content"], queryFn: getContent });
+  const portrait = data?.about?.image || FALLBACK_PORTRAIT;
+
   return (
     <Container>
       <Seo
@@ -80,9 +89,16 @@ export function UeberMichPage() {
           <div className="absolute -bottom-8 -left-4 h-44 w-44 rounded-full bg-[rgba(210,228,255,0.45)]" />
           <div className="relative z-[1] aspect-[3/4] overflow-hidden rounded-xl bg-line-soft shadow-[0_20px_60px_rgba(0,31,60,0.10),0_4px_24px_rgba(38,38,38,0.06)]">
             <img
-              src="/assets/portrait.webp"
+              src={portrait}
               alt="Beatrice Czekalla, Porträtaufnahme"
               className="h-full w-full object-cover"
+              onError={(e) => {
+                // Stale/dead DB path (e.g. the old "/assets/portrait.jpg" seed):
+                // swap in the bundled portrait instead of a broken image.
+                if (e.currentTarget.src !== window.location.origin + FALLBACK_PORTRAIT) {
+                  e.currentTarget.src = FALLBACK_PORTRAIT;
+                }
+              }}
             />
           </div>
         </div>

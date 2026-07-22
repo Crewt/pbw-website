@@ -11,9 +11,11 @@ import { adminRouter } from "./routes/admin.routes";
 import { contactRouter } from "./routes/contact.routes";
 import { seoRouter } from "./routes/seo.routes";
 import { renderShell } from "./seo/shell";
+import { apiLogger } from "./middleware/log";
 
 const app = express();
 app.use(express.json({ limit: "2mb" }));
+app.use("/api", apiLogger);
 
 // Staging/dev: keep the whole mirror out of every index (search + AI). An HTTP
 // header can't be stripped by the SPA's client-side meta reconciliation the way
@@ -72,7 +74,7 @@ app.get("*", async (req, res) => {
 });
 
 // ---- Error handler: DB-connection problems -> 503, else 500 ----
-app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
   const code = err && err.code;
   const dbDown = [
     "ECONNREFUSED",
@@ -84,11 +86,11 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     "ER_NO_SUCH_TABLE",
   ].includes(code);
   if (dbDown) {
-    console.error("[db]", code, err.sqlMessage || err.message);
+    console.error("[db]", req.method, req.path, code, err.sqlMessage || err.message);
     res.status(503).json({ error: "Datenbank nicht erreichbar oder nicht eingerichtet." });
     return;
   }
-  console.error("[error]", err);
+  console.error("[error]", req.method, req.path, err);
   res.status(500).json({ error: "Interner Serverfehler." });
 });
 

@@ -61,12 +61,14 @@ uploadsRouter.post("/", requireAuth, (req, res) => {
           .resize({ width: 2000, height: 2000, fit: "inside", withoutEnlargement: true })
           .webp({ quality: 82 })
           .toFile(path.join(config.uploadsDir, filename));
+        console.log(`[upload] ${f.originalname} ${f.size}B -> /uploads/${filename}`);
         res.json({ url: "/uploads/" + filename, name: f.originalname });
       } else {
         // SVG / PDF: store as-is, keeping the sanitized original extension.
         const ext = (path.extname(f.originalname) || "").toLowerCase().replace(/[^a-z0-9.]/g, "");
         const filename = randomName(ext);
         await fs.writeFile(path.join(config.uploadsDir, filename), f.buffer);
+        console.log(`[upload] ${f.originalname} ${f.size}B -> /uploads/${filename}`);
         res.json({ url: "/uploads/" + filename, name: f.originalname });
       }
     } catch (e: any) {
