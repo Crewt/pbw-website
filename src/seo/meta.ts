@@ -51,7 +51,21 @@ export const ROUTE_META: Record<string, PageMeta> = {
     description:
       "Kontakt zu Beatrice Czekalla (PBW) – Psychologische Beratung & Weiterbildung. Nachricht schreiben oder Termin vereinbaren.",
   },
+  "/impressum": {
+    title: `Impressum | ${SITE_NAME}`,
+    description: "Impressum und Anbieterkennzeichnung von PBW – Beatrice Czekalla.",
+  },
+  "/datenschutz": {
+    title: `Datenschutzerklärung | ${SITE_NAME}`,
+    description:
+      "Datenschutzerklärung von PBW – Beatrice Czekalla: Verantwortliche, Hosting, Cookies & Einwilligung, Google Fonts, Google Maps, Kontaktformular und Ihre Rechte.",
+  },
 };
+
+// Legal pages: kept in ROUTE_META (so they still get correct server-side meta),
+// but excluded from the sitemap and served with noindex — no SEO value, and we
+// don't want them competing with the real content in search.
+export const NOINDEX_PATHS = new Set<string>(["/impressum", "/datenschutz"]);
 
 export const STATIC_PATHS = Object.keys(ROUTE_META);
 

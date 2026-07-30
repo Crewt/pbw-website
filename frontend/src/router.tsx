@@ -12,6 +12,8 @@ import { KursterminePage } from "./site/kurstermine/KursterminePage";
 import { SeminarPage } from "./site/seminar/SeminarPage";
 import { EmpfehlungenPage } from "./site/empfehlungen/EmpfehlungenPage";
 import { KontaktPage } from "./site/kontakt/KontaktPage";
+import { ImpressumPage } from "./site/impressum/ImpressumPage";
+import { DatenschutzPage } from "./site/datenschutz/DatenschutzPage";
 
 // Single SPA served at the domain root: the public website at /, the admin
 // shell under /admin (RequireAuth gates the whole admin subtree).
@@ -26,6 +28,8 @@ export const router = createBrowserRouter([
       { path: "seminar/:slug", element: <SeminarPage /> },
       { path: "empfehlungen", element: <EmpfehlungenPage /> },
       { path: "kontakt", element: <KontaktPage /> },
+      { path: "impressum", element: <ImpressumPage /> },
+      { path: "datenschutz", element: <DatenschutzPage /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
   },

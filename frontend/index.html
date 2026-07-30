@@ -13,21 +13,9 @@
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#001f3c" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Load fonts without blocking first render (flip to stylesheet once loaded). -->
-    <link
-      rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      onload="this.onload=null;this.rel='stylesheet'"
-    />
-    <noscript>
-      <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-        rel="stylesheet"
-      />
-    </noscript>
+    <!-- Google Fonts (Inter) are loaded at runtime only after consent — see
+         frontend/src/site/consent/ConsentContext.tsx. Until then the system-font
+         fallback in --font-sans applies. Do NOT re-add the font <link> here. -->
     <title>PBW - Beatrice Czekalla – Psychologische Beratung &amp; Weiterbildung</title>
     <!--seo-meta-->
   </head>

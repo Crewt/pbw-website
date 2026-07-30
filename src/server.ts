@@ -53,6 +53,17 @@ app.use("/api", (_req, res) => {
 // middleware and SPA catch-all so these non-file paths aren't served the shell.
 app.use(seoRouter);
 
+// ---- Legacy URL redirects ----
+// The old static site used .htm URLs for the legal pages. 301 them to the new
+// React routes so existing links and search-engine entries keep working.
+const LEGACY_REDIRECTS: Record<string, string> = {
+  "/impressum.htm": "/impressum",
+  "/datenschutz.htm": "/datenschutz",
+};
+app.get(Object.keys(LEGACY_REDIRECTS), (req, res) => {
+  res.redirect(301, LEGACY_REDIRECTS[req.path]);
+});
+
 // ---- Static files ----
 // Built SPA bundles under /app/, then the public/ dir for /assets, /uploads and
 // the generated favicons/manifest. Both use index:false so "/" (and any dir)

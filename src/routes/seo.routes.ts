@@ -2,7 +2,7 @@ import { Router } from "express";
 import { listCourses } from "../repositories/courses.repo";
 import { listCollection } from "../repositories/content.repo";
 import { getSingle } from "../repositories/settings.repo";
-import { absUrl, isCourseExpired, SITE_TITLE, SITE_DESCRIPTION, STATIC_PATHS } from "../seo/meta";
+import { absUrl, isCourseExpired, SITE_TITLE, SITE_DESCRIPTION, STATIC_PATHS, NOINDEX_PATHS } from "../seo/meta";
 import { config } from "../config";
 import type { Course } from "../types";
 
@@ -52,7 +52,10 @@ seoRouter.get("/robots.txt", (_req, res) => {
 seoRouter.get("/sitemap.xml", async (_req, res) => {
   const courses = await safeCourses();
   const urls: { loc: string; lastmod?: string }[] = [];
-  for (const p of STATIC_PATHS) urls.push({ loc: absUrl(p) });
+  for (const p of STATIC_PATHS) {
+    if (NOINDEX_PATHS.has(p)) continue; // keep legal pages out of the sitemap
+    urls.push({ loc: absUrl(p) });
+  }
   for (const c of courses) {
     if (isCourseExpired(c)) continue; // drop past events from the sitemap
     urls.push({ loc: absUrl(`/seminar/${c.slug}`), lastmod: isoDate(c.updatedAt) });

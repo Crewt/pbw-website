@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
+import { ConsentBanner } from "./consent/ConsentBanner";
 
 // SPA navigation keeps the previous scroll position; reset to top per page.
 function ScrollToTop() {
@@ -22,6 +23,7 @@ export function SiteLayout() {
         <Outlet />
       </main>
       <Footer />
+      <ConsentBanner />
     </div>
   );
 }

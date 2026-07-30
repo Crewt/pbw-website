@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { Container } from "./Container";
+import { useConsent } from "../consent/ConsentContext";
 
 const linkCls = "text-[15px] text-text opacity-85 transition hover:text-navy hover:opacity-100";
 
 export function Footer() {
+  const { reopen } = useConsent();
   return (
     <footer className="border-t border-line bg-bg-alt py-12">
       <Container className="grid grid-cols-1 items-start gap-8 md:grid-cols-[2fr_1fr_1fr]">
@@ -19,19 +21,24 @@ export function Footer() {
           <h4 className="mb-3 text-sm font-bold text-navy">Navigation</h4>
           <ul className="flex flex-col gap-2">
             <li>
-              <a href="#" className={linkCls}>
+              <Link to="/impressum" className={linkCls}>
                 Impressum
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className={linkCls}>
+              <Link to="/datenschutz" className={linkCls}>
                 Datenschutz
-              </a>
+              </Link>
             </li>
             <li>
               <Link to="/kontakt" className={linkCls}>
                 Kontakt
               </Link>
+            </li>
+            <li>
+              <button type="button" onClick={reopen} className={`${linkCls} bg-transparent p-0 text-left`}>
+                Cookie-Einstellungen
+              </button>
             </li>
           </ul>
         </div>

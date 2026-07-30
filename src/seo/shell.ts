@@ -5,6 +5,7 @@ import { getCourse } from "../repositories/courses.repo";
 import { getSingle } from "../repositories/settings.repo";
 import {
   ROUTE_META,
+  NOINDEX_PATHS,
   courseMeta,
   absUrl,
   isCourseExpired,
@@ -184,7 +185,7 @@ async function resolveMeta(pathname: string): Promise<Resolved> {
     return { meta, noindex: false, jsonLd: key === "/" ? organizationJsonLd(k) : personJsonLd(k) };
   }
 
-  return { meta, noindex: false };
+  return { meta, noindex: NOINDEX_PATHS.has(key) };
 }
 
 function buildBlock(pathname: string, r: Resolved): { title: string; block: string } {

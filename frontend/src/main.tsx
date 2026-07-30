@@ -4,6 +4,7 @@ import { RouterProvider } from "react-router-dom";
 import { MutationCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { router } from "./router";
 import { ToastProvider } from "./admin/components/ToastProvider";
+import { ConsentProvider } from "./site/consent/ConsentContext";
 import { ApiError } from "./lib/api";
 import "./index.css";
 
@@ -28,7 +29,9 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
-        <RouterProvider router={router} />
+        <ConsentProvider>
+          <RouterProvider router={router} />
+        </ConsentProvider>
       </ToastProvider>
     </QueryClientProvider>
   </StrictMode>
