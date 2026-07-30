@@ -82,37 +82,4 @@ export const highlights: Highlight[] = [
   },
 ];
 
-export interface Testimonial {
-  quote: string;
-  name: string;
-  org: string;
-}
-
-export const testimonials: Testimonial[] = [
-  {
-    quote:
-      "Die Arbeit mit Frau Czekalla zeichnet sich durch eine bemerkenswerte Klarheit aus. Die transaktionsanalytischen Konzepte wurden so vermittelt, dass wir als Führungsteam sofort handlungsfähiger wurden und festgefahrene Kommunikationsmuster auflösen konnten.",
-    name: "Geschäftsführung",
-    org: "Mittelständisches IT-Unternehmen",
-  },
-  {
-    quote:
-      "Die Supervision hat unserem Team geholfen, Konflikte konstruktiv anzugehen und wieder mit Freude und Vertrauen zusammenzuarbeiten. Ein echter Wendepunkt.",
-    name: "Teamleitung",
-    org: "Sozialer Träger, Hamburg",
-  },
-  {
-    quote:
-      "In der Einzelberatung habe ich Klarheit über meine nächsten beruflichen Schritte gewonnen - wertschätzend, strukturiert und immer auf den Punkt.",
-    name: "Führungskraft",
-    org: "Industrieunternehmen, NRW",
-  },
-  {
-    quote:
-      "Die Weiterbildung in Transaktionsanalyse war fundiert, praxisnah und zutiefst menschlich. Ich nehme Werkzeuge mit, die ich täglich anwende.",
-    name: "Weiterbildungsteilnehmerin",
-    org: "Beraterin i. A.",
-  },
-];
-
 export const badges = ["DGTA", "EATA", "EASC"];

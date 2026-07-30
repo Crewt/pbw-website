@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { Container } from "../../components/Container";
 import { ArrowRight, IconUser } from "../../components/Icons";
 import { TestimonialCarousel } from "../../components/TestimonialCarousel";
-import { testimonials, badges, type Testimonial } from "../data";
+import { getContent } from "../../../lib/api";
+import type { Referenz } from "../../../lib/types";
+import { badges } from "../data";
 
-function TestimonialSlide({ t }: { t: Testimonial }) {
+function TestimonialSlide({ t }: { t: Referenz }) {
   return (
     <div className="relative flex min-h-[300px] w-full flex-col overflow-hidden rounded-xl border border-line bg-white px-10 pb-9 pt-12 max-[560px]:px-6">
       <span aria-hidden className="pointer-events-none absolute left-7 top-3.5 font-serif text-[72px] leading-none text-line-soft">
@@ -12,9 +15,17 @@ function TestimonialSlide({ t }: { t: Testimonial }) {
       </span>
       <p className="relative z-[1] my-4 flex-1 text-[19px] italic leading-[1.6] text-navy">{t.quote}</p>
       <div className="inline-flex items-center gap-3">
-        <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-line-soft text-slate [&_svg]:size-6">
-          <IconUser />
-        </span>
+        {t.image ? (
+          <img
+            src={t.image}
+            alt=""
+            className="h-12 w-12 shrink-0 rounded-full object-cover"
+          />
+        ) : (
+          <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-line-soft text-slate [&_svg]:size-6">
+            <IconUser />
+          </span>
+        )}
         <div>
           <div className="text-sm font-semibold text-navy">{t.name}</div>
           <div className="text-[13px] text-text">{t.org}</div>
@@ -25,7 +36,9 @@ function TestimonialSlide({ t }: { t: Testimonial }) {
 }
 
 export function Testimonials() {
-  const slides = testimonials.map((t, i) => <TestimonialSlide key={i} t={t} />);
+  const { data } = useQuery({ queryKey: ["content"], queryFn: getContent });
+  const items = data?.referenzen ?? [];
+  const slides = items.map((r) => <TestimonialSlide key={r.id} t={r} />);
 
   return (
     <section className="py-24">

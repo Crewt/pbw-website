@@ -48,6 +48,7 @@ export interface Referenz {
   quote: string;
   name: string;
   org: string;
+  image: string;
 }
 
 export interface RessourceFile {

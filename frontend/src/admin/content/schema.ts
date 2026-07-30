@@ -64,6 +64,13 @@ export const SCHEMAS: Record<string, CollectionSchema> = {
       { key: "quote", label: "Zitat", type: "textarea", required: true },
       { key: "name", label: "Name", type: "text" },
       { key: "org", label: "Rolle / Organisation", type: "text" },
+      {
+        key: "image",
+        label: "Foto (optional)",
+        type: "image",
+        imageShape: "circle",
+        hint: "Optional. Quadratisch empfohlen. Ohne Bild wird ein Platzhalter angezeigt.",
+      },
     ],
     rowTitle: (it) => it.quote || "(ohne Zitat)",
     rowMeta: (it) => [it.name, it.org].filter(Boolean).join(" · "),

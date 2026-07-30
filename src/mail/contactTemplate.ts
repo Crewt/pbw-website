@@ -15,9 +15,12 @@ function escapeHtml(s: string): string {
 function replyMailto(p: ContactPayload): string {
   const subject = `Re: Ihre Anfrage bei PBW${p.subject ? ` – ${p.subject}` : ""}`;
   const body = `Hallo ${p.name},\n\nvielen Dank für Ihre Nachricht.\n\n`;
-  return `mailto:${encodeURIComponent(p.email)}?subject=${encodeURIComponent(
-    subject
-  )}&body=${encodeURIComponent(body)}`;
+  // Keep "@" (and ".") literal in the address — many mail clients (Outlook,
+  // Apple Mail, Thunderbird, various mobile handlers) do NOT percent-decode the
+  // mailto address, so an encoded "%40" leaves the To field empty. Only the
+  // subject/body query parts need encoding.
+  const to = encodeURIComponent(p.email).replace(/%40/g, "@");
+  return `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 // One-line labelled row; value is escaped, label is static.
@@ -79,7 +82,7 @@ export function contactHtml(p: ContactPayload): string {
               p.message
             )}</div>
             <div style="margin-top:24px;">
-              <a href="${replyMailto(p)}"
+              <a href="${replyMailto(p).replace(/&/g, "&amp;")}"
                  style="display:inline-block;background:#2563eb;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 22px;border-radius:8px;">
                 An ${escapeHtml(p.name)} antworten
               </a>

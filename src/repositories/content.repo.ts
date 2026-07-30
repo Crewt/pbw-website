@@ -61,8 +61,9 @@ const COLLECTIONS: Record<CollectionName, CollConfig> = {
       quote: (it.quote || "").trim(),
       name: (it.name || "").trim(),
       org: (it.org || "").trim(),
+      image: (it.image || "").trim(),
     }),
-    fromRow: (r) => ({ id: r.id, quote: r.quote, name: r.name, org: r.org }),
+    fromRow: (r) => ({ id: r.id, quote: r.quote, name: r.name, org: r.org, image: r.image }),
   },
   ressourcen: {
     table: "ressourcen",
