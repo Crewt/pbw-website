@@ -19,6 +19,10 @@ const schema = z.object({
   phone: z.string().trim().max(80),
   subject: z.string().trim().max(300),
   message: z.string().trim().min(1, "Bitte schreiben Sie eine Nachricht.").max(5000),
+  // Purely client-side gate — not part of the API payload (see onSubmit).
+  privacy: z.boolean().refine((v) => v === true, {
+    message: "Bitte stimmen Sie der Verarbeitung Ihrer Daten zu.",
+  }),
 });
 type FormValues = z.infer<typeof schema>;
 
@@ -33,12 +37,19 @@ export function ContactForm() {
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { name: "", email: "", phone: "", subject: kurs ? `Anmeldung: ${kurs}` : "", message: "" },
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      subject: kurs ? `Anmeldung: ${kurs}` : "",
+      message: "",
+      privacy: false,
+    },
   });
 
-  async function onSubmit(values: FormValues) {
+  async function onSubmit({ privacy: _privacy, ...payload }: FormValues) {
     try {
-      await submitContact(values);
+      await submitContact(payload);
       setSent(true);
     } catch (e) {
       toast(e instanceof Error ? e.message : "Senden fehlgeschlagen.", "error");
@@ -82,6 +93,28 @@ export function ContactForm() {
               {...register("message")}
             />
           </Field>
+          <div className="pt-1">
+            <label className="flex items-start gap-3 text-[14px] leading-[1.5] text-text">
+              <input
+                type="checkbox"
+                className="mt-0.5 h-4 w-4 shrink-0 accent-navy"
+                {...register("privacy")}
+              />
+              <span>
+                Ich stimme zu, dass meine Daten gemäß der{" "}
+                <a
+                  href="/datenschutz"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-navy underline underline-offset-2 hover:text-navy-deep"
+                >
+                  Datenschutzerklärung
+                </a>{" "}
+                verarbeitet werden.
+              </span>
+            </label>
+            {errors.privacy && <p className="mt-1 text-sm text-red-700">{errors.privacy.message}</p>}
+          </div>
           <button
             type="submit"
             disabled={isSubmitting}
