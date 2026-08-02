@@ -56,7 +56,9 @@ contactRouter.post(
       });
       return;
     }
-    console.log(`[contact] Anfrage per Mail versandt von ${email} (${name})`);
+    // Keep diagnostic that a submission was sent, but never log PII in clear
+    // text (DSGVO). Log only a coarse, non-identifying signal.
+    console.log(`[contact] Anfrage per Mail versandt (subject=${subject ? "ja" : "nein"})`);
     res.status(201).json({ ok: true });
   })
 );

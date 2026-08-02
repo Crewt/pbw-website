@@ -1,23 +1,67 @@
 import { Request, Response, NextFunction } from "express";
 
-// Fields whose values must never appear in logs.
-const REDACT = new Set(["password", "passwort", "token", "authorization"]);
+// Fields whose values must never appear in logs. Includes secrets AND personal
+// data (DSGVO/GDPR): contact-form fields (name, email, phone, message, subject)
+// must not be written to logs in clear text.
+const REDACT = new Set([
+  "password",
+  "passwort",
+  "token",
+  "authorization",
+  // PII
+  "email",
+  "e-mail",
+  "mail",
+  "phone",
+  "telefon",
+  "tel",
+  "name",
+  "message",
+  "nachricht",
+  "subject",
+  "betreff",
+]);
 const MAX_VALUE_LEN = 200;
+const MAX_DEPTH = 4;
+
+// Serialize a value for the log, redacting matching keys recursively so PII and
+// secrets nested inside objects/arrays are masked too. Returns a compact string.
+function redactValue(value: unknown, depth: number): string {
+  if (value === null) return "null";
+  if (value === undefined) return "undefined";
+  if (typeof value !== "object") {
+    let v = typeof value === "string" ? value : String(value);
+    if (v.length > MAX_VALUE_LEN) v = v.slice(0, MAX_VALUE_LEN) + "…";
+    return v;
+  }
+  if (depth >= MAX_DEPTH) return "…";
+  if (Array.isArray(value)) {
+    return "[" + value.map((el) => redactValue(el, depth + 1)).join(", ") + "]";
+  }
+  const parts: string[] = [];
+  for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+    if (REDACT.has(key.toLowerCase())) {
+      parts.push(`${key}=<redacted>`);
+    } else {
+      parts.push(`${key}=${redactValue(val, depth + 1)}`);
+    }
+  }
+  return "{" + parts.join(" ") + "}";
+}
 
 // Compact one-line summary of a JSON body: keys with truncated values,
-// secrets redacted. Only used for mutating requests and errors.
+// secrets and PII redacted (recursively). Only used for mutating requests.
 function bodySummary(body: unknown): string {
-  if (!body || typeof body !== "object") return "";
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return body && typeof body === "object" ? redactValue(body, 0) : "";
+  }
   const parts: string[] = [];
   for (const [key, value] of Object.entries(body as Record<string, unknown>)) {
     if (REDACT.has(key.toLowerCase())) {
       parts.push(`${key}=<redacted>`);
       continue;
     }
-    let v = typeof value === "string" ? value : JSON.stringify(value);
-    if (v === undefined) v = "undefined";
-    if (v.length > MAX_VALUE_LEN) v = v.slice(0, MAX_VALUE_LEN) + "…";
-    parts.push(`${key}=${v}`);
+    parts.push(`${key}=${redactValue(value, 1)}`);
   }
   return parts.join(" ");
 }

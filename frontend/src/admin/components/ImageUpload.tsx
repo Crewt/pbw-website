@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Cropper, { type Area, type Point } from "react-easy-crop";
 import "react-easy-crop/react-easy-crop.css";
@@ -38,6 +38,14 @@ export function ImageUpload({ value, onChange, shape = "rect", aspect }: ImageUp
   const toast = useToast();
 
   const cropAspect = aspect ?? SHAPE_ASPECT[shape];
+
+  // Revoke the active object URL if the component unmounts while the crop modal
+  // is still open (closeModal handles the normal path).
+  useEffect(() => {
+    return () => {
+      if (src) URL.revokeObjectURL(src);
+    };
+  }, [src]);
 
   function resetInput() {
     if (inputRef.current) inputRef.current.value = "";

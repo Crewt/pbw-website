@@ -4,6 +4,7 @@ import { Container } from "../components/Container";
 import { getContent } from "../../lib/api";
 import type { Kollege, Ressource, Zertifikat } from "../../lib/types";
 import { resolveImg } from "../lib/img";
+import { safeHref } from "../../lib/url";
 import { IconArrowUpRight, IconDownload, IconInstitute, IconLink, IconNetwork } from "../components/Icons";
 import { Seo, SITE_NAME } from "../lib/Seo";
 
@@ -56,9 +57,10 @@ function Row({
       {action}
     </>
   );
-  if (href) {
+  const safe = safeHref(href);
+  if (safe) {
     return (
-      <a className={rowCls} href={href} {...(download ? { download } : { target: "_blank", rel: "noopener" })}>
+      <a className={rowCls} href={safe} {...(download ? { download } : { target: "_blank", rel: "noopener noreferrer" })}>
         {inner}
       </a>
     );
@@ -88,11 +90,11 @@ function InstitutionCard({ z }: { z: Zertifikat }) {
       </div>
       <h3 className="mb-3 text-[18px] font-bold leading-[1.35] text-navy">{z.name}</h3>
       {z.description && <p className="mb-5 text-[15px] leading-[1.55] text-text">{z.description}</p>}
-      {z.link && (
+      {safeHref(z.link) && (
         <a
-          href={z.link}
+          href={safeHref(z.link)}
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 text-[13px] font-medium tracking-[0.6px] text-navy transition-all hover:gap-2.5 [&_svg]:size-3"
         >
           Website besuchen <IconArrowUpRight />

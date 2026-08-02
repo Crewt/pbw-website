@@ -77,6 +77,7 @@ export interface AdminUser {
   id: number;
   username: string;
   password_hash: string;
+  token_version: number;
 }
 
 // Public contact-form submission (POST /api/contact). phone/subject optional.
