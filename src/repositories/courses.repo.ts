@@ -84,12 +84,12 @@ export async function getCourse(idOrSlug: string): Promise<Course | null> {
 // omit it to insert a new one with a generated id.
 export async function saveCourse(input: Partial<Course>): Promise<Course> {
   const id = (input.id && String(input.id).trim()) || uid("c");
-  const title = (input.title || "").trim();
-  const slug = (input.slug && input.slug.trim()) || slugify(title);
-  const subtitle = (input.subtitle || "").trim();
-  const description = (input.description || "").trim();
-  const cost = (input.cost || "").trim();
-  const image = (input.image || "").trim();
+  const title = String(input.title ?? "").trim();
+  const slug = (typeof input.slug === "string" && input.slug.trim()) || slugify(title);
+  const subtitle = String(input.subtitle ?? "").trim();
+  const description = String(input.description ?? "").trim();
+  const cost = String(input.cost ?? "").trim();
+  const image = String(input.image ?? "").trim();
   const termine = Array.isArray(input.termine) ? input.termine : [];
   const includes = Array.isArray(input.includes) ? input.includes : [];
   const enables = Array.isArray(input.enables) ? input.enables : [];
@@ -115,8 +115,8 @@ export async function saveCourse(input: Partial<Course>): Promise<Course> {
     }
     for (let i = 0; i < termine.length; i++) {
       const t = termine[i] || ({} as Termin);
-      const d = (t.date || "").trim() || null;
-      const tm = (t.time || "").trim();
+      const d = String(t.date ?? "").trim() || null;
+      const tm = String(t.time ?? "").trim();
       if (!d && !tm) continue;
       await conn.query(
         "INSERT INTO course_termine (course_id, termin_date, termin_time, sort_order) VALUES (?,?,?,?)",
@@ -124,12 +124,12 @@ export async function saveCourse(input: Partial<Course>): Promise<Course> {
       );
     }
     for (let i = 0; i < includes.length; i++) {
-      const v = (includes[i] || "").trim();
+      const v = String(includes[i] ?? "").trim();
       if (!v) continue;
       await conn.query("INSERT INTO course_includes (course_id, item_text, sort_order) VALUES (?,?,?)", [id, v, i]);
     }
     for (let i = 0; i < enables.length; i++) {
-      const v = (enables[i] || "").trim();
+      const v = String(enables[i] ?? "").trim();
       if (!v) continue;
       await conn.query("INSERT INTO course_enables (course_id, item_text, sort_order) VALUES (?,?,?)", [id, v, i]);
     }

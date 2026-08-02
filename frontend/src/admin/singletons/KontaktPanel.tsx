@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useContent } from "../hooks/useContent";
 import { useSingletonMutations } from "../hooks/useSingletons";
 import { useToast } from "../components/ToastProvider";
@@ -11,9 +11,12 @@ export function KontaktPanel() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [saved, setSaved] = useState(false);
+  // Once the user starts editing, background refetches (e.g. window focus) must
+  // not clobber the in-progress input anymore.
+  const dirty = useRef(false);
 
   useEffect(() => {
-    if (data?.kontakt) {
+    if (data?.kontakt && !dirty.current) {
       setEmail(data.kontakt.email ?? "");
       setPhone(data.kontakt.phone ?? "");
     }
@@ -22,6 +25,7 @@ export function KontaktPanel() {
   async function handleSave() {
     try {
       await kontakt.mutateAsync({ email: email.trim(), phone: phone.trim() });
+      dirty.current = false;
       setSaved(true);
       window.setTimeout(() => setSaved(false), 1800);
     } catch (e) {
@@ -40,7 +44,10 @@ export function KontaktPanel() {
             className="field-input"
             placeholder="info@pbw-ta.de"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              dirty.current = true;
+              setEmail(e.target.value);
+            }}
           />
         </div>
         <div>
@@ -50,7 +57,10 @@ export function KontaktPanel() {
             className="field-input"
             placeholder="+49 (0) 261 671234"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) => {
+              dirty.current = true;
+              setPhone(e.target.value);
+            }}
           />
         </div>
         <div className="flex items-center gap-3">

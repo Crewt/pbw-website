@@ -6,10 +6,14 @@ import { Request, Response, NextFunction, RequestHandler } from "express";
 interface Options {
   windowMs: number;
   max: number;
+  // Optional: derive the throttle key from the request. Defaults to client IP.
+  // Lets callers key by something more specific (e.g. IP + username on login)
+  // without changing the default per-IP behaviour of existing callers.
+  keyGenerator?: (req: Request) => string;
 }
 
-export function rateLimit({ windowMs, max }: Options): RequestHandler {
-  // ip -> timestamps (ms) of hits inside the current window.
+export function rateLimit({ windowMs, max, keyGenerator }: Options): RequestHandler {
+  // key -> timestamps (ms) of hits inside the current window.
   const hits = new Map<string, number[]>();
 
   // Occasionally drop stale entries so the map can't grow unbounded.
@@ -17,19 +21,22 @@ export function rateLimit({ windowMs, max }: Options): RequestHandler {
   const sweep = (now: number) => {
     if (now - lastSweep < windowMs) return;
     lastSweep = now;
-    for (const [ip, times] of hits) {
+    for (const [key, times] of hits) {
       const fresh = times.filter((t) => now - t < windowMs);
-      if (fresh.length) hits.set(ip, fresh);
-      else hits.delete(ip);
+      if (fresh.length) hits.set(key, fresh);
+      else hits.delete(key);
     }
   };
+
+  const defaultKey = (req: Request) => req.ip || req.socket.remoteAddress || "unknown";
+  const keyOf = keyGenerator ?? defaultKey;
 
   return (req: Request, res: Response, next: NextFunction): void => {
     const now = Date.now();
     sweep(now);
 
-    const ip = req.ip || req.socket.remoteAddress || "unknown";
-    const recent = (hits.get(ip) || []).filter((t) => now - t < windowMs);
+    const key = keyOf(req);
+    const recent = (hits.get(key) || []).filter((t) => now - t < windowMs);
 
     if (recent.length >= max) {
       res.status(429).json({ error: "Zu viele Anfragen. Bitte später erneut versuchen." });
@@ -37,7 +44,7 @@ export function rateLimit({ windowMs, max }: Options): RequestHandler {
     }
 
     recent.push(now);
-    hits.set(ip, recent);
+    hits.set(key, recent);
     next();
   };
 }

@@ -45,6 +45,13 @@ function loadGoogleFonts(): void {
   document.head.appendChild(link);
 }
 
+// Remove the injected stylesheet again when consent is withdrawn (deny/reopen),
+// so no further requests reach Google. Idempotent — safe if nothing was loaded.
+function unloadGoogleFonts(): void {
+  if (typeof document === "undefined") return;
+  document.getElementById(FONTS_LINK_ID)?.remove();
+}
+
 export function ConsentProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<ConsentStatus>("unknown");
 
@@ -53,9 +60,12 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
     setStatus(readStored());
   }, []);
 
-  // Load the Google Fonts stylesheet as soon as consent is (or becomes) granted.
+  // Load the Google Fonts stylesheet as soon as consent is (or becomes) granted,
+  // and remove it again on withdrawal (deny/reopen) — symmetric to MapCard, which
+  // stops rendering the Maps iframe once status is no longer "granted".
   useEffect(() => {
     if (status === "granted") loadGoogleFonts();
+    else unloadGoogleFonts();
   }, [status]);
 
   const persist = useCallback((choice: ConsentChoice) => {

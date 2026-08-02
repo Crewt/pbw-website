@@ -17,6 +17,13 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? "https://pbw-ta.de,https:
   .map((s) => s.trim())
   .filter(Boolean);
 
+// Runtime mode. Anything other than an explicit "development" is treated as a
+// hardened deployment (staging/production): Secure cookies on by default and a
+// hard SESSION_SECRET check below. NODE_ENV unset -> treated as non-development
+// so a forgotten env can't silently downgrade security on a real server.
+const nodeEnv = (process.env.NODE_ENV ?? "").trim().toLowerCase();
+const isDevelopment = nodeEnv === "development";
+
 export const config = {
   port: Number(process.env.PORT ?? 3042),
   db: {
@@ -38,7 +45,17 @@ export const config = {
   },
   allowedOrigins,
   sessionSecret: process.env.SESSION_SECRET ?? "",
-  cookieSecure: (process.env.COOKIE_SECURE ?? "false") === "true",
+  // Secure flag on the admin session cookie. An explicit COOKIE_SECURE env still
+  // wins (either direction); otherwise it defaults ON everywhere except local
+  // development, so a production deploy that forgets COOKIE_SECURE still gets a
+  // Secure cookie instead of silently shipping it over plain HTTP.
+  // A blank COOKIE_SECURE= is treated as unset (falls back to the default)
+  // rather than as an explicit "false", so an empty env value can't silently
+  // downgrade production to an insecure cookie.
+  cookieSecure:
+    process.env.COOKIE_SECURE?.trim()
+      ? process.env.COOKIE_SECURE.trim() === "true"
+      : !isDevelopment,
   // Absolute site origin (scheme-guarded above). Override per host via SITE_URL.
   siteUrl: resolvedSiteUrl,
   // Staging/dev flag: when true, every response gets X-Robots-Tag: noindex so a
@@ -51,10 +68,20 @@ export const config = {
   spaDir: path.join(__dirname, "..", "frontend", "dist"),
 } as const;
 
-if (!config.sessionSecret) {
-  console.warn(
-    "[config] SESSION_SECRET is empty — set it in .env (openssl rand -hex 32). Admin sessions are insecure until you do."
-  );
+// SESSION_SECRET must be present and long enough to make cookie HMACs
+// non-guessable. In development we tolerate a weak/empty secret with a warning
+// so `npm run dev` works out of the box; on any real deployment (non-development)
+// a missing or too-short secret is fatal — better to fail loudly at boot than to
+// serve forgeable admin sessions.
+const MIN_SESSION_SECRET_LEN = 32;
+if (!config.sessionSecret || config.sessionSecret.length < MIN_SESSION_SECRET_LEN) {
+  const msg = `[config] SESSION_SECRET must be set and at least ${MIN_SESSION_SECRET_LEN} characters — generate one with: openssl rand -hex 32`;
+  if (isDevelopment) {
+    console.warn(`${msg}. Admin sessions are insecure until you fix this (dev only).`);
+  } else {
+    console.error(`${msg}. Refusing to start.`);
+    process.exit(1);
+  }
 }
 
 if (!config.mail.host || !config.mail.from) {

@@ -6,6 +6,7 @@ import { useToast } from "../components/ToastProvider";
 import { Drawer } from "../components/Drawer";
 import { ImageUpload } from "../components/ImageUpload";
 import { FileUpload } from "../components/FileUpload";
+import { isAllowedHref } from "../../lib/url";
 
 type Item = Record<string, any> & { id?: string };
 type Values = Record<string, any>;
@@ -55,6 +56,15 @@ export function ContentEditor({
       const v = values[f.key];
       const empty = f.type === "file" ? !(v && (v.name || v.url)) : !(typeof v === "string" ? v.trim() : v);
       if (empty) errs[f.key] = `Bitte „${f.label}“ ausfüllen.`;
+    }
+    // Restrict URL fields to safe schemes (http/https/mailto/tel or relative
+    // paths) — blocks e.g. javascript: values before they reach the site.
+    for (const f of sch.fields) {
+      if (f.type !== "url" || !visible(f)) continue;
+      const v = values[f.key];
+      if (typeof v === "string" && v.trim() && !isAllowedHref(v)) {
+        errs[f.key] = `Bitte eine gültige URL angeben (z. B. https://…, mailto: oder tel:).`;
+      }
     }
     if (Object.keys(errs).length) {
       setFieldErrors(errs);
