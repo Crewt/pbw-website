@@ -49,9 +49,12 @@ export const config = {
   // wins (either direction); otherwise it defaults ON everywhere except local
   // development, so a production deploy that forgets COOKIE_SECURE still gets a
   // Secure cookie instead of silently shipping it over plain HTTP.
+  // A blank COOKIE_SECURE= is treated as unset (falls back to the default)
+  // rather than as an explicit "false", so an empty env value can't silently
+  // downgrade production to an insecure cookie.
   cookieSecure:
-    process.env.COOKIE_SECURE != null
-      ? process.env.COOKIE_SECURE === "true"
+    process.env.COOKIE_SECURE?.trim()
+      ? process.env.COOKIE_SECURE.trim() === "true"
       : !isDevelopment,
   // Absolute site origin (scheme-guarded above). Override per host via SITE_URL.
   siteUrl: resolvedSiteUrl,

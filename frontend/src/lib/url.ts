@@ -16,7 +16,18 @@ export function safeHref(url: string | null | undefined): string | undefined {
     const parsed = new URL(trimmed);
     return ALLOWED_SCHEMES.includes(parsed.protocol) ? trimmed : undefined;
   } catch {
-    // Scheme-less or malformed values are rejected rather than guessed at.
+    // Scheme-less host-like values (e.g. "www.example.de") are common admin
+    // input. Retry with an https:// prefix; if that parses to an http(s) URL,
+    // return the prefixed form so it renders as a working link.
+    try {
+      const prefixed = `https://${trimmed}`;
+      const parsed = new URL(prefixed);
+      if (ALLOWED_SCHEMES.includes(parsed.protocol) && parsed.hostname.includes(".")) {
+        return prefixed;
+      }
+    } catch {
+      /* fall through */
+    }
     return undefined;
   }
 }

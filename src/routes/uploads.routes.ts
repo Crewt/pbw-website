@@ -12,11 +12,14 @@ import { config } from "../config";
 // in DB. Raster images are re-encoded to optimized WebP; PDF passes through.
 //
 // SECURITY: The stored file extension is derived from a fixed MIME->extension
-// whitelist below, NEVER from the client-supplied originalname. Because uploads
-// are served same-origin, active content (notably SVG, which can execute
-// script) is not accepted at all — image/svg+xml is deliberately excluded from
-// ALLOWED. If SVG support is ever required it must be either sanitized
-// server-side (e.g. DOMPurify) or served with Content-Disposition: attachment.
+// whitelist below, NEVER from the client-supplied originalname. SVG can carry
+// active script and is served same-origin, so the XSS vector is neutralised at
+// the delivery layer: everything under /uploads is served with a strict
+// "default-src 'none'; sandbox" CSP (see src/server.ts), which prevents script
+// execution when an uploaded SVG/HTML is opened as a top-level document, and
+// SVG embedded via <img> never executes script. SVG stays allowed so admins can
+// upload vector logos (e.g. Zertifikate). If the uploads CSP is ever relaxed,
+// SVG must instead be sanitised (e.g. DOMPurify) or sent as an attachment.
 
 // Fixed MIME -> extension whitelist. The extension is chosen from the (multer-
 // validated) mimetype only; the client-controlled filename never influences it.
@@ -25,6 +28,7 @@ const MIME_EXT: Record<string, string> = {
   "image/png": ".png",
   "image/webp": ".webp",
   "image/gif": ".gif",
+  "image/svg+xml": ".svg",
   "application/pdf": ".pdf",
 };
 

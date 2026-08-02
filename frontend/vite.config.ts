@@ -9,7 +9,11 @@ export default defineConfig({
   // Single SPA served at the domain root (public site + /admin). Bundles go to
   // /app/ so they don't collide with the legacy /assets images.
   base: "/",
-  build: { assetsDir: "app" },
+  // modulePreload.polyfill=false stops Vite from injecting an inline polyfill
+  // script into index.html, which keeps the backend CSP at a strict
+  // script-src 'self' (no 'unsafe-inline'). Native modulepreload is supported
+  // in all current browsers.
+  build: { assetsDir: "app", modulePreload: { polyfill: false } },
   plugins: [react(), tailwindcss()],
   server: {
     port: 5173,

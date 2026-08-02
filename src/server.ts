@@ -30,13 +30,12 @@ function parseTrustProxy(raw: string | undefined): number | boolean | string {
 //
 // Design notes / justification:
 //  - default-src 'self': everything defaults to same-origin.
-//  - script-src 'self' 'unsafe-inline': our own JS is the external Vite bundle
-//    ('self'). JSON-LD (<script type="application/ld+json">) is inert data and
-//    not gated by script-src. 'unsafe-inline' is kept ONLY because a default
-//    Vite build injects a small inline module-preload polyfill into index.html;
-//    without a build-time nonce/hash (the shell can't rewrite Vite's tags) a bare
-//    'self' would blank the app. TIGHTENING: set build.modulePreload.polyfill =
-//    false (or emit a nonce) in frontend/vite.config.ts, then drop 'unsafe-inline'.
+//  - script-src 'self': our own JS is the external Vite bundle ('self'). JSON-LD
+//    (<script type="application/ld+json">) is inert data and not gated by
+//    script-src. No inline script is emitted: the Vite module-preload polyfill is
+//    disabled (build.modulePreload.polyfill = false in frontend/vite.config.ts),
+//    so 'unsafe-inline' is intentionally NOT present here. If code-splitting is
+//    ever added, keep that polyfill disabled (or emit a nonce) so this stays valid.
 //  - style-src 'self' 'unsafe-inline' + fonts.googleapis.com: React/Tailwind emit
 //    inline style attributes, and the Google Fonts stylesheet is injected at
 //    runtime after consent (frontend consent flow).
@@ -50,7 +49,7 @@ function parseTrustProxy(raw: string | undefined): number | boolean | string {
 //    X-Frame-Options) and off-site form posts.
 const APP_CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  "script-src 'self'",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: https:",

@@ -49,9 +49,11 @@ export async function countAdmins(): Promise<number> {
 }
 
 // Used by the create-admin script: insert or reset a user's password hash.
+// A password reset also bumps token_version so any existing sessions (e.g. an
+// attacker's) are invalidated on the next request.
 export async function upsertAdmin(username: string, passwordHash: string): Promise<void> {
   await pool.query(
-    "INSERT INTO admin_users (username, password_hash) VALUES (?, ?) ON DUPLICATE KEY UPDATE password_hash = VALUES(password_hash)",
+    "INSERT INTO admin_users (username, password_hash) VALUES (?, ?) ON DUPLICATE KEY UPDATE password_hash = VALUES(password_hash), token_version = token_version + 1",
     [username, passwordHash]
   );
 }

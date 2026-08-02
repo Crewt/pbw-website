@@ -60,10 +60,10 @@ export function ContentEditor({
     // Restrict URL fields to safe schemes (http/https/mailto/tel or relative
     // paths) — blocks e.g. javascript: values before they reach the site.
     for (const f of sch.fields) {
-      if (f.type !== "url") continue;
+      if (f.type !== "url" || !visible(f)) continue;
       const v = values[f.key];
       if (typeof v === "string" && v.trim() && !isAllowedHref(v)) {
-        errs[f.key] = `Bitte eine gültige URL angeben (http, https oder mailto).`;
+        errs[f.key] = `Bitte eine gültige URL angeben (z. B. https://…, mailto: oder tel:).`;
       }
     }
     if (Object.keys(errs).length) {
