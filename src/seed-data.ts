@@ -9,6 +9,8 @@ export const COURSE_DEFAULTS: Course[] = [
   {
     id: "c-angst",
     slug: "von-der-angst-zum-mut",
+    isAusbildungskurs: false,
+    isBildungsurlaub: false,
     title: "Von der Angst zum Mut",
     subtitle: "Die grundlegenden Formen der Angst und der Weg zur persönlichen Autonomie.",
     description:
@@ -34,6 +36,8 @@ export const COURSE_DEFAULTS: Course[] = [
   {
     id: "c-konflikt",
     slug: "konfliktpotential-kreativ-nutzen",
+    isAusbildungskurs: false,
+    isBildungsurlaub: false,
     title: "Konfliktpotential kreativ nutzen",
     subtitle: "Konflikte als Motor für Entwicklung - im Team und in der eigenen Person.",
     description:
@@ -58,6 +62,8 @@ export const COURSE_DEFAULTS: Course[] = [
   {
     id: "c-ausbildung",
     slug: "ausbildungskurs-ta",
+    isAusbildungskurs: true,
+    isBildungsurlaub: false,
     title: "Ausbildungskurs in TA",
     subtitle: "Mehrjähriger Ausbildungsgang in Transaktionsanalyse.",
     description:
@@ -86,6 +92,8 @@ export const COURSE_DEFAULTS: Course[] = [
   {
     id: "c-einfuehrung",
     slug: "einfuehrungskurs-ta",
+    isAusbildungskurs: true,
+    isBildungsurlaub: false,
     title: "Einführungskurs in TA",
     subtitle: "Erste Begegnung mit Transaktionsanalyse - kompakt an einem Wochenende.",
     description:
@@ -106,6 +114,8 @@ export const COURSE_DEFAULTS: Course[] = [
   {
     id: "c-selbsterfahrung",
     slug: "selbsterfahrungsseminar",
+    isAusbildungskurs: false,
+    isBildungsurlaub: false,
     title: "Selbsterfahrungsseminar",
     subtitle: "Bei sich selbst ankommen - Reflexion und Begegnung in einer kleinen Gruppe.",
     description:
@@ -130,6 +140,8 @@ export const COURSE_DEFAULTS: Course[] = [
   {
     id: "c-gruppensuper",
     slug: "gruppensupervision",
+    isAusbildungskurs: false,
+    isBildungsurlaub: false,
     title: "Gruppensupervision",
     subtitle: "Regelmäßiger Reflexionsraum für Beratungs- und Therapieprofessionals.",
     description:

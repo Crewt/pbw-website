@@ -17,6 +17,8 @@ const schema = z.object({
   cost: z.string(),
   slug: z.string(),
   image: z.string(),
+  isAusbildungskurs: z.boolean(),
+  isBildungsurlaub: z.boolean(),
   termine: z.array(z.object({ date: z.string(), time: z.string() })),
   includes: z.array(z.object({ value: z.string() })),
   enables: z.array(z.object({ value: z.string() })),
@@ -33,6 +35,8 @@ function toForm(course: Course | null): FormValues {
       cost: "",
       slug: "",
       image: "",
+      isAusbildungskurs: false,
+      isBildungsurlaub: false,
       termine: [],
       includes: [{ value: "" }],
       enables: [{ value: "" }],
@@ -46,6 +50,8 @@ function toForm(course: Course | null): FormValues {
     cost: course.cost,
     slug: course.slug,
     image: course.image,
+    isAusbildungskurs: course.isAusbildungskurs,
+    isBildungsurlaub: course.isBildungsurlaub,
     termine: course.termine.map((t) => ({ date: t.date, time: t.time })),
     includes: (course.includes.length ? course.includes : [""]).map((value) => ({ value })),
     enables: (course.enables.length ? course.enables : [""]).map((value) => ({ value })),
@@ -61,8 +67,15 @@ export function CourseEditor({ course, onClose }: { course: Course | null; onClo
     register,
     control,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: toForm(course) });
+
+  // Drives the "Seminar" vs "Ausbildungskurs" wording in the labels below and,
+  // via the saved flag, on the public detail page.
+  const isKurs = watch("isAusbildungskurs");
+  const noun = isKurs ? "Ausbildungskurs" : "Seminar";
+  const enablesLabel = isKurs ? "Der Ausbildungskurs ermöglicht Ihnen…" : "Das Seminar ermöglicht Ihnen…";
 
   const termine = useFieldArray({ control, name: "termine" });
   const includes = useFieldArray({ control, name: "includes" });
@@ -77,6 +90,8 @@ export function CourseEditor({ course, onClose }: { course: Course | null; onClo
       cost: data.cost.trim(),
       slug: data.slug.trim() || slugify(data.title),
       image: data.image,
+      isAusbildungskurs: data.isAusbildungskurs,
+      isBildungsurlaub: data.isBildungsurlaub,
       termine: data.termine
         .map((t) => ({ date: t.date, time: t.time.trim() }))
         .filter((t) => t.date || t.time),
@@ -161,6 +176,17 @@ export function CourseEditor({ course, onClose }: { course: Course | null; onClo
           />
         </div>
 
+        <div className="space-y-2 rounded-lg border border-line bg-bg-alt/50 p-4">
+          <label className="flex items-center gap-2 text-sm text-text">
+            <input type="checkbox" className="h-4 w-4" {...register("isAusbildungskurs")} />
+            Ist ein Ausbildungskurs (statt Seminar)
+          </label>
+          <label className="flex items-center gap-2 text-sm text-text">
+            <input type="checkbox" className="h-4 w-4" {...register("isBildungsurlaub")} />
+            Ist anerkannter Bildungsurlaub
+          </label>
+        </div>
+
         <Repeater label="Termine" addLabel="+ Termin hinzufügen" onAdd={() => termine.append({ date: "", time: "" })}>
           {termine.fields.map((f, i) => (
             <div key={f.id} className="flex items-center gap-2">
@@ -177,13 +203,13 @@ export function CourseEditor({ course, onClose }: { course: Course | null; onClo
           ))}
         </Repeater>
 
-        <Repeater label="Im Seminar erhalten Sie…" addLabel="+ Punkt hinzufügen" onAdd={() => includes.append({ value: "" })}>
+        <Repeater label={`Im ${noun} erhalten Sie…`} addLabel="+ Punkt hinzufügen" onAdd={() => includes.append({ value: "" })}>
           {includes.fields.map((f, i) => (
             <TextRow key={f.id} reg={register(`includes.${i}.value`)} onRemove={() => includes.remove(i)} />
           ))}
         </Repeater>
 
-        <Repeater label="Das Seminar ermöglicht Ihnen…" addLabel="+ Punkt hinzufügen" onAdd={() => enables.append({ value: "" })}>
+        <Repeater label={enablesLabel} addLabel="+ Punkt hinzufügen" onAdd={() => enables.append({ value: "" })}>
           {enables.fields.map((f, i) => (
             <TextRow key={f.id} reg={register(`enables.${i}.value`)} onRemove={() => enables.remove(i)} />
           ))}

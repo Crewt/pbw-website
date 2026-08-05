@@ -14,6 +14,11 @@ export interface Course {
   description: string;
   cost: string; // free text, e.g. "280,00 €" or "Auf Anfrage"
   image: string; // web path, e.g. "/uploads/abc.jpg" or "/assets/x.png"
+  // Offering kind: false = Seminar (default), true = Ausbildungskurs. Drives the
+  // "Seminar" vs "Ausbildungskurs" wording on the public detail page + admin.
+  isAusbildungskurs: boolean;
+  // Whether this offering is a recognised Bildungsurlaub (shows a hint on the page).
+  isBildungsurlaub: boolean;
   termine: Termin[];
   includes: string[];
   enables: string[];

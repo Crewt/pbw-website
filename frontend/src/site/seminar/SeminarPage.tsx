@@ -63,6 +63,10 @@ export function SeminarPage() {
   if (isError || !course) return <NotFound />;
 
   const img = resolveImg(course.image);
+  const noun = course.isAusbildungskurs ? "Ausbildungskurs" : "Seminar";
+  const enablesHeading = course.isAusbildungskurs
+    ? "Der Ausbildungskurs ermöglicht Ihnen…"
+    : "Das Seminar ermöglicht Ihnen…";
 
   return (
     <>
@@ -106,7 +110,7 @@ export function SeminarPage() {
 
             {course.includes.length > 0 && (
               <>
-                <h2 className="mb-4 mt-10 text-[22px] font-bold text-ink">Im Seminar erhalten Sie…</h2>
+                <h2 className="mb-4 mt-10 text-[22px] font-bold text-ink">Im {noun} erhalten Sie…</h2>
                 <div className="mb-2 grid grid-cols-2 gap-4 max-[900px]:grid-cols-1">
                   {course.includes.map((s, i) => (
                     <div key={i} className="flex items-start gap-3 rounded-lg bg-bg-alt px-[18px] py-4">
@@ -122,7 +126,7 @@ export function SeminarPage() {
 
             {course.enables.length > 0 && (
               <>
-                <h2 className="mb-4 mt-10 text-[22px] font-bold text-ink">Das Seminar ermöglicht Ihnen…</h2>
+                <h2 className="mb-4 mt-10 text-[22px] font-bold text-ink">{enablesHeading}</h2>
                 <ul className="flex flex-col gap-2">
                   {course.enables.map((s, i) => (
                     <li
@@ -180,6 +184,11 @@ export function SeminarPage() {
               <Link to={`/kontakt?kurs=${encodeURIComponent(course.title)}`} className="btn-cta w-full">
                 Jetzt Kontakt aufnehmen
               </Link>
+              {course.isBildungsurlaub && (
+                <p className="mt-4 rounded-lg bg-bg-alt px-4 py-3 text-center text-sm font-semibold text-navy">
+                  Als Bildungsurlaub mit der Kennziffer 8291/0321/27 anerkannt!
+                </p>
+              )}
             </div>
           </aside>
         </div>

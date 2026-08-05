@@ -40,8 +40,10 @@ function parseTrustProxy(raw: string | undefined): number | boolean | string {
 //    inline style attributes, and the Google Fonts stylesheet is injected at
 //    runtime after consent (frontend consent flow).
 //  - font-src adds fonts.gstatic.com for those same Google Fonts.
-//  - img-src 'self' data: https:: OG/asset images are same-origin; https:/data:
-//    keep author-supplied and inline images working without breakage.
+//  - img-src 'self' data: blob: https:: OG/asset images are same-origin; https:/
+//    data: keep author-supplied and inline images working; blob: is required by
+//    the admin image cropper (react-easy-crop), which previews the picked file
+//    via URL.createObjectURL() — a blob: URL — before upload.
 //  - frame-src www.google.com: the Kontakt page embeds a Google Maps iframe
 //    (loaded only after consent). Without this the map would be blocked.
 //  - object-src 'none', base-uri 'self', frame-ancestors 'none', form-action
@@ -52,7 +54,7 @@ const APP_CSP = [
   "script-src 'self'",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
-  "img-src 'self' data: https:",
+  "img-src 'self' data: blob: https:",
   "connect-src 'self'",
   "frame-src https://www.google.com https://maps.google.com",
   "object-src 'none'",

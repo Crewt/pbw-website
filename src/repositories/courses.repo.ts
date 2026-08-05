@@ -15,6 +15,8 @@ function assemble(c: any, termine: Termin[], includes: string[], enables: string
     description: c.description,
     cost: c.cost,
     image: c.image,
+    isAusbildungskurs: !!c.is_ausbildungskurs,
+    isBildungsurlaub: !!c.is_bildungsurlaub,
     termine,
     includes,
     enables,
@@ -90,6 +92,8 @@ export async function saveCourse(input: Partial<Course>): Promise<Course> {
   const description = String(input.description ?? "").trim();
   const cost = String(input.cost ?? "").trim();
   const image = String(input.image ?? "").trim();
+  const isAusbildungskurs = input.isAusbildungskurs ? 1 : 0;
+  const isBildungsurlaub = input.isBildungsurlaub ? 1 : 0;
   const termine = Array.isArray(input.termine) ? input.termine : [];
   const includes = Array.isArray(input.includes) ? input.includes : [];
   const enables = Array.isArray(input.enables) ? input.enables : [];
@@ -99,8 +103,8 @@ export async function saveCourse(input: Partial<Course>): Promise<Course> {
     const exists = (ex as any[]).length > 0;
     if (exists) {
       await conn.query(
-        "UPDATE courses SET slug=?, title=?, subtitle=?, description=?, cost=?, image=? WHERE id=?",
-        [slug, title, subtitle, description, cost, image, id]
+        "UPDATE courses SET slug=?, title=?, subtitle=?, description=?, cost=?, image=?, is_ausbildungskurs=?, is_bildungsurlaub=? WHERE id=?",
+        [slug, title, subtitle, description, cost, image, isAusbildungskurs, isBildungsurlaub, id]
       );
       await conn.query("DELETE FROM course_termine WHERE course_id=?", [id]);
       await conn.query("DELETE FROM course_includes WHERE course_id=?", [id]);
@@ -109,8 +113,8 @@ export async function saveCourse(input: Partial<Course>): Promise<Course> {
       const [mx] = await conn.query("SELECT COALESCE(MAX(sort_order),-1)+1 AS n FROM courses");
       const sort = (mx as any[])[0].n;
       await conn.query(
-        "INSERT INTO courses (id, slug, title, subtitle, description, cost, image, sort_order) VALUES (?,?,?,?,?,?,?,?)",
-        [id, slug, title, subtitle, description, cost, image, sort]
+        "INSERT INTO courses (id, slug, title, subtitle, description, cost, image, is_ausbildungskurs, is_bildungsurlaub, sort_order) VALUES (?,?,?,?,?,?,?,?,?,?)",
+        [id, slug, title, subtitle, description, cost, image, isAusbildungskurs, isBildungsurlaub, sort]
       );
     }
     for (let i = 0; i < termine.length; i++) {

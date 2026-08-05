@@ -113,7 +113,7 @@ export function KursterminePage() {
         <Container>
           <div className="relative z-[1] max-w-[720px]">
             <h1 className="mb-3 text-[48px] font-bold leading-[1.05] tracking-[-1px] text-ink max-[800px]:text-[36px]">
-              Kursangebote
+              Kurstermine
             </h1>
             <p className="mb-6 max-w-[560px] text-[17px] leading-[1.55] text-text">
               Übersicht aller Kurse und Seminare - von der mehrjährigen TA-Ausbildung bis zu einzelnen
