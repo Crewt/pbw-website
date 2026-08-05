@@ -119,9 +119,6 @@ export function KursterminePage() {
               Übersicht aller Kurse und Seminare - von der mehrjährigen TA-Ausbildung bis zu einzelnen
               Wochenendseminaren.
             </p>
-            <Link to="/ueber-mich" className="btn-outline">
-              Mehr über mich
-            </Link>
           </div>
         </Container>
       </section>

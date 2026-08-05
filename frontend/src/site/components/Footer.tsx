@@ -12,7 +12,7 @@ export function Footer() {
         <div>
           <div className="text-xl font-bold text-navy">PBW - Beatrice Czekalla</div>
           <p className="mt-3 max-w-[480px] text-sm text-ink">
-            Psychologische Beratung &amp; Weiterbildung in der Tradition der Transaktionsanalyse.
+            Psychologische Beratung &amp; Weiterbildung auf Basis der Transaktionsanalyse.
             <br />© 2026 PBW - Beatrice Czekalla. Alle Rechte vorbehalten.
           </p>
         </div>

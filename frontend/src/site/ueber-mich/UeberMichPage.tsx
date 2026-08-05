@@ -8,10 +8,11 @@ const FALLBACK_PORTRAIT = "/assets/portrait.webp";
 
 const facts = [
   { num: "15+", lbl: "Jahre Erfahrung in Beratung & Begleitung" },
-  { num: "DGTA", lbl: "Zertifizierte Lehrtrainerin & Supervisorin (TA)" },
-  { num: "EATA", lbl: "Mitglied der European Association for Transactional Analysis" },
-  { num: "TA-Wege", lbl: "Ausbildungsinstitut für Transaktionsanalyse" },
-  { num: "EASC", lbl: "European Association for Supervision and Coaching" },
+  { num: "VPU", lbl: "Masterabschluss im Studiengang Coaching" },
+  { num: "DGTA", lbl: "Zertifizierte Lehrtrainerin und Lehrsupervisorin unter Supervision (u. S.)" },
+  { num: "EATA", lbl: "Zertifizierte Lehrtrainerinund Lehrsupervisorin u. S." },
+  { num: "TA-Wege", lbl: "Mitglied des Zussammenschlusses von Transaktionsanalytiker*innen" },
+  { num: "EASC", lbl: "Zertifizierte Lehrsupervisorin und Coach" },
 ];
 
 const motivation =
@@ -67,7 +68,7 @@ export function UeberMichPage() {
               Ich verstehe meine Arbeit als eine „Pflanzschule“: ein geschützter Raum, in dem Ideen keimen und erste
               Schritte wie „Setzlinge“ entwickelt und kultiviert werden können.
             </p>
-            <p className="my-4 text-[17px] leading-[1.65] text-text">Dieser Rahmen lädt Sie ein,</p>
+            <p className="my-4 text-[17px] leading-[1.65] text-text">Dieser Raum lädt Sie ein,</p>
             <ul className="flex flex-col gap-2">
               {pflanzList.map((item) => (
                 <li

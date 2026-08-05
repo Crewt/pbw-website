@@ -52,7 +52,7 @@ export function Testimonials() {
             to="/empfehlungen"
             className="inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-navy transition-all hover:gap-2.5 [&_svg]:size-4"
           >
-            Weiter zu den Empfehlungen <ArrowRight />
+            Weiter zu Kooperation & Infos<ArrowRight />
           </Link>
         </div>
 
@@ -62,7 +62,7 @@ export function Testimonials() {
           <div>
             <h3 className="mb-2.5 text-[22px] font-bold text-navy">Qualität und Zertifizierung</h3>
             <p className="mb-6 text-[15px] leading-[1.6] text-text">
-              Höchste Standards in der Beratungsarbeit, zertifiziert durch anerkannte Fachgesellschaften.
+              Höchste Standards in der Beratungsarbeit, zertifiziert durch anerkannte Fachgesellschaften und wissenschaftlich ausgebildet an der Vinzenz Pallotti University (VPU):
             </p>
             <div className="mb-8 flex flex-wrap gap-4">
               {badges.map((b) => (
