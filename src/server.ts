@@ -46,6 +46,9 @@ function parseTrustProxy(raw: string | undefined): number | boolean | string {
 //    via URL.createObjectURL() — a blob: URL — before upload.
 //  - frame-src www.google.com: the Kontakt page embeds a Google Maps iframe
 //    (loaded only after consent). Without this the map would be blocked.
+//    *.cleverreach.com is added so the Kontakt page can embed the externally
+//    hosted CleverReach newsletter signup form in an iframe (loaded only after
+//    the visitor clicks the newsletter button).
 //  - object-src 'none', base-uri 'self', frame-ancestors 'none', form-action
 //    'self': block plugins, <base> injection, clickjacking (redundant with
 //    X-Frame-Options) and off-site form posts.
@@ -56,7 +59,7 @@ const APP_CSP = [
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: blob: https:",
   "connect-src 'self'",
-  "frame-src https://www.google.com https://maps.google.com",
+  "frame-src https://www.google.com https://maps.google.com https://*.cleverreach.com",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

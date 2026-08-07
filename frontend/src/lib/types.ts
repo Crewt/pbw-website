@@ -70,6 +70,9 @@ export interface Ressource {
 export interface Kontakt {
   email: string;
   phone: string;
+  // Optional URL of the externally hosted CleverReach signup form. Empty = the
+  // newsletter button is not rendered on the public site.
+  newsletterFormularUrl: string;
 }
 
 export interface About {

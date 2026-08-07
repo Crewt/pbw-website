@@ -117,8 +117,22 @@ export async function saveCourse(input: Partial<Course>): Promise<Course> {
         [id, slug, title, subtitle, description, cost, image, isAusbildungskurs, isBildungsurlaub, sort]
       );
     }
-    for (let i = 0; i < termine.length; i++) {
-      const t = termine[i] || ({} as Termin);
+    // Persist termine in chronological order (ISO yyyy-mm-dd sorts lexically),
+    // so newly added dates land in the right spot regardless of input order.
+    // Termine without a date are kept at the end in their original order.
+    const sortedTermine = [...termine]
+      .map((t, i) => ({ t: t || ({} as Termin), i }))
+      .sort((a, b) => {
+        const da = String(a.t.date ?? "").trim();
+        const db = String(b.t.date ?? "").trim();
+        if (!da && !db) return a.i - b.i;
+        if (!da) return 1;
+        if (!db) return -1;
+        return da < db ? -1 : da > db ? 1 : a.i - b.i;
+      })
+      .map((x) => x.t);
+    for (let i = 0; i < sortedTermine.length; i++) {
+      const t = sortedTermine[i];
       const d = String(t.date ?? "").trim() || null;
       const tm = String(t.time ?? "").trim();
       if (!d && !tm) continue;

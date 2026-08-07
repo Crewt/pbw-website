@@ -1,10 +1,15 @@
+import { useQuery } from "@tanstack/react-query";
 import { Container } from "../components/Container";
 import { ContactForm } from "./ContactForm";
 import { ContactInfo } from "./ContactInfo";
 import { MapCard } from "./MapCard";
+import { NewsletterSignup } from "./NewsletterSignup";
+import { getContent } from "../../lib/api";
 import { Seo, SITE_NAME } from "../lib/Seo";
 
 export function KontaktPage() {
+  const { data } = useQuery({ queryKey: ["content"], queryFn: getContent });
+
   return (
     <>
       <Seo
@@ -33,6 +38,17 @@ export function KontaktPage() {
             <MapCard />
           </div>
         </div>
+
+        {data?.kontakt.newsletterFormularUrl && (
+          <div className="mb-24 rounded-xl border border-line bg-white p-8 text-center shadow-soft">
+            <h2 className="mb-2 text-[22px] font-bold text-ink">Newsletter</h2>
+            <p className="mx-auto mb-6 max-w-[560px] text-[16px] leading-[1.6] text-text">
+              Bleiben Sie auf dem Laufenden zu Terminen, Seminaren und Angeboten – melden Sie sich
+              für den Newsletter an.
+            </p>
+            <NewsletterSignup url={data.kontakt.newsletterFormularUrl} />
+          </div>
+        )}
       </Container>
     </>
   );

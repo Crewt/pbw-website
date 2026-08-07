@@ -5,7 +5,11 @@ import type { SingletonName } from "../types";
 // `settings`. Field<->key mapping is whitelisted here.
 
 const SINGLETONS: Record<SingletonName, Record<string, string>> = {
-  kontakt: { email: "kontakt.email", phone: "kontakt.phone" },
+  kontakt: {
+    email: "kontakt.email",
+    phone: "kontakt.phone",
+    newsletterFormularUrl: "kontakt.newsletter_formular_url",
+  },
   about: { image: "about.image" },
 };
 

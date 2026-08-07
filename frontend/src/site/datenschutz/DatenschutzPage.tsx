@@ -16,7 +16,7 @@ export function DatenschutzPage() {
     <Container>
       <Seo
         title={`Datenschutzerklärung | ${SITE_NAME}`}
-        description="Datenschutzerklärung von PBW – Beatrice Czekalla: Verantwortliche, Hosting, Server-Logfiles, Cookies & Einwilligung, Google Fonts, Google Maps, Kontaktformular und Ihre Rechte."
+        description="Datenschutzerklärung von PBW – Beatrice Czekalla: Verantwortliche, Hosting, Server-Logfiles, Cookies & Einwilligung, Google Fonts, Google Maps, Kontaktformular, Newsletter (CleverReach) und Ihre Rechte."
         noindex
       />
       <section className="max-w-[760px] py-16 max-[960px]:py-10">
@@ -147,7 +147,37 @@ export function DatenschutzPage() {
           Aufbewahrungsfristen – bleiben unberührt.
         </p>
 
-        <h2 className={h2}>9. Ihre Rechte</h2>
+        <h2 className={h2}>9. Newsletter (CleverReach)</h2>
+        <p className={p}>
+          Auf der Kontaktseite bieten wir Ihnen die Möglichkeit, sich zu unserem Newsletter anzumelden.
+          Für den Versand des Newsletters und die Verwaltung der Empfänger nutzen wir den Dienst der
+          CleverReach GmbH &amp; Co. KG, Schafjückenweg 2, 26180 Rastede (nachfolgend „CleverReach"). Mit
+          CleverReach besteht ein Vertrag über Auftragsverarbeitung (Art. 28 DSGVO).
+        </p>
+        <p className={`${p} mt-3`}>
+          Das Anmeldeformular wird von CleverReach bereitgestellt und{" "}
+          <strong className="font-semibold text-ink">erst nach Ihrem aktiven Klick</strong> auf den
+          Newsletter-Button in einem eingebetteten Fenster (iframe) geladen. Erst zu diesem Zeitpunkt
+          werden Daten – insbesondere Ihre IP-Adresse – an CleverReach übertragen und dort ggf. Cookies
+          gesetzt. Die Anmeldung erfolgt im sogenannten Double-Opt-in-Verfahren: Nach dem Absenden des
+          Formulars erhalten Sie eine E-Mail, in der Sie Ihre Anmeldung ausdrücklich bestätigen müssen.
+        </p>
+        <p className={`${p} mt-3`}>
+          Rechtsgrundlage der Verarbeitung ist Ihre Einwilligung (Art. 6 Abs. 1 lit. a DSGVO), die Sie
+          jederzeit mit Wirkung für die Zukunft widerrufen können – etwa über den Abmeldelink am Ende
+          jeder Newsletter-E-Mail. Weitere Informationen finden Sie in den{" "}
+          <a
+            href="https://www.cleverreach.com/de/datenschutz/"
+            target="_blank"
+            rel="noreferrer"
+            className={linkCls}
+          >
+            Datenschutzhinweisen von CleverReach
+          </a>
+          .
+        </p>
+
+        <h2 className={h2}>10. Ihre Rechte</h2>
         <p className={p}>Ihnen stehen hinsichtlich Ihrer personenbezogenen Daten folgende Rechte zu:</p>
         <ul className={list}>
           {[
@@ -167,7 +197,7 @@ export function DatenschutzPage() {
           Zur Ausübung Ihrer Rechte genügt eine formlose Nachricht an die oben genannten Kontaktdaten.
         </p>
 
-        <h2 className={h2}>10. Widerruf Ihrer Einwilligung</h2>
+        <h2 className={h2}>11. Widerruf Ihrer Einwilligung</h2>
         <p className={p}>
           Viele Datenverarbeitungsvorgänge sind nur mit Ihrer ausdrücklichen Einwilligung möglich. Eine bereits erteilte
           Einwilligung können Sie jederzeit mit Wirkung für die Zukunft widerrufen. Die Rechtmäßigkeit der bis zum
@@ -179,7 +209,7 @@ export function DatenschutzPage() {
           anpassen.
         </p>
 
-        <h2 className={h2}>11. Beschwerderecht bei der Aufsichtsbehörde</h2>
+        <h2 className={h2}>12. Beschwerderecht bei der Aufsichtsbehörde</h2>
         <p className={p}>
           Ihnen steht ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde zu. Zuständig ist der Landesbeauftragte
           für den Datenschutz und die Informationsfreiheit Rheinland-Pfalz, Hintere Bleiche 34, 55116 Mainz.

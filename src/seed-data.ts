@@ -292,6 +292,7 @@ export const RESSOURCEN_DEFAULTS: Ressource[] = [
 export const KONTAKT_DEFAULT: Kontakt = {
   email: "info@pbw-ta.de",
   phone: "+49 (0) 261 671234",
+  newsletterFormularUrl: "",
 };
 
 export const ABOUT_DEFAULT: About = {

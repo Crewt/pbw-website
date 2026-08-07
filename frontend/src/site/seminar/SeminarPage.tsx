@@ -7,6 +7,19 @@ import { ChevronLeft, IconCalendar, IconCheckCircle, IconCreditCard } from "../c
 import { resolveImg } from "../lib/img";
 import { Seo, SITE_NAME } from "../lib/Seo";
 
+// Termine chronologisch (ISO yyyy-mm-dd sortiert lexikalisch); Termine ohne
+// Datum ans Ende. So werden auch noch nicht neu gespeicherte Kurse korrekt angezeigt.
+function sortTermine<T extends { date: string }>(termine: T[]): T[] {
+  return [...termine].sort((a, b) => {
+    const da = (a.date ?? "").trim();
+    const db = (b.date ?? "").trim();
+    if (!da && !db) return 0;
+    if (!da) return 1;
+    if (!db) return -1;
+    return da < db ? -1 : da > db ? 1 : 0;
+  });
+}
+
 function Description({ text }: { text: string }) {
   const paras = text
     .split(/\n\s*\n/)
@@ -153,7 +166,7 @@ export function SeminarPage() {
                   <div className="flex-1">
                     <small className="mb-0.5 block text-[13px] text-text">Termine</small>
                     <ul className="text-sm">
-                      {course.termine.map((t, i) => (
+                      {sortTermine(course.termine).map((t, i) => (
                         <li key={i} className="border-b border-line-soft py-1.5 last:border-b-0">
                           <span className="font-semibold text-navy">{fmtDateLong(t.date)}</span>
                           {t.time && <span className="ml-1.5 text-[13px] text-text">{t.time}</span>}
