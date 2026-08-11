@@ -80,6 +80,7 @@ export function SeminarPage() {
   const enablesHeading = course.isAusbildungskurs
     ? "Der Ausbildungskurs ermöglicht Ihnen…"
     : "Das Seminar ermöglicht Ihnen…";
+  const detailsHeading = course.isAusbildungskurs ? "Kursdetails" : "Seminardetails";
 
   return (
     <>
@@ -156,7 +157,7 @@ export function SeminarPage() {
 
           <aside>
             <div className="sticky top-[90px] rounded-xl border border-line bg-white p-7 shadow-soft">
-              <span className="kicker mb-5 block">Seminardetails</span>
+              <span className="kicker mb-5 block">{detailsHeading}</span>
 
               {course.termine.length > 0 && (
                 <div className="mb-4 flex items-start gap-3.5">

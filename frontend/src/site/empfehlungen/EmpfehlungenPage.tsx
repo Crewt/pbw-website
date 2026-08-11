@@ -5,7 +5,7 @@ import { getContent } from "../../lib/api";
 import type { Kollege, Ressource, Zertifikat } from "../../lib/types";
 import { resolveImg } from "../lib/img";
 import { safeHref } from "../../lib/url";
-import { IconArrowUpRight, IconDownload, IconInstitute, IconLink, IconNetwork } from "../components/Icons";
+import { IconArrowUpRight, IconDownload, IconInstitute, IconLink } from "../components/Icons";
 import { Seo, SITE_NAME } from "../lib/Seo";
 
 function initials(name: string): string {
@@ -185,11 +185,11 @@ export function EmpfehlungenPage() {
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(249,249,249,0.7)_0%,rgba(249,249,249,1)_100%)]" />
         <Container>
           <div className="relative z-[1]">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-2 text-[13px] font-medium text-navy [&_svg]:size-3.5">
+            { /*<span className="inline-flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-2 text-[13px] font-medium text-navy [&_svg]:size-3.5">
               <IconNetwork /> Netzwerk &amp; Austausch
-            </span>
+            </span> */}
             <h1 className="my-4 text-[48px] font-bold leading-[1.05] tracking-[-1px] text-ink max-[960px]:text-[36px]">
-              Empfehlungen &amp; Links
+              Kooperation &amp; Austausch
             </h1>
             <p className="mx-auto max-w-[720px] text-[17px] leading-[1.55] text-text">
               Ein vertrauensvolles Netzwerk ist das Fundament professioneller Begleitung. Hier finden Sie
