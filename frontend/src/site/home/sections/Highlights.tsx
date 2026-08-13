@@ -5,6 +5,9 @@ export function Highlights() {
   return (
     <section className="border-y border-line bg-bg-alt py-20">
       <Container>
+        <h2 className="mb-12 text-center text-[34px] font-bold tracking-[-0.6px] text-ink max-[960px]:mb-10">
+          Was Sie erwarten können
+        </h2>
         <div className="grid grid-cols-3 gap-6 max-[960px]:grid-cols-1 max-[960px]:gap-10">
           {highlights.map((h) => {
             const Icon = h.icon;

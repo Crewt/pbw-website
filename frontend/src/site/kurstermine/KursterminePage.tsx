@@ -8,9 +8,13 @@ import { CourseCard } from "./CourseCard";
 import { IconCalendar, IconChat, IconDownload } from "../components/Icons";
 import { Seo, SITE_NAME } from "../lib/Seo";
 
-// Latest termin of a course — ISO date strings sort chronologically.
+// Latest termin of a course — ISO date strings sort chronologically. A ranged
+// termin counts through its end date, so a running multi-day seminar stays visible.
 function lastDate(c: Course): string {
-  return (c.termine ?? []).reduce((max, t) => (t.date > max ? t.date : max), "");
+  return (c.termine ?? []).reduce((max, t) => {
+    const d = t.endDate && t.endDate > t.date ? t.endDate : t.date;
+    return d > max ? d : max;
+  }, "");
 }
 
 // Distinct years across a course's termine.

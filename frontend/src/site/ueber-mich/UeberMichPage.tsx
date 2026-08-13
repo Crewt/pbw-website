@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { Container } from "../components/Container";
-import { IconArrowUpRight } from "../components/Icons";
 import { Seo, SITE_NAME } from "../lib/Seo";
 import { getContent } from "../../lib/api";
 
@@ -109,14 +108,8 @@ export function UeberMichPage() {
         {facts.map((f) => (
           <div
             key={f.num}
-            className="group relative rounded-xl border border-line bg-white p-6 transition hover:-translate-y-0.5 hover:border-navy hover:shadow-[0_8px_24px_rgba(15,30,60,0.08)]"
+            className="rounded-xl border border-line bg-white p-6"
           >
-            <span
-              aria-hidden
-              className="absolute right-[18px] top-[18px] inline-flex h-7 w-7 items-center justify-center rounded-full bg-navy/5 text-navy transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:bg-navy group-hover:text-white [&_svg]:size-3.5"
-            >
-              <IconArrowUpRight />
-            </span>
             <div className="mb-1 text-[36px] font-bold tracking-[-1px] text-navy">{f.num}</div>
             <div className="text-sm text-text">{f.lbl}</div>
           </div>

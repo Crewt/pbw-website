@@ -155,12 +155,33 @@ export function DatenschutzPage() {
           CleverReach besteht ein Vertrag über Auftragsverarbeitung (Art. 28 DSGVO).
         </p>
         <p className={`${p} mt-3`}>
+          Für die Anmeldung zum Newsletter ist die Angabe Ihrer E-Mail-Adresse erforderlich. Weitere von
+          Ihnen im Anmeldeformular angegebene Daten (z. B. Ihr Name) sind freiwillig und werden
+          ausschließlich zur persönlichen Ansprache verwendet.
+        </p>
+        <p className={`${p} mt-3`}>
           Das Anmeldeformular wird von CleverReach bereitgestellt und{" "}
           <strong className="font-semibold text-ink">erst nach Ihrem aktiven Klick</strong> auf den
           Newsletter-Button in einem eingebetteten Fenster (iframe) geladen. Erst zu diesem Zeitpunkt
           werden Daten – insbesondere Ihre IP-Adresse – an CleverReach übertragen und dort ggf. Cookies
           gesetzt. Die Anmeldung erfolgt im sogenannten Double-Opt-in-Verfahren: Nach dem Absenden des
           Formulars erhalten Sie eine E-Mail, in der Sie Ihre Anmeldung ausdrücklich bestätigen müssen.
+          Zum Nachweis der Einwilligung werden der Zeitpunkt der Anmeldung und der Bestätigung sowie Ihre
+          IP-Adresse protokolliert.
+        </p>
+        <p className={`${p} mt-3`}>
+          <strong className="font-semibold text-ink">Erfolgsmessung:</strong> Die Newsletter enthalten
+          einen sogenannten Zählpixel (Web-Beacon) sowie individualisierte Links. Dadurch kann
+          CleverReach erkennen, ob und wann eine Newsletter-E-Mail geöffnet und welche darin enthaltenen
+          Links angeklickt wurden. Diese Informationen dienen der statistischen Auswertung und der
+          Verbesserung unseres Newsletter-Angebots. Diese Auswertung ist von Ihrer Einwilligung umfasst;
+          widerrufen können Sie sie jederzeit durch Abmeldung vom Newsletter.
+        </p>
+        <p className={`${p} mt-3`}>
+          Ihre für den Newsletter gespeicherten Daten werden verarbeitet, solange Sie den Newsletter
+          abonniert haben, und nach der Abmeldung gelöscht. Um sicherzustellen, dass Sie nach einer
+          Abmeldung keine weiteren E-Mails erhalten, kann Ihre E-Mail-Adresse in einer Sperrliste
+          (Blacklist) gespeichert werden.
         </p>
         <p className={`${p} mt-3`}>
           Rechtsgrundlage der Verarbeitung ist Ihre Einwilligung (Art. 6 Abs. 1 lit. a DSGVO), die Sie
@@ -215,7 +236,7 @@ export function DatenschutzPage() {
           für den Datenschutz und die Informationsfreiheit Rheinland-Pfalz, Hintere Bleiche 34, 55116 Mainz.
         </p>
 
-        <p className={`${p} mt-10 text-[14px] text-slate`}>Stand: Juli 2026</p>
+        <p className={`${p} mt-10 text-[14px] text-slate`}>Stand: August 2026</p>
       </section>
     </Container>
   );

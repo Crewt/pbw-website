@@ -17,42 +17,51 @@ export interface Service {
   icon: IconType;
   title: string;
   description: string;
+  // Stable homepage-card slot key (see lib/serviceSlots.ts). A course assigned
+  // to this slot in the CMS becomes this card's link target.
+  slot: string;
 }
 
 export const services: Service[] = [
   {
     icon: IconIndividual,
     title: "Einzelberatung",
+    slot: "einzelberatung",
     description:
       "Individuelle Begleitung in Krisen, bei Neuorientierung oder für die persönliche Entwicklung und Klarheit.",
   },
   {
     icon: IconCouple,
     title: "Paarberatung",
+    slot: "paarberatung",
     description:
       "Unterstützung für Paare zur Klärung von Konflikten, Verbesserung der Kommunikation und Entwicklung neuer Perspektiven.",
   },
   {
     icon: IconCoaching,
     title: "Coaching",
+    slot: "coaching",
     description:
       "Individuelle Unterstützung für Führungskräfte zur Stärkung der Führungskompetenz, Rollenklärung und Bewältigung komplexer Herausforderungen.",
   },
   {
     icon: IconSupervision,
     title: "Supervision",
+    slot: "supervision",
     description:
       "Stärkung von Zusammenarbeit und Zusammenhalt im Team durch Klärung der Strukturen, Prozesse und Teamkultur sowie durch Förderung direkter Kommunikation.",
   },
   {
     icon: IconOrg,
     title: "Organisationsentwicklung",
+    slot: "organisationsentwicklung",
     description:
       "Entwicklung der Organisation und Menschen zur Stärkung der Wirksamkeit - durch flexible, aktive Anpassung an Veränderungen für mehr Effektivität, bessere Zusammenarbeit und Arbeitszufriedenheit.",
   },
   {
     icon: IconEducation,
     title: "Weiterbildung",
+    slot: "weiterbildung",
     description:
       "Unterstützung im bewussten Umgang mit eigenen Ressourcen und Grenzen sowie Förderung der Selbstreflexion zu authentischen Beziehungen und einer stimmigen persönlichen Haltung.",
   },

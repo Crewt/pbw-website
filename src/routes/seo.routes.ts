@@ -132,10 +132,13 @@ seoRouter.get("/llms-full.txt", async (_req, res) => {
     L.push("");
     if (c.description) L.push(c.description, "");
     if (c.cost) L.push(`Kosten: ${c.cost}`);
-    const termine = c.termine.filter((t) => t.date || t.time);
+    const termine = c.termine.filter((t) => t.date || t.name);
     if (termine.length) {
       L.push("Termine:");
-      for (const t of termine) L.push(`- ${[t.date, t.time].filter(Boolean).join(" ")}`);
+      for (const t of termine) {
+        const dp = t.date ? (t.endDate ? `${t.date} – ${t.endDate}` : t.date) : "";
+        L.push(`- ${[dp, t.name].filter(Boolean).join(" ")}`);
+      }
     }
     if (c.includes.length) {
       L.push("Inhalte:");

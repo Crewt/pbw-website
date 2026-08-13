@@ -8,6 +8,7 @@ import { useToast } from "../components/ToastProvider";
 import { Drawer } from "../components/Drawer";
 import { ImageUpload } from "../components/ImageUpload";
 import { slugify } from "../lib/slugify";
+import { SERVICE_SLOTS } from "../../lib/serviceSlots";
 
 const schema = z.object({
   id: z.string().optional(),
@@ -19,9 +20,12 @@ const schema = z.object({
   image: z.string(),
   isAusbildungskurs: z.boolean(),
   isBildungsurlaub: z.boolean(),
-  termine: z.array(z.object({ date: z.string(), time: z.string() })),
+  termine: z.array(
+    z.object({ date: z.string(), endDate: z.string(), name: z.string(), description: z.string() })
+  ),
   includes: z.array(z.object({ value: z.string() })),
   enables: z.array(z.object({ value: z.string() })),
+  homepageSlots: z.array(z.string()),
 });
 type FormValues = z.infer<typeof schema>;
 
@@ -40,6 +44,7 @@ function toForm(course: Course | null): FormValues {
       termine: [],
       includes: [{ value: "" }],
       enables: [{ value: "" }],
+      homepageSlots: [],
     };
   }
   return {
@@ -52,9 +57,15 @@ function toForm(course: Course | null): FormValues {
     image: course.image,
     isAusbildungskurs: course.isAusbildungskurs,
     isBildungsurlaub: course.isBildungsurlaub,
-    termine: course.termine.map((t) => ({ date: t.date, time: t.time })),
+    termine: course.termine.map((t) => ({
+      date: t.date,
+      endDate: t.endDate ?? "",
+      name: t.name,
+      description: t.description ?? "",
+    })),
     includes: (course.includes.length ? course.includes : [""]).map((value) => ({ value })),
     enables: (course.enables.length ? course.enables : [""]).map((value) => ({ value })),
+    homepageSlots: course.homepageSlots ?? [],
   };
 }
 
@@ -74,7 +85,6 @@ export function CourseEditor({ course, onClose }: { course: Course | null; onClo
   // Drives the "Seminar" vs "Ausbildungskurs" wording in the labels below and,
   // via the saved flag, on the public detail page.
   const isKurs = watch("isAusbildungskurs");
-  const noun = isKurs ? "Ausbildungskurs" : "Seminar";
   const enablesLabel = isKurs ? "Der Ausbildungskurs ermöglicht Ihnen…" : "Das Seminar ermöglicht Ihnen…";
 
   const termine = useFieldArray({ control, name: "termine" });
@@ -93,10 +103,16 @@ export function CourseEditor({ course, onClose }: { course: Course | null; onClo
       isAusbildungskurs: data.isAusbildungskurs,
       isBildungsurlaub: data.isBildungsurlaub,
       termine: data.termine
-        .map((t) => ({ date: t.date, time: t.time.trim() }))
-        .filter((t) => t.date || t.time),
+        .map((t) => ({
+          date: t.date,
+          endDate: t.endDate.trim() || undefined,
+          name: t.name.trim(),
+          description: t.description.trim() || undefined,
+        }))
+        .filter((t) => t.date || t.name),
       includes: data.includes.map((i) => i.value.trim()).filter(Boolean),
       enables: data.enables.map((e) => e.value.trim()).filter(Boolean),
+      homepageSlots: data.homepageSlots,
     };
     try {
       await save.mutateAsync(payload);
@@ -187,23 +203,55 @@ export function CourseEditor({ course, onClose }: { course: Course | null; onClo
           </label>
         </div>
 
-        <Repeater label="Termine" addLabel="+ Termin hinzufügen" onAdd={() => termine.append({ date: "", time: "" })}>
+        <div className="space-y-2 rounded-lg border border-line bg-bg-alt/50 p-4">
+          <label className="field-label">Auf Startseite verlinken von…</label>
+          <p className="text-xs text-slate">
+            Die ausgewählten Startseiten-Karten verlinken auf dieses Seminar (Mehrfachauswahl möglich).
+          </p>
+          <div className="grid grid-cols-2 gap-2 max-[640px]:grid-cols-1">
+            {SERVICE_SLOTS.map((slot) => (
+              <label key={slot.key} className="flex items-center gap-2 text-sm text-text">
+                <input type="checkbox" className="h-4 w-4" value={slot.key} {...register("homepageSlots")} />
+                {slot.label}
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <Repeater
+          label="Termine"
+          addLabel="+ Termin hinzufügen"
+          onAdd={() => termine.append({ date: "", endDate: "", name: "", description: "" })}
+        >
           {termine.fields.map((f, i) => (
-            <div key={f.id} className="flex items-center gap-2">
-              <input type="date" className="field-input w-44" {...register(`termine.${i}.date`)} />
+            <div key={f.id} className="space-y-2 rounded-lg border border-line bg-white p-3">
+              <div className="flex items-center gap-2">
+                <input type="date" className="field-input w-40" {...register(`termine.${i}.date`)} />
+                <span className="text-sm text-slate">bis</span>
+                <input type="date" className="field-input w-40" {...register(`termine.${i}.endDate`)} />
+                <button
+                  type="button"
+                  className="icon-btn icon-btn-danger ml-auto"
+                  onClick={() => termine.remove(i)}
+                >
+                  ✕
+                </button>
+              </div>
               <input
-                className="field-input flex-1"
-                placeholder="z. B. 09:30-18:00 Uhr"
-                {...register(`termine.${i}.time`)}
+                className="field-input"
+                placeholder="Name des Termins (z. B. Modul 1 · 09:30–18:00 Uhr)"
+                {...register(`termine.${i}.name`)}
               />
-              <button type="button" className="icon-btn icon-btn-danger" onClick={() => termine.remove(i)}>
-                ✕
-              </button>
+              <textarea
+                className="field-input min-h-16"
+                placeholder="Beschreibung / Seminardetails (optional)"
+                {...register(`termine.${i}.description`)}
+              />
             </div>
           ))}
         </Repeater>
 
-        <Repeater label={`Im ${noun} erhalten Sie…`} addLabel="+ Punkt hinzufügen" onAdd={() => includes.append({ value: "" })}>
+        <Repeater label="Im Kurs erhalten Sie…" addLabel="+ Punkt hinzufügen" onAdd={() => includes.append({ value: "" })}>
           {includes.fields.map((f, i) => (
             <TextRow key={f.id} reg={register(`includes.${i}.value`)} onRemove={() => includes.remove(i)} />
           ))}

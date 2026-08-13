@@ -1,13 +1,15 @@
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { Container } from "../../components/Container";
 import { ArrowRight, IconEducation } from "../../components/Icons";
+import { getCourses } from "../../../lib/api";
 import { services, type Service } from "../data";
 
-function ServiceCard({ service }: { service: Service }) {
+function ServiceCard({ service, to }: { service: Service; to: string }) {
   const Icon = service.icon;
   return (
     <Link
-      to="/kurstermine"
+      to={to}
       className="group flex flex-col rounded-xl border border-line bg-white p-6 transition hover:-translate-y-0.5 hover:border-navy hover:shadow-[0_4px_20px_rgba(27,43,72,0.07)]"
     >
       <span className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-navy-deep/[0.08] text-navy [&_svg]:size-6">
@@ -23,6 +25,19 @@ function ServiceCard({ service }: { service: Service }) {
 }
 
 export function Services() {
+  // Resolve each card's link target from the CMS: a course assigned to the card's
+  // slot links to its seminar page; unassigned cards fall back to /kurstermine.
+  // On collision the last matching course wins.
+  const { data: courses } = useQuery({ queryKey: ["courses"], queryFn: getCourses });
+  const slotToSlug = new Map<string, string>();
+  for (const c of courses ?? []) {
+    for (const slot of c.homepageSlots ?? []) slotToSlug.set(slot, c.slug || c.id);
+  }
+  const linkFor = (s: Service) => {
+    const slug = slotToSlug.get(s.slot);
+    return slug ? `/seminar/${slug}` : "/kurstermine";
+  };
+
   return (
     <section className="py-24">
       <Container>
@@ -35,7 +50,7 @@ export function Services() {
 
         <div className="grid grid-cols-3 gap-4 max-[640px]:grid-cols-1">
           {services.map((s) => (
-            <ServiceCard key={s.title} service={s} />
+            <ServiceCard key={s.title} service={s} to={linkFor(s)} />
           ))}
         </div>
 

@@ -69,8 +69,11 @@ async function seminarBody(slug: string): Promise<string> {
   }
   if (!c) return "";
   const termine = c.termine
-    .filter((t) => t.date || t.time)
-    .map((t) => [t.date, t.time].filter(Boolean).join(" "));
+    .filter((t) => t.date || t.name)
+    .map((t) => {
+      const dp = t.date ? (t.endDate ? `${t.date} – ${t.endDate}` : t.date) : "";
+      return [dp, t.name].filter(Boolean).join(" ");
+    });
   return wrap(
     (c.image ? `<img src="${esc(c.image)}" alt="${esc(c.title)}" />` : "") +
       `<h1>${esc(c.title)}</h1>` +

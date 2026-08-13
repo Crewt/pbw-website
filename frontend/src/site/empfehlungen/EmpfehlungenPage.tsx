@@ -207,7 +207,7 @@ export function EmpfehlungenPage() {
           <p className="py-16 text-center text-text">Die Inhalte konnten derzeit nicht geladen werden.</p>
         ) : (
           <>
-            <SectionTitle>Therapeutische Einrichtungen &amp; Institute</SectionTitle>
+            <SectionTitle>Fachgesellschaften & Institutionen</SectionTitle>
             {data.zertifikate.length > 0 ? (
               <div className="grid grid-cols-2 gap-6 max-[960px]:grid-cols-1">
                 {data.zertifikate.map((z) => (

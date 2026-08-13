@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Container } from "../components/Container";
 import { getCourse } from "../../lib/api";
-import { fmtDateLong } from "../lib/date";
+import { fmtDateRange } from "../lib/date";
 import { ChevronLeft, IconCalendar, IconCheckCircle, IconCreditCard } from "../components/Icons";
 import { resolveImg } from "../lib/img";
 import { Seo, SITE_NAME } from "../lib/Seo";
@@ -76,7 +76,6 @@ export function SeminarPage() {
   if (isError || !course) return <NotFound />;
 
   const img = resolveImg(course.image);
-  const noun = course.isAusbildungskurs ? "Ausbildungskurs" : "Seminar";
   const enablesHeading = course.isAusbildungskurs
     ? "Der Ausbildungskurs ermöglicht Ihnen…"
     : "Das Seminar ermöglicht Ihnen…";
@@ -124,7 +123,7 @@ export function SeminarPage() {
 
             {course.includes.length > 0 && (
               <>
-                <h2 className="mb-4 mt-10 text-[22px] font-bold text-ink">Im {noun} erhalten Sie…</h2>
+                <h2 className="mb-4 mt-10 text-[22px] font-bold text-ink">Im Kurs erhalten Sie…</h2>
                 <div className="mb-2 grid grid-cols-2 gap-4 max-[900px]:grid-cols-1">
                   {course.includes.map((s, i) => (
                     <div key={i} className="flex items-start gap-3 rounded-lg bg-bg-alt px-[18px] py-4">
@@ -169,8 +168,17 @@ export function SeminarPage() {
                     <ul className="text-sm">
                       {sortTermine(course.termine).map((t, i) => (
                         <li key={i} className="border-b border-line-soft py-1.5 last:border-b-0">
-                          <span className="font-semibold text-navy">{fmtDateLong(t.date)}</span>
-                          {t.time && <span className="ml-1.5 text-[13px] text-text">{t.time}</span>}
+                          <div>
+                            {t.date && <span className="font-semibold text-navy">{fmtDateRange(t.date, t.endDate)}</span>}
+                            {t.name && (
+                              <span className={t.date ? "ml-1.5 text-[13px] text-text" : "text-[13px] font-semibold text-navy"}>
+                                {t.name}
+                              </span>
+                            )}
+                          </div>
+                          {t.description && (
+                            <div className="mt-0.5 text-[12px] leading-[1.45] text-slate">{t.description}</div>
+                          )}
                         </li>
                       ))}
                     </ul>

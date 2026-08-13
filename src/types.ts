@@ -2,8 +2,10 @@
 // localStorage prototype (js/store.js) so the admin frontend needs minimal change.
 
 export interface Termin {
-  date: string; // ISO yyyy-mm-dd
-  time: string; // free text, e.g. "09:30-18:00" or "Block 1"
+  date: string; // ISO yyyy-mm-dd (start date; may be "" for a name-only entry)
+  endDate?: string; // ISO yyyy-mm-dd — optional end date for a range (e.g. 6.–7. Feb.)
+  name: string; // prominent label, e.g. "Modul 1" or "09:30–18:00 Uhr" (was the free-text "time")
+  description?: string; // optional detail, shown smaller below the name
 }
 
 export interface Course {
@@ -22,6 +24,9 @@ export interface Course {
   termine: Termin[];
   includes: string[];
   enables: string[];
+  // Keys of the fixed homepage service-card slots that link to this course
+  // (see frontend serviceSlots.ts). Empty = not featured on the homepage.
+  homepageSlots: string[];
   createdAt?: string;
   updatedAt?: string;
 }

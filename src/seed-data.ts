@@ -9,6 +9,7 @@ export const COURSE_DEFAULTS: Course[] = [
   {
     id: "c-angst",
     slug: "von-der-angst-zum-mut",
+    homepageSlots: [],
     isAusbildungskurs: false,
     isBildungsurlaub: false,
     title: "Von der Angst zum Mut",
@@ -18,8 +19,12 @@ export const COURSE_DEFAULTS: Course[] = [
     cost: "280,00 €",
     image: "/assets/seminar-mountain.png",
     termine: [
-      { date: "2026-06-19", time: "09:30-18:00" },
-      { date: "2026-06-20", time: "09:30-18:00" },
+      {
+        date: "2026-06-19",
+        endDate: "2026-06-20",
+        name: "09:30–18:00 Uhr",
+        description: "Zweitägiges Wochenendseminar in kleiner Gruppe.",
+      },
     ],
     includes: [
       "Einen Überblick über den Ansatz von Fritz Riemann",
@@ -36,6 +41,7 @@ export const COURSE_DEFAULTS: Course[] = [
   {
     id: "c-konflikt",
     slug: "konfliktpotential-kreativ-nutzen",
+    homepageSlots: [],
     isAusbildungskurs: false,
     isBildungsurlaub: false,
     title: "Konfliktpotential kreativ nutzen",
@@ -44,10 +50,7 @@ export const COURSE_DEFAULTS: Course[] = [
       "Konflikte sind keine Störung, sondern ein natürlicher Teil zwischenmenschlicher Beziehungen. Gut genutzt eröffnen sie Räume für Wachstum, Klärung und neue Perspektiven.\n\nIn diesem Wochenendseminar lernen Sie, eigene Konfliktmuster zu erkennen, die innere Dynamik zu verstehen und Werkzeuge der Transaktionsanalyse einzusetzen, um Konflikte konstruktiv zu gestalten.",
     cost: "280,00 €",
     image: "",
-    termine: [
-      { date: "2026-09-03", time: "09:30-18:00" },
-      { date: "2026-09-04", time: "09:30-18:00" },
-    ],
+    termine: [{ date: "2026-09-03", endDate: "2026-09-04", name: "09:30–18:00 Uhr" }],
     includes: [
       "Modelle zum Verständnis von Konfliktdynamik",
       "Übungen zur Selbstwahrnehmung in Konfliktsituationen",
@@ -62,6 +65,7 @@ export const COURSE_DEFAULTS: Course[] = [
   {
     id: "c-ausbildung",
     slug: "ausbildungskurs-ta",
+    homepageSlots: [],
     isAusbildungskurs: true,
     isBildungsurlaub: false,
     title: "Ausbildungskurs in TA",
@@ -71,12 +75,12 @@ export const COURSE_DEFAULTS: Course[] = [
     cost: "Auf Anfrage",
     image: "",
     termine: [
-      { date: "2026-02-06", time: "Block 1" },
-      { date: "2026-03-20", time: "Block 2" },
-      { date: "2026-06-12", time: "Block 3" },
-      { date: "2026-09-25", time: "Block 4" },
-      { date: "2026-10-30", time: "Block 5" },
-      { date: "2026-12-04", time: "Block 6" },
+      { date: "2026-02-06", name: "Block 1" },
+      { date: "2026-03-20", name: "Block 2" },
+      { date: "2026-06-12", name: "Block 3" },
+      { date: "2026-09-25", name: "Block 4" },
+      { date: "2026-10-30", name: "Block 5" },
+      { date: "2026-12-04", name: "Block 6" },
     ],
     includes: [
       "Vermittlung der zentralen TA-Konzepte",
@@ -92,6 +96,7 @@ export const COURSE_DEFAULTS: Course[] = [
   {
     id: "c-einfuehrung",
     slug: "einfuehrungskurs-ta",
+    homepageSlots: [],
     isAusbildungskurs: true,
     isBildungsurlaub: false,
     title: "Einführungskurs in TA",
@@ -101,8 +106,8 @@ export const COURSE_DEFAULTS: Course[] = [
     cost: "240,00 €",
     image: "",
     termine: [
-      { date: "2026-10-16", time: "09:30-18:00" },
-      { date: "2026-10-17", time: "09:30-17:00" },
+      { date: "2026-10-16", name: "09:30–18:00 Uhr" },
+      { date: "2026-10-17", name: "09:30–17:00 Uhr" },
     ],
     includes: [
       "Überblick über die zentralen TA-Konzepte",
@@ -114,6 +119,7 @@ export const COURSE_DEFAULTS: Course[] = [
   {
     id: "c-selbsterfahrung",
     slug: "selbsterfahrungsseminar",
+    homepageSlots: [],
     isAusbildungskurs: false,
     isBildungsurlaub: false,
     title: "Selbsterfahrungsseminar",
@@ -123,8 +129,8 @@ export const COURSE_DEFAULTS: Course[] = [
     cost: "320,00 €",
     image: "",
     termine: [
-      { date: "2026-11-20", time: "09:30-18:00" },
-      { date: "2026-11-21", time: "09:30-17:00" },
+      { date: "2026-11-20", name: "09:30–18:00 Uhr" },
+      { date: "2026-11-21", name: "09:30–17:00 Uhr" },
     ],
     includes: [
       "Strukturierte Selbsterfahrungseinheiten",
@@ -140,6 +146,7 @@ export const COURSE_DEFAULTS: Course[] = [
   {
     id: "c-gruppensuper",
     slug: "gruppensupervision",
+    homepageSlots: [],
     isAusbildungskurs: false,
     isBildungsurlaub: false,
     title: "Gruppensupervision",
@@ -149,12 +156,12 @@ export const COURSE_DEFAULTS: Course[] = [
     cost: "Auf Anfrage",
     image: "",
     termine: [
-      { date: "2026-02-26", time: "09:30-17:00" },
-      { date: "2026-04-30", time: "09:30-17:00" },
-      { date: "2026-06-18", time: "09:30-17:00" },
-      { date: "2026-08-27", time: "09:30-17:00" },
-      { date: "2026-10-08", time: "09:30-17:00" },
-      { date: "2026-11-12", time: "09:30-17:00" },
+      { date: "2026-02-26", name: "09:30–17:00 Uhr" },
+      { date: "2026-04-30", name: "09:30–17:00 Uhr" },
+      { date: "2026-06-18", name: "09:30–17:00 Uhr" },
+      { date: "2026-08-27", name: "09:30–17:00 Uhr" },
+      { date: "2026-10-08", name: "09:30–17:00 Uhr" },
+      { date: "2026-11-12", name: "09:30–17:00 Uhr" },
     ],
     includes: [
       "Strukturierte Fallreflexion",

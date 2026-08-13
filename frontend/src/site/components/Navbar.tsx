@@ -9,7 +9,7 @@ const navLinks: { to: string; label: string; end?: boolean; alsoActiveOn?: strin
   { to: "/", label: "Home", end: true },
   { to: "/ueber-mich", label: "Über mich" },
   { to: "/kurstermine", label: "Kurstermine", alsoActiveOn: "/seminar" },
-  { to: "/empfehlungen", label: "Empfehlungen" },
+  { to: "/empfehlungen", label: "Kooperationen" },
 ];
 
 const linkBase =
