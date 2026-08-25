@@ -193,8 +193,7 @@ export function EmpfehlungenPage() {
             </h1>
             <p className="mx-auto max-w-[720px] text-[17px] leading-[1.55] text-text">
               Ein vertrauensvolles Netzwerk ist das Fundament professioneller Begleitung. Hier finden Sie
-              Institutionen, geschätzte Kolleg:innen und wertvolle Ressourcen, die ich aufgrund ihrer fachlichen
-              Qualität und menschlichen Integrität empfehle.
+              Institutionen, geschätzte Kolleg:innen und wertvolle Ressourcen, mit denen ich aufgrund ihrer fachlichen Qualität und menschlichen Integrität gern zusammenarbeite.
             </p>
           </div>
         </Container>
@@ -202,7 +201,7 @@ export function EmpfehlungenPage() {
 
       <Container className="pb-20">
         {isLoading ? (
-          <p className="py-16 text-center text-slate">Inhalte werden geladen…</p>
+          <p className="py-16 text-center text-slate">Inhalte werden geladen…</p>   
         ) : isError || !data ? (
           <p className="py-16 text-center text-text">Die Inhalte konnten derzeit nicht geladen werden.</p>
         ) : (

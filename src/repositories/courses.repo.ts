@@ -27,6 +27,9 @@ function assemble(
     includes,
     enables,
     homepageSlots,
+    arbeitsweise: c.arbeitsweise ?? "",
+    useNameWording: !!c.use_name_wording,
+    nameInSentence: c.name_in_sentence ?? "",
     createdAt: c.created_at,
     updatedAt: c.updated_at,
   };
@@ -123,6 +126,9 @@ export async function saveCourse(input: Partial<Course>): Promise<Course> {
   const image = String(input.image ?? "").trim();
   const isAusbildungskurs = input.isAusbildungskurs ? 1 : 0;
   const isBildungsurlaub = input.isBildungsurlaub ? 1 : 0;
+  const arbeitsweise = String(input.arbeitsweise ?? "").trim();
+  const useNameWording = input.useNameWording ? 1 : 0;
+  const nameInSentence = String(input.nameInSentence ?? "").trim();
   const termine = Array.isArray(input.termine) ? input.termine : [];
   const includes = Array.isArray(input.includes) ? input.includes : [];
   const enables = Array.isArray(input.enables) ? input.enables : [];
@@ -133,8 +139,8 @@ export async function saveCourse(input: Partial<Course>): Promise<Course> {
     const exists = (ex as any[]).length > 0;
     if (exists) {
       await conn.query(
-        "UPDATE courses SET slug=?, title=?, subtitle=?, description=?, cost=?, image=?, is_ausbildungskurs=?, is_bildungsurlaub=? WHERE id=?",
-        [slug, title, subtitle, description, cost, image, isAusbildungskurs, isBildungsurlaub, id]
+        "UPDATE courses SET slug=?, title=?, subtitle=?, description=?, cost=?, image=?, is_ausbildungskurs=?, is_bildungsurlaub=?, arbeitsweise=?, use_name_wording=?, name_in_sentence=? WHERE id=?",
+        [slug, title, subtitle, description, cost, image, isAusbildungskurs, isBildungsurlaub, arbeitsweise, useNameWording, nameInSentence, id]
       );
       await conn.query("DELETE FROM course_termine WHERE course_id=?", [id]);
       await conn.query("DELETE FROM course_includes WHERE course_id=?", [id]);
@@ -144,8 +150,8 @@ export async function saveCourse(input: Partial<Course>): Promise<Course> {
       const [mx] = await conn.query("SELECT COALESCE(MAX(sort_order),-1)+1 AS n FROM courses");
       const sort = (mx as any[])[0].n;
       await conn.query(
-        "INSERT INTO courses (id, slug, title, subtitle, description, cost, image, is_ausbildungskurs, is_bildungsurlaub, sort_order) VALUES (?,?,?,?,?,?,?,?,?,?)",
-        [id, slug, title, subtitle, description, cost, image, isAusbildungskurs, isBildungsurlaub, sort]
+        "INSERT INTO courses (id, slug, title, subtitle, description, cost, image, is_ausbildungskurs, is_bildungsurlaub, arbeitsweise, use_name_wording, name_in_sentence, sort_order) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        [id, slug, title, subtitle, description, cost, image, isAusbildungskurs, isBildungsurlaub, arbeitsweise, useNameWording, nameInSentence, sort]
       );
     }
     // Persist termine in chronological order (ISO yyyy-mm-dd sorts lexically),

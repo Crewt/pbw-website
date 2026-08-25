@@ -11,6 +11,8 @@ export function KontaktPanel() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [newsletterUrl, setNewsletterUrl] = useState("");
+  const [instagramUrl, setInstagramUrl] = useState("");
+  const [linkedinUrl, setLinkedinUrl] = useState("");
   const [saved, setSaved] = useState(false);
   // Once the user starts editing, background refetches (e.g. window focus) must
   // not clobber the in-progress input anymore.
@@ -21,6 +23,8 @@ export function KontaktPanel() {
       setEmail(data.kontakt.email ?? "");
       setPhone(data.kontakt.phone ?? "");
       setNewsletterUrl(data.kontakt.newsletterFormularUrl ?? "");
+      setInstagramUrl(data.kontakt.instagramUrl ?? "");
+      setLinkedinUrl(data.kontakt.linkedinUrl ?? "");
     }
   }, [data]);
 
@@ -30,6 +34,8 @@ export function KontaktPanel() {
         email: email.trim(),
         phone: phone.trim(),
         newsletterFormularUrl: newsletterUrl.trim(),
+        instagramUrl: instagramUrl.trim(),
+        linkedinUrl: linkedinUrl.trim(),
       });
       dirty.current = false;
       setSaved(true);
@@ -85,6 +91,34 @@ export function KontaktPanel() {
             Link zum gehosteten CleverReach-Anmeldeformular. Leer lassen, um den Newsletter-Button
             auszublenden.
           </p>
+        </div>
+        <div>
+          <label className="field-label">Instagram-URL</label>
+          <input
+            type="url"
+            className="field-input"
+            placeholder="https://www.instagram.com/…"
+            value={instagramUrl}
+            onChange={(e) => {
+              dirty.current = true;
+              setInstagramUrl(e.target.value);
+            }}
+          />
+          <p className="mt-1 text-xs text-slate">Leer lassen, um das Instagram-Icon im Footer auszublenden.</p>
+        </div>
+        <div>
+          <label className="field-label">LinkedIn-URL</label>
+          <input
+            type="url"
+            className="field-input"
+            placeholder="https://www.linkedin.com/in/…"
+            value={linkedinUrl}
+            onChange={(e) => {
+              dirty.current = true;
+              setLinkedinUrl(e.target.value);
+            }}
+          />
+          <p className="mt-1 text-xs text-slate">Leer lassen, um das LinkedIn-Icon im Footer auszublenden.</p>
         </div>
         <div className="flex items-center gap-3">
           <button className="btn-primary" onClick={handleSave} disabled={kontakt.isPending}>

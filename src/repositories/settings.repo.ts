@@ -9,6 +9,8 @@ const SINGLETONS: Record<SingletonName, Record<string, string>> = {
     email: "kontakt.email",
     phone: "kontakt.phone",
     newsletterFormularUrl: "kontakt.newsletter_formular_url",
+    instagramUrl: "kontakt.instagram_url",
+    linkedinUrl: "kontakt.linkedin_url",
   },
   about: { image: "about.image" },
 };

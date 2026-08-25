@@ -24,6 +24,13 @@ export interface Course {
   // Keys of the fixed homepage service-card slots that link to this course
   // (see lib/serviceSlots.ts). Empty = not featured on the homepage.
   homepageSlots: string[];
+  // Optional second description ("Wie ich arbeite"), rendered at the very bottom
+  // of the seminar page; the section is hidden when empty.
+  arbeitsweise: string;
+  // When true, the seminar page uses the course name in the two content headings
+  // via nameInSentence (dative form incl. article, e.g. "der Paarberatung").
+  useNameWording: boolean;
+  nameInSentence: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -78,6 +85,9 @@ export interface Kontakt {
   // Optional URL of the externally hosted CleverReach signup form. Empty = the
   // newsletter button is not rendered on the public site.
   newsletterFormularUrl: string;
+  // Optional social profile URLs. Empty = the icon is not shown in the footer.
+  instagramUrl: string;
+  linkedinUrl: string;
 }
 
 export interface About {

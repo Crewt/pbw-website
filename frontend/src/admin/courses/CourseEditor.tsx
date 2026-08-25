@@ -26,6 +26,9 @@ const schema = z.object({
   includes: z.array(z.object({ value: z.string() })),
   enables: z.array(z.object({ value: z.string() })),
   homepageSlots: z.array(z.string()),
+  arbeitsweise: z.string(),
+  useNameWording: z.boolean(),
+  nameInSentence: z.string(),
 });
 type FormValues = z.infer<typeof schema>;
 
@@ -45,6 +48,9 @@ function toForm(course: Course | null): FormValues {
       includes: [{ value: "" }],
       enables: [{ value: "" }],
       homepageSlots: [],
+      arbeitsweise: "",
+      useNameWording: false,
+      nameInSentence: "",
     };
   }
   return {
@@ -66,6 +72,9 @@ function toForm(course: Course | null): FormValues {
     includes: (course.includes.length ? course.includes : [""]).map((value) => ({ value })),
     enables: (course.enables.length ? course.enables : [""]).map((value) => ({ value })),
     homepageSlots: course.homepageSlots ?? [],
+    arbeitsweise: course.arbeitsweise ?? "",
+    useNameWording: course.useNameWording ?? false,
+    nameInSentence: course.nameInSentence ?? "",
   };
 }
 
@@ -86,6 +95,7 @@ export function CourseEditor({ course, onClose }: { course: Course | null; onClo
   // via the saved flag, on the public detail page.
   const isKurs = watch("isAusbildungskurs");
   const enablesLabel = isKurs ? "Der Ausbildungskurs ermöglicht Ihnen…" : "Das Seminar ermöglicht Ihnen…";
+  const useName = watch("useNameWording");
 
   const termine = useFieldArray({ control, name: "termine" });
   const includes = useFieldArray({ control, name: "includes" });
@@ -113,6 +123,9 @@ export function CourseEditor({ course, onClose }: { course: Course | null; onClo
       includes: data.includes.map((i) => i.value.trim()).filter(Boolean),
       enables: data.enables.map((e) => e.value.trim()).filter(Boolean),
       homepageSlots: data.homepageSlots,
+      arbeitsweise: data.arbeitsweise.trim(),
+      useNameWording: data.useNameWording,
+      nameInSentence: data.nameInSentence.trim(),
     };
     try {
       await save.mutateAsync(payload);
@@ -171,7 +184,14 @@ export function CourseEditor({ course, onClose }: { course: Course | null; onClo
         <div>
           <label className="field-label">Beschreibung</label>
           <textarea className="field-input min-h-24" {...register("description")} />
-          <p className="mt-1 text-xs text-slate">Mehrere Absätze mit Leerzeile trennen.</p>
+          <p className="mt-1 text-xs text-slate">Mehrere Absätze mit Leerzeile trennen. Leer = Block wird ausgeblendet.</p>
+        </div>
+        <div>
+          <label className="field-label">Arbeitsweise (optional)</label>
+          <textarea className="field-input min-h-24" {...register("arbeitsweise")} />
+          <p className="mt-1 text-xs text-slate">
+            Erscheint als Abschnitt „Wie ich arbeite" ganz unten auf der Seminarseite. Leer = wird nicht angezeigt.
+          </p>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -201,6 +221,24 @@ export function CourseEditor({ course, onClose }: { course: Course | null; onClo
             <input type="checkbox" className="h-4 w-4" {...register("isBildungsurlaub")} />
             Ist anerkannter Bildungsurlaub
           </label>
+          <label className="flex items-center gap-2 text-sm text-text">
+            <input type="checkbox" className="h-4 w-4" {...register("useNameWording")} />
+            Im Text den Kursnamen verwenden (statt „Seminar/Kurs")
+          </label>
+          {useName && (
+            <div className="pl-6">
+              <label className="field-label">Bezeichnung im Satz (Dativ, inkl. Artikel)</label>
+              <input
+                className="field-input"
+                placeholder="z. B. der Paarberatung / dem Coaching"
+                {...register("nameInSentence")}
+              />
+              <p className="mt-1 text-xs text-slate">
+                Ergibt z. B. „In der Paarberatung erhalten Sie…" und „In der Paarberatung lernen Sie…".
+                Leer = generische Formulierung.
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="space-y-2 rounded-lg border border-line bg-bg-alt/50 p-4">
