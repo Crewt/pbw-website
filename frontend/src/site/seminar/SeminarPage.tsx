@@ -167,7 +167,9 @@ function DetailsBoxInner({ course }: { course: Course }) {
       <hr className="my-5 border-0 border-t border-line-soft" />
 
       <p className="mb-4 text-sm leading-[1.5] text-text">
-        Nehmen Sie Kontakt auf, um weitere Informationen zu erhalten und sich anzumelden.
+        {course.termine.length > 0
+          ? "Nehmen Sie Kontakt auf, um weitere Informationen zu erhalten und sich anzumelden."
+          : "Nehmen Sie Kontakt auf, um weitere Informationen zu erhalten und einen Termin zu vereinbaren."}
       </p>
       <Link to={`/kontakt?kurs=${encodeURIComponent(course.title)}`} className="btn-cta w-full">
         Jetzt Kontakt aufnehmen
