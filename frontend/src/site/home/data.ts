@@ -31,13 +31,6 @@ export const services: Service[] = [
       "Individuelle Begleitung in Krisen, bei Neuorientierung oder für die persönliche Entwicklung und Klarheit.",
   },
   {
-    icon: IconCouple,
-    title: "Paarberatung",
-    slot: "paarberatung",
-    description:
-      "Unterstützung für Paare zur Klärung von Konflikten, Verbesserung der Kommunikation und Entwicklung neuer Perspektiven.",
-  },
-  {
     icon: IconCoaching,
     title: "Coaching",
     slot: "coaching",
@@ -52,11 +45,18 @@ export const services: Service[] = [
       "Stärkung von Zusammenarbeit und Zusammenhalt im Team durch Klärung der Strukturen, Prozesse und Teamkultur sowie durch Förderung direkter Kommunikation.",
   },
   {
+    icon: IconCouple,
+    title: "Paarberatung",
+    slot: "paarberatung",
+    description:
+      "Unterstützung für Paare zur Klärung von Konflikten, Verbesserung der Kommunikation und Entwicklung neuer Perspektiven.",
+  },
+  {
     icon: IconOrg,
     title: "Organisationsentwicklung",
     slot: "organisationsentwicklung",
     description:
-      "Entwicklung der Organisation und Menschen zur Stärkung der Wirksamkeit - durch flexible, aktive Anpassung an Veränderungen für mehr Effektivität, bessere Zusammenarbeit und Arbeitszufriedenheit.",
+      "Entwicklung der Organisation und Menschen zur Stärkung der Wirksamkeit - durch flexible, aktive Anpassung an Veränderungen.",
   },
   {
     icon: IconEducation,
@@ -91,4 +91,4 @@ export const highlights: Highlight[] = [
   },
 ];
 
-export const badges = ["DGTA", "EATA", "EASC"];
+export const badges = ["DGTA", "EATA", "EASC", "VPU"];

@@ -52,7 +52,7 @@ export function Testimonials() {
             to="/empfehlungen"
             className="inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-navy transition-all hover:gap-2.5 [&_svg]:size-4"
           >
-            Weiter zu Kooperation & Infos<ArrowRight />
+            Weiter zu Kooperation & Austausch<ArrowRight />
           </Link>
         </div>
 
