@@ -51,7 +51,7 @@ async function activeCourses(): Promise<Course[]> {
 async function homeBody(): Promise<string> {
   const courses = await activeCourses();
   return wrap(
-    `<img src="/assets/hero-office.webp" alt="Ruhiger Beratungsraum" width="1200" height="800" />` +
+    `<img src="/assets/hero4.webp" alt="Ruhiger Beratungsraum" width="1200" height="800" />` +
       `<p class="kicker">Psychologische Beratung &amp; Weiterbildung</p>` +
       `<h1>Wachstum durch bewusste Veränderung</h1>` +
       `<p>${esc(SITE_DESCRIPTION)}</p>` +

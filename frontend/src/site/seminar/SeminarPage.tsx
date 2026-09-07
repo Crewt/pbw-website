@@ -115,11 +115,17 @@ function ArticleBody({ course }: { course: Course }) {
   );
 }
 
-// The details box (Termine, Kosten, Kontakt-Button, Bildungsurlaub-Hinweis).
-// Rendered in the sticky right column when the course has Termine, otherwise
-// full-width below the article.
+// The details box (Termine, Kosten). Rendered in the sticky right column when
+// the course has Termine, otherwise full-width below the article. The contact
+// call-to-action lives in <ContactCta> at the very bottom of the page instead.
+// When the course opts into name wording, the box heading shows the course
+// title in place of the generic "Seminardetails"/"Kursdetails".
 function DetailsBoxInner({ course }: { course: Course }) {
-  const detailsHeading = course.isAusbildungskurs ? "Kursdetails" : "Seminardetails";
+  const detailsHeading = course.useNameWording
+    ? course.title
+    : course.isAusbildungskurs
+      ? "Kursdetails"
+      : "Seminardetails";
   return (
     <>
       <span className="kicker mb-5 block">{detailsHeading}</span>
@@ -164,22 +170,30 @@ function DetailsBoxInner({ course }: { course: Course }) {
         </div>
       )}
 
-      <hr className="my-5 border-0 border-t border-line-soft" />
+    </>
+  );
+}
 
+// Contact call-to-action, shown full-width at the very bottom of the page
+// (below "Wie ich arbeite"). Wording follows the same Termine-based rule as
+// before; the Bildungsurlaub note travels with it.
+function ContactCta({ course }: { course: Course }) {
+  return (
+    <section className="mb-20 rounded-xl border border-line bg-white p-7 shadow-soft">
       <p className="mb-4 text-sm leading-[1.5] text-text">
         {course.termine.length > 0
           ? "Nehmen Sie Kontakt auf, um weitere Informationen zu erhalten und sich anzumelden."
           : "Nehmen Sie Kontakt auf, um weitere Informationen zu erhalten und einen Termin zu vereinbaren."}
       </p>
-      <Link to={`/kontakt?kurs=${encodeURIComponent(course.title)}`} className="btn-cta w-full">
+      <Link to={`/kontakt?kurs=${encodeURIComponent(course.title)}`} className="btn-cta">
         Jetzt Kontakt aufnehmen
       </Link>
       {course.isBildungsurlaub && (
-        <p className="mt-4 rounded-lg bg-bg-alt px-4 py-3 text-center text-sm font-semibold text-navy">
+        <p className="mt-4 rounded-lg bg-bg-alt px-4 py-3 text-sm font-semibold text-navy">
           Als Bildungsurlaub mit der Kennziffer 8291/0321/27 anerkannt!
         </p>
       )}
-    </>
+    </section>
   );
 }
 
@@ -258,18 +272,22 @@ export function SeminarPage() {
         ) : (
           <div className="my-16 flex flex-col gap-10">
             <ArticleBody course={course} />
-            <div className="mx-auto w-full max-w-[600px] rounded-xl border border-line bg-white p-7 shadow-soft">
-              <DetailsBoxInner course={course} />
-            </div>
+            {course.cost && (
+              <div className="mx-auto w-full max-w-[600px] rounded-xl border border-line bg-white p-7 shadow-soft">
+                <DetailsBoxInner course={course} />
+              </div>
+            )}
           </div>
         )}
 
         {course.arbeitsweise?.trim() && (
-          <section className="mb-20 max-w-[760px]">
+          <section className="mb-12">
             <h2 className="mb-4 text-[22px] font-bold text-ink">Wie ich arbeite</h2>
             <Description text={course.arbeitsweise} />
           </section>
         )}
+
+        <ContactCta course={course} />
       </Container>
     </>
   );

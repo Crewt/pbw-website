@@ -199,7 +199,7 @@ function buildBlock(pathname: string, r: Resolved): { title: string; block: stri
   // parallel with the JS bundle instead of after React renders (big LCP win).
   if (pathname === "/") {
     rows.push(
-      `<link rel="preload" as="image" href="/assets/hero-office.webp" fetchpriority="high" data-seo-server />`
+      `<link rel="preload" as="image" href="/assets/hero4.webp" fetchpriority="high" data-seo-server />`
     );
   }
   rows.push(`<meta name="description" content="${esc(d)}" data-seo-server />`);
