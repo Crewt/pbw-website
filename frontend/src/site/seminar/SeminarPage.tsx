@@ -21,22 +21,17 @@ function sortTermine<T extends { date: string }>(termine: T[]): T[] {
   });
 }
 
-// Section headings for "…erhalten Sie" / "…ermöglicht Ihnen". When the course
-// opts into name wording (and supplies a dative form like "der Paarberatung"),
-// the generic "Seminar/Kurs" wording is replaced by the course name.
+// Section headings above the two content lists. Each is a free-text field the
+// course can override verbatim; when empty we fall back to a generic wording
+// ("Im Kurs erhalten Sie…" / "Das Seminar ermöglicht Ihnen…").
 function courseWordings(course: Course): { includesHeading: string; enablesHeading: string } {
-  const form = course.nameInSentence?.trim();
-  if (course.useNameWording && form) {
-    return {
-      includesHeading: `In ${form} erhalten Sie…`,
-      enablesHeading: `In ${form} lernen Sie…`,
-    };
-  }
   return {
-    includesHeading: "Im Kurs erhalten Sie…",
-    enablesHeading: course.isAusbildungskurs
-      ? "Der Ausbildungskurs ermöglicht Ihnen…"
-      : "Das Seminar ermöglicht Ihnen…",
+    includesHeading: course.includesHeading?.trim() || "Im Kurs erhalten Sie…",
+    enablesHeading:
+      course.enablesHeading?.trim() ||
+      (course.isAusbildungskurs
+        ? "Der Ausbildungskurs ermöglicht Ihnen…"
+        : "Das Seminar ermöglicht Ihnen…"),
   };
 }
 
@@ -118,17 +113,11 @@ function ArticleBody({ course }: { course: Course }) {
 // The details box (Termine, Kosten). Rendered in the sticky right column when
 // the course has Termine, otherwise full-width below the article. The contact
 // call-to-action lives in <ContactCta> at the very bottom of the page instead.
-// When the course opts into name wording, the box heading shows the course
-// title in place of the generic "Seminardetails"/"Kursdetails".
+// The box heading always shows the course title.
 function DetailsBoxInner({ course }: { course: Course }) {
-  const detailsHeading = course.useNameWording
-    ? course.title
-    : course.isAusbildungskurs
-      ? "Kursdetails"
-      : "Seminardetails";
   return (
     <>
-      <span className="kicker mb-5 block">{detailsHeading}</span>
+      <span className="kicker mb-5 block">{course.title}</span>
 
       {course.termine.length > 0 && (
         <div className="mb-4 flex items-start gap-3.5">

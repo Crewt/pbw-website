@@ -27,8 +27,8 @@ const schema = z.object({
   enables: z.array(z.object({ value: z.string() })),
   homepageSlots: z.array(z.string()),
   arbeitsweise: z.string(),
-  useNameWording: z.boolean(),
-  nameInSentence: z.string(),
+  includesHeading: z.string(),
+  enablesHeading: z.string(),
 });
 type FormValues = z.infer<typeof schema>;
 
@@ -49,8 +49,8 @@ function toForm(course: Course | null): FormValues {
       enables: [{ value: "" }],
       homepageSlots: [],
       arbeitsweise: "",
-      useNameWording: false,
-      nameInSentence: "",
+      includesHeading: "",
+      enablesHeading: "",
     };
   }
   return {
@@ -73,8 +73,8 @@ function toForm(course: Course | null): FormValues {
     enables: (course.enables.length ? course.enables : [""]).map((value) => ({ value })),
     homepageSlots: course.homepageSlots ?? [],
     arbeitsweise: course.arbeitsweise ?? "",
-    useNameWording: course.useNameWording ?? false,
-    nameInSentence: course.nameInSentence ?? "",
+    includesHeading: course.includesHeading ?? "",
+    enablesHeading: course.enablesHeading ?? "",
   };
 }
 
@@ -95,7 +95,6 @@ export function CourseEditor({ course, onClose }: { course: Course | null; onClo
   // via the saved flag, on the public detail page.
   const isKurs = watch("isAusbildungskurs");
   const enablesLabel = isKurs ? "Der Ausbildungskurs ermöglicht Ihnen…" : "Das Seminar ermöglicht Ihnen…";
-  const useName = watch("useNameWording");
 
   const termine = useFieldArray({ control, name: "termine" });
   const includes = useFieldArray({ control, name: "includes" });
@@ -124,8 +123,8 @@ export function CourseEditor({ course, onClose }: { course: Course | null; onClo
       enables: data.enables.map((e) => e.value.trim()).filter(Boolean),
       homepageSlots: data.homepageSlots,
       arbeitsweise: data.arbeitsweise.trim(),
-      useNameWording: data.useNameWording,
-      nameInSentence: data.nameInSentence.trim(),
+      includesHeading: data.includesHeading.trim(),
+      enablesHeading: data.enablesHeading.trim(),
     };
     try {
       await save.mutateAsync(payload);
@@ -221,24 +220,31 @@ export function CourseEditor({ course, onClose }: { course: Course | null; onClo
             <input type="checkbox" className="h-4 w-4" {...register("isBildungsurlaub")} />
             Ist anerkannter Bildungsurlaub
           </label>
-          <label className="flex items-center gap-2 text-sm text-text">
-            <input type="checkbox" className="h-4 w-4" {...register("useNameWording")} />
-            Im Text den Kursnamen verwenden (statt „Seminar/Kurs")
-          </label>
-          {useName && (
-            <div className="pl-6">
-              <label className="field-label">Bezeichnung im Satz (Dativ, inkl. Artikel)</label>
-              <input
-                className="field-input"
-                placeholder="z. B. der Paarberatung / dem Coaching"
-                {...register("nameInSentence")}
-              />
-              <p className="mt-1 text-xs text-slate">
-                Ergibt z. B. „In der Paarberatung erhalten Sie…" und „In der Paarberatung lernen Sie…".
-                Leer = generische Formulierung.
-              </p>
-            </div>
-          )}
+        </div>
+
+        <div className="space-y-3 rounded-lg border border-line bg-bg-alt/50 p-4">
+          <div>
+            <label className="field-label">Überschrift über den Leistungen</label>
+            <input
+              className="field-input"
+              placeholder="z. B. Paarberatung unterstützt Sie…"
+              {...register("includesHeading")}
+            />
+            <p className="mt-1 text-xs text-slate">
+              Vollständige Überschrift über der „Leistungen"-Liste. Leer = „Im Kurs erhalten Sie…".
+            </p>
+          </div>
+          <div>
+            <label className="field-label">Überschrift über den Zielen</label>
+            <input
+              className="field-input"
+              placeholder="z. B. Paarberatung ermöglicht Ihnen…"
+              {...register("enablesHeading")}
+            />
+            <p className="mt-1 text-xs text-slate">
+              Vollständige Überschrift über der „Ziele"-Liste. Leer = „{enablesLabel}".
+            </p>
+          </div>
         </div>
 
         <div className="space-y-2 rounded-lg border border-line bg-bg-alt/50 p-4">

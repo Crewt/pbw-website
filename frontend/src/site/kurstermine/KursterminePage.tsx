@@ -155,8 +155,8 @@ export function KursterminePage() {
 
         <div className="mt-16 mb-24 aspect-[21/9] overflow-hidden rounded-xl bg-bg-alt">
           <img
-            src="/assets/kurstermine-office.webp"
-            alt="Seminarraum / Praxisflur"
+            src="/assets/kurstermine-seite-unten.webp"
+            alt=""
             className="h-full w-full object-cover"
           />
         </div>

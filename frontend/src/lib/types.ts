@@ -27,10 +27,11 @@ export interface Course {
   // Optional second description ("Wie ich arbeite"), rendered at the very bottom
   // of the seminar page; the section is hidden when empty.
   arbeitsweise: string;
-  // When true, the seminar page uses the course name in the two content headings
-  // via nameInSentence (dative form incl. article, e.g. "der Paarberatung").
-  useNameWording: boolean;
-  nameInSentence: string;
+  // Full, free-text headings above the two content lists on the seminar page.
+  // Empty = generic fallback ("Im Kurs erhalten Sie…" / "Das Seminar ermöglicht
+  // Ihnen…"). E.g. "Paarberatung unterstützt Sie…" / "Paarberatung ermöglicht Ihnen…".
+  includesHeading: string;
+  enablesHeading: string;
   createdAt?: string;
   updatedAt?: string;
 }
