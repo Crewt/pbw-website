@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "build:ts": "tsc",
-    "build": "npm run build:ts && npm run build:web",
+    "build": "test \"$(id -u)\" != 0 || exec sudo -u pbw -H npm run build; npm run build:ts && npm run build:web",
     "dev": "concurrently \"tsc --watch\" \"nodemon dist/server.js\"",
     "dev:web": "npm --prefix frontend run dev",
     "dev:all": "concurrently \"npm run dev\" \"npm run dev:web\"",
@@ -14,7 +14,7 @@
     "seed": "node dist/scripts/seed.js",
     "admin:create": "node dist/scripts/create-admin.js",
     "favicons": "node scripts/gen-favicons.mjs",
-    "deploy": "npm i && npm run build && sudo -u pbw -H pm2 restart pbw-website --update-env"
+    "deploy": "test \"$(id -u)\" != 0 || exec sudo -u pbw -H npm run deploy; npm i && npm run build && pm2 restart pbw-website --update-env"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
