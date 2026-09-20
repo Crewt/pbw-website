@@ -2,11 +2,14 @@ import type { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { Container } from "../components/Container";
-import { getCourses } from "../../lib/api";
+import { getContent, getCourses } from "../../lib/api";
 import type { Course } from "../../lib/types";
 import { CourseCard } from "./CourseCard";
 import { IconCalendar, IconChat, IconDownload } from "../components/Icons";
 import { Seo, SITE_NAME } from "../lib/Seo";
+
+const FALLBACK_HEADER_BG = "/assets/header-bg.webp";
+const FALLBACK_KURSTERMINE_UNTEN = "/assets/kurstermine-seite-unten.webp";
 
 // Latest termin of a course — ISO date strings sort chronologically. A ranged
 // termin counts through its end date, so a running multi-day seminar stays visible.
@@ -74,6 +77,9 @@ function YearSection({ year, courses, first }: { year: number; courses: Course[]
 
 export function KursterminePage() {
   const { data: courses, isLoading, isError } = useQuery({ queryKey: ["courses"], queryFn: getCourses });
+  const { data: content } = useQuery({ queryKey: ["content"], queryFn: getContent });
+  const headerBg = content?.bilder?.headerBg || FALLBACK_HEADER_BG;
+  const kurstermineUnten = content?.bilder?.kurstermineUnten || FALLBACK_KURSTERMINE_UNTEN;
 
   // --- visibility + grouping (client-side, against the real date) ---
   const today0 = new Date();
@@ -112,7 +118,10 @@ export function KursterminePage() {
         description="Aktuelle Kurstermine und Seminare von PBW – Beatrice Czekalla. Themen, Termine und Anmeldung im Überblick."
       />
       <section className="relative mb-16 overflow-hidden border-b border-line bg-bg-alt pb-16 pt-20">
-        <div className="absolute inset-0 bg-[url(/assets/header-bg.webp)] bg-cover bg-center opacity-20" />
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-20"
+          style={{ backgroundImage: `url(${JSON.stringify(headerBg)})` }}
+        />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(243,244,244,0.7)_0%,rgba(243,244,244,0.95)_100%)]" />
         <Container>
           <div className="relative z-[1] max-w-[720px]">
@@ -154,11 +163,7 @@ export function KursterminePage() {
         </div>
 
         <div className="mt-16 mb-24 aspect-[21/9] overflow-hidden rounded-xl bg-bg-alt">
-          <img
-            src="/assets/kurstermine-seite-unten.webp"
-            alt=""
-            className="h-full w-full object-cover"
-          />
+          <img src={kurstermineUnten} alt="" className="h-full w-full object-cover" />
         </div>
       </Container>
     </>

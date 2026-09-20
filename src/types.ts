@@ -94,8 +94,17 @@ export interface About {
   image: string;
 }
 
+// Fixed decorative/hero images maintained in the admin; each field falls back
+// to the bundled default asset on the public site when empty.
+export interface Bilder {
+  hero: string;
+  headerBg: string;
+  kurstermineUnten: string;
+  contactBg: string;
+}
+
 export type CollectionName = "kollegen" | "zertifikate" | "referenzen" | "ressourcen";
-export type SingletonName = "kontakt" | "about";
+export type SingletonName = "kontakt" | "about" | "bilder";
 
 export interface AdminUser {
   id: number;

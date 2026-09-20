@@ -4,6 +4,7 @@ import { Seo, SITE_NAME } from "../lib/Seo";
 import { getContent } from "../../lib/api";
 
 const FALLBACK_PORTRAIT = "/assets/portrait.webp";
+const FALLBACK_HEADER_BG = "/assets/header-bg.webp";
 
 const facts = [
   { num: "15+", lbl: "Jahre Erfahrung in Beratung & Begleitung" },
@@ -30,6 +31,7 @@ export function UeberMichPage() {
   // fall back to the static asset while loading or if the value is empty.
   const { data } = useQuery({ queryKey: ["content"], queryFn: getContent });
   const portrait = data?.about?.image || FALLBACK_PORTRAIT;
+  const headerBg = data?.bilder?.headerBg || FALLBACK_HEADER_BG;
 
   return (
     <Container>
@@ -40,7 +42,10 @@ export function UeberMichPage() {
       <section className="relative grid grid-cols-[1.1fr_1fr] items-start gap-16 py-20 max-[960px]:grid-cols-1 max-[960px]:gap-8 max-[960px]:py-12">
         {/* decorative background */}
         <div aria-hidden className="pointer-events-none absolute -left-10 top-0 h-full w-[70%] overflow-hidden">
-          <div className="absolute inset-0 bg-[url(/assets/header-bg.webp)] bg-cover bg-center opacity-10" />
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-10"
+            style={{ backgroundImage: `url(${JSON.stringify(headerBg)})` }}
+          />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,#f9f9f9_0%,rgba(249,249,249,0.4)_50%,rgba(249,249,249,1)_100%)]" />
         </div>
 

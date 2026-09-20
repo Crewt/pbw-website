@@ -1,12 +1,14 @@
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Container } from "../components/Container";
-import { getCourse } from "../../lib/api";
+import { getContent, getCourse } from "../../lib/api";
 import type { Course } from "../../lib/types";
 import { fmtDateRange } from "../lib/date";
 import { ChevronLeft, IconCalendar, IconCheckCircle, IconCreditCard } from "../components/Icons";
 import { resolveImg } from "../lib/img";
 import { Seo, SITE_NAME } from "../lib/Seo";
+
+const FALLBACK_HEADER_BG = "/assets/header-bg.webp";
 
 // Termine chronologisch (ISO yyyy-mm-dd sortiert lexikalisch); Termine ohne
 // Datum ans Ende. So werden auch noch nicht neu gespeicherte Kurse korrekt angezeigt.
@@ -207,6 +209,8 @@ export function SeminarPage() {
     isLoading,
     isError,
   } = useQuery({ queryKey: ["course", slug], queryFn: () => getCourse(slug!), enabled: !!slug });
+  const { data: content } = useQuery({ queryKey: ["content"], queryFn: getContent });
+  const headerBg = content?.bilder?.headerBg || FALLBACK_HEADER_BG;
 
   if (isLoading) {
     return (
@@ -229,7 +233,10 @@ export function SeminarPage() {
         image={course.image}
       />
       <section className="relative overflow-hidden border-b border-line bg-bg-alt pb-12 pt-16">
-        <div className="absolute inset-0 bg-[url(/assets/header-bg.webp)] bg-cover bg-center opacity-20" />
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-20"
+          style={{ backgroundImage: `url(${JSON.stringify(headerBg)})` }}
+        />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(243,244,244,0.4)_0%,rgba(243,244,244,0.85)_100%)]" />
         <Container>
           <div className="relative z-[1]">

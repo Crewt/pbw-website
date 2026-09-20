@@ -1,4 +1,4 @@
-import type { About, ContactPayload, Content, Course, CoursePayload, Kontakt } from "./types";
+import type { About, Bilder, ContactPayload, Content, Course, CoursePayload, Kontakt } from "./types";
 
 // Relative base: proxied to :3042 in dev (vite.config.ts), same-origin in prod.
 const API_BASE = "";
@@ -81,6 +81,7 @@ export const moveContentItem = (coll: string, id: string, dir: -1 | 1) =>
 // ---- Singletons ----
 export const saveKontakt = (obj: Kontakt) => request<Kontakt>("PUT", "/api/content/single/kontakt", obj);
 export const saveAbout = (obj: About) => request<About>("PUT", "/api/content/single/about", obj);
+export const saveBilder = (obj: Partial<Bilder>) => request<Bilder>("PUT", "/api/content/single/bilder", obj);
 
 // ---- Admin ----
 export const resetSeed = () => request<{ ok: boolean }>("POST", "/api/admin/reset");

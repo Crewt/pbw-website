@@ -3,7 +3,7 @@
 // example data" endpoint, so the two never drift. Image paths point at the
 // bundled /assets files copied into public/.
 
-import type { Course, Kollege, Zertifikat, Referenz, Ressource, Kontakt, About } from "./types";
+import type { Course, Kollege, Zertifikat, Referenz, Ressource, Kontakt, About, Bilder } from "./types";
 
 export const COURSE_DEFAULTS: Course[] = [
   {
@@ -324,4 +324,11 @@ export const KONTAKT_DEFAULT: Kontakt = {
 
 export const ABOUT_DEFAULT: About = {
   image: "/assets/portrait.webp",
+};
+
+export const BILDER_DEFAULT: Bilder = {
+  hero: "/assets/hero4.webp",
+  headerBg: "/assets/header-bg.webp",
+  kurstermineUnten: "/assets/kurstermine-seite-unten.webp",
+  contactBg: "/assets/contact-bg.jpg",
 };

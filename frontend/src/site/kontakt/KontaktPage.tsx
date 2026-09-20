@@ -7,8 +7,11 @@ import { NewsletterSignup } from "./NewsletterSignup";
 import { getContent } from "../../lib/api";
 import { Seo, SITE_NAME } from "../lib/Seo";
 
+const FALLBACK_CONTACT_BG = "/assets/contact-bg.jpg";
+
 export function KontaktPage() {
   const { data } = useQuery({ queryKey: ["content"], queryFn: getContent });
+  const contactBg = data?.bilder?.contactBg || FALLBACK_CONTACT_BG;
 
   return (
     <>
@@ -17,7 +20,10 @@ export function KontaktPage() {
         description="Kontakt zu Beatrice Czekalla (PBW) – Psychologische Beratung & Weiterbildung. Nachricht schreiben oder Termin vereinbaren."
       />
       <section className="relative overflow-hidden bg-bg-alt pb-[72px] pt-24 text-center">
-        <div className="absolute inset-0 bg-[url(/assets/contact-bg.jpg)] bg-cover bg-center opacity-30 saturate-[.85]" />
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-30 saturate-[.85]"
+          style={{ backgroundImage: `url(${JSON.stringify(contactBg)})` }}
+        />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(243,244,244,0.4)_0%,rgba(243,244,244,0.95)_100%)]" />
         <div className="relative z-[1] mx-auto max-w-[760px] px-5 md:px-10">
           <h1 className="mb-4 text-[52px] font-bold leading-[1.05] tracking-[-1px] text-ink max-[900px]:text-[36px]">

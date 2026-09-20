@@ -83,8 +83,8 @@ export function ImpressumPage() {
 
         <h2 className={h2}>Bildnachweis</h2>
         <p className={p}>
-          Die verwendeten Bilder stammen aus dem Bildarchiv der Bildagentur (Magix) oder sind eigene Aufnahmen bzw.
-          Aufnahmen von Teilnehmenden, die mit deren Einverständnis verwendet werden.
+          Die Bilder wurden entweder mit KI generiert oder zeigen Personen, die der Verwendung zugestimmt haben und
+          die Bildrechte innehaben.
         </p>
 
         <h2 className={h2}>Schriftarten</h2>

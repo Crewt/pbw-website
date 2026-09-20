@@ -13,6 +13,12 @@ const SINGLETONS: Record<SingletonName, Record<string, string>> = {
     linkedinUrl: "kontakt.linkedin_url",
   },
   about: { image: "about.image" },
+  bilder: {
+    hero: "bilder.hero",
+    headerBg: "bilder.header_bg",
+    kurstermineUnten: "bilder.kurstermine_unten",
+    contactBg: "bilder.contact_bg",
+  },
 };
 
 export function isSingleton(name: string): name is SingletonName {

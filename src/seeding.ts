@@ -9,6 +9,7 @@ import {
   RESSOURCEN_DEFAULTS,
   KONTAKT_DEFAULT,
   ABOUT_DEFAULT,
+  BILDER_DEFAULT,
 } from "./seed-data";
 
 // Wipe and reinsert the example content. Used by `npm run seed` and by the
@@ -29,4 +30,5 @@ export async function seedAll(): Promise<void> {
 
   await saveSingle("kontakt", KONTAKT_DEFAULT);
   await saveSingle("about", ABOUT_DEFAULT);
+  await saveSingle("bilder", BILDER_DEFAULT);
 }

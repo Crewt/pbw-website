@@ -8,6 +8,8 @@ import { safeHref } from "../../lib/url";
 import { IconArrowUpRight, IconDownload, IconInstitute, IconLink } from "../components/Icons";
 import { Seo, SITE_NAME } from "../lib/Seo";
 
+const FALLBACK_HEADER_BG = "/assets/header-bg.webp";
+
 function initials(name: string): string {
   return String(name || "?")
     .trim()
@@ -173,6 +175,7 @@ function RessourceRow({ r }: { r: Ressource }) {
 
 export function EmpfehlungenPage() {
   const { data, isLoading, isError } = useQuery({ queryKey: ["content"], queryFn: getContent });
+  const headerBg = data?.bilder?.headerBg || FALLBACK_HEADER_BG;
 
   return (
     <>
@@ -181,7 +184,10 @@ export function EmpfehlungenPage() {
         description="Empfehlungen, Kolleg:innen und Zertifizierungen im Netzwerk von PBW – Beatrice Czekalla."
       />
       <section className="relative overflow-hidden py-20 text-center">
-        <div className="absolute inset-0 bg-[url(/assets/header-bg.webp)] bg-cover bg-center opacity-[0.18]" />
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-[0.18]"
+          style={{ backgroundImage: `url(${JSON.stringify(headerBg)})` }}
+        />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(249,249,249,0.7)_0%,rgba(249,249,249,1)_100%)]" />
         <Container>
           <div className="relative z-[1]">

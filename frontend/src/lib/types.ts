@@ -95,8 +95,17 @@ export interface About {
   image: string;
 }
 
+// Fixed decorative/hero images maintained in the admin; each field falls back
+// to the bundled default asset on the public site when empty.
+export interface Bilder {
+  hero: string;
+  headerBg: string;
+  kurstermineUnten: string;
+  contactBg: string;
+}
+
 export type CollectionName = "kollegen" | "zertifikate" | "referenzen" | "ressourcen";
-export type SingletonName = "kontakt" | "about";
+export type SingletonName = "kontakt" | "about" | "bilder";
 
 // Aggregated response of GET /api/content (courses are served separately).
 export interface Content {
@@ -106,6 +115,7 @@ export interface Content {
   ressourcen: Ressource[];
   kontakt: Kontakt;
   about: About;
+  bilder: Bilder;
 }
 
 // Payload for POST /api/contact (mirrors backend ContactPayload).

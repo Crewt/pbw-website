@@ -24,6 +24,7 @@ contentRouter.get(
       ressourcen: await listCollection("ressourcen"),
       kontakt: await getSingle("kontakt"),
       about: await getSingle("about"),
+      bilder: await getSingle("bilder"),
     });
   })
 );

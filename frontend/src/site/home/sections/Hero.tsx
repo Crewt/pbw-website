@@ -1,11 +1,18 @@
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { Container } from "../../components/Container";
+import { getContent } from "../../../lib/api";
+
+const FALLBACK_HERO = "/assets/hero4.webp";
 
 export function Hero() {
+  const { data } = useQuery({ queryKey: ["content"], queryFn: getContent });
+  const hero = data?.bilder?.hero || FALLBACK_HERO;
+
   return (
     <section className="relative flex min-h-[560px] items-center overflow-hidden bg-bg-alt">
       <div className="absolute inset-0">
-        <img src="/assets/hero4.webp" alt="Ruhiger Beratungsraum" className="h-full w-full object-cover" />
+        <img src={hero} alt="Ruhiger Beratungsraum" className="h-full w-full object-cover" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(249,249,249,0.92)_0%,rgba(249,249,249,0.72)_38%,rgba(249,249,249,0.25)_70%,rgba(249,249,249,0)_100%)]" />
       </div>
       <Container className="relative z-[1] py-[72px]">

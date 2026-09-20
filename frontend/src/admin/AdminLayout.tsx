@@ -28,6 +28,7 @@ export function AdminLayout() {
   ];
   const pagesGroup: NavItem[] = [
     { to: "ueber-mich", label: "Über mich" },
+    { to: "bilder", label: "Bilder" },
     { to: "kontakt", label: "Kontakt" },
   ];
 

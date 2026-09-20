@@ -5,6 +5,7 @@ import { CoursesPanel } from "./admin/courses/CoursesPanel";
 import { CollectionPanel } from "./admin/content/CollectionPanel";
 import { KontaktPanel } from "./admin/singletons/KontaktPanel";
 import { AboutPanel } from "./admin/singletons/AboutPanel";
+import { BilderPanel } from "./admin/singletons/BilderPanel";
 import { SiteLayout } from "./site/SiteLayout";
 import { HomePage } from "./site/home/HomePage";
 import { UeberMichPage } from "./site/ueber-mich/UeberMichPage";
@@ -48,6 +49,7 @@ export const router = createBrowserRouter([
       { path: "referenzen", element: <CollectionPanel coll="referenzen" /> },
       { path: "ressourcen", element: <CollectionPanel coll="ressourcen" /> },
       { path: "ueber-mich", element: <AboutPanel /> },
+      { path: "bilder", element: <BilderPanel /> },
       { path: "kontakt", element: <KontaktPanel /> },
     ],
   },
