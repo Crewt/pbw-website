@@ -246,7 +246,6 @@ export function SeminarPage() {
             >
               <ChevronLeft /> Alle Kursangebote
             </Link>
-            <span className="kicker block">Kursangebot</span>
             <h1 className="mt-3 text-[48px] font-bold leading-[1.05] tracking-[-1px] text-ink max-[900px]:text-[36px]">
               {course.title}
             </h1>

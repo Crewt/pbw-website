@@ -198,7 +198,7 @@ export function EmpfehlungenPage() {
               Kooperation &amp; Austausch
             </h1>
             <p className="mx-auto max-w-[720px] text-[17px] leading-[1.55] text-text">
-              Ein vertrauensvolles Netzwerk ist das Fundament professioneller Begleitung. Hier finden Sie Institutionen und geschätzte Kolleg:innen , mit denen ich aufgrund ihrer fachlichen Qualität und menschlichen Integrität gern zusammenarbeite, sowie wertvolle Ressourcen, die ich empfehle.
+              Ein vertrauensvolles Netzwerk ist das Fundament professioneller Begleitung. Hier finden Sie Institutionen und geschätzte Kolleg:innen, mit denen ich aufgrund ihrer fachlichen Qualität und menschlichen Integrität gern zusammenarbeite, sowie wertvolle Ressourcen, die ich empfehle.
             </p>
           </div>
         </Container>
