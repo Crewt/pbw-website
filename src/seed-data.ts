@@ -15,6 +15,7 @@ export const COURSE_DEFAULTS: Course[] = [
     enablesHeading: "",
     isAusbildungskurs: false,
     isBildungsurlaub: false,
+    bildungsurlaubKennziffer: "",
     title: "Von der Angst zum Mut",
     subtitle: "Die grundlegenden Formen der Angst und der Weg zur persönlichen Autonomie.",
     description:
@@ -50,6 +51,7 @@ export const COURSE_DEFAULTS: Course[] = [
     enablesHeading: "",
     isAusbildungskurs: false,
     isBildungsurlaub: false,
+    bildungsurlaubKennziffer: "",
     title: "Konfliktpotential kreativ nutzen",
     subtitle: "Konflikte als Motor für Entwicklung - im Team und in der eigenen Person.",
     description:
@@ -77,6 +79,7 @@ export const COURSE_DEFAULTS: Course[] = [
     enablesHeading: "",
     isAusbildungskurs: true,
     isBildungsurlaub: false,
+    bildungsurlaubKennziffer: "",
     title: "Ausbildungskurs in TA",
     subtitle: "Mehrjähriger Ausbildungsgang in Transaktionsanalyse.",
     description:
@@ -111,6 +114,7 @@ export const COURSE_DEFAULTS: Course[] = [
     enablesHeading: "",
     isAusbildungskurs: true,
     isBildungsurlaub: false,
+    bildungsurlaubKennziffer: "",
     title: "Einführungskurs in TA",
     subtitle: "Erste Begegnung mit Transaktionsanalyse - kompakt an einem Wochenende.",
     description:
@@ -137,6 +141,7 @@ export const COURSE_DEFAULTS: Course[] = [
     enablesHeading: "",
     isAusbildungskurs: false,
     isBildungsurlaub: false,
+    bildungsurlaubKennziffer: "",
     title: "Selbsterfahrungsseminar",
     subtitle: "Bei sich selbst ankommen - Reflexion und Begegnung in einer kleinen Gruppe.",
     description:
@@ -167,6 +172,7 @@ export const COURSE_DEFAULTS: Course[] = [
     enablesHeading: "",
     isAusbildungskurs: false,
     isBildungsurlaub: false,
+    bildungsurlaubKennziffer: "",
     title: "Gruppensupervision",
     subtitle: "Regelmäßiger Reflexionsraum für Beratungs- und Therapieprofessionals.",
     description:

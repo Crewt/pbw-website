@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { Container } from "../components/Container";
+import { BannerBg } from "../components/BannerBg";
 import { getContent, getCourses } from "../../lib/api";
 import type { Course } from "../../lib/types";
 import { CourseCard } from "./CourseCard";
@@ -118,11 +119,7 @@ export function KursterminePage() {
         description="Aktuelle Kurstermine und Seminare von PBW – Beatrice Czekalla. Themen, Termine und Anmeldung im Überblick."
       />
       <section className="relative mb-16 overflow-hidden border-b border-line bg-bg-alt pb-16 pt-20">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-20"
-          style={{ backgroundImage: `url(${JSON.stringify(headerBg)})` }}
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(243,244,244,0.7)_0%,rgba(243,244,244,0.95)_100%)]" />
+        <BannerBg image={headerBg} />
         <Container>
           <div className="relative z-[1] max-w-[720px]">
             <h1 className="mb-3 text-[48px] font-bold leading-[1.05] tracking-[-1px] text-ink max-[800px]:text-[36px]">

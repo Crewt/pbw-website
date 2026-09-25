@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Container } from "../components/Container";
+import { BannerBg } from "../components/BannerBg";
 import { getContent } from "../../lib/api";
 import type { Kollege, Ressource, Zertifikat } from "../../lib/types";
 import { resolveImg } from "../lib/img";
@@ -184,11 +185,7 @@ export function EmpfehlungenPage() {
         description="Empfehlungen, Kolleg:innen und Zertifizierungen im Netzwerk von PBW – Beatrice Czekalla."
       />
       <section className="relative overflow-hidden py-20 text-center">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-[0.18]"
-          style={{ backgroundImage: `url(${JSON.stringify(headerBg)})` }}
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(249,249,249,0.7)_0%,rgba(249,249,249,1)_100%)]" />
+        <BannerBg image={headerBg} fade="249,249,249" />
         <Container>
           <div className="relative z-[1]">
             { /*<span className="inline-flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-2 text-[13px] font-medium text-navy [&_svg]:size-3.5">

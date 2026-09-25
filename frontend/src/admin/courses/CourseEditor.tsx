@@ -20,6 +20,7 @@ const schema = z.object({
   image: z.string(),
   isAusbildungskurs: z.boolean(),
   isBildungsurlaub: z.boolean(),
+  bildungsurlaubKennziffer: z.string().max(100, "Maximal 100 Zeichen."),
   termine: z.array(
     z.object({ date: z.string(), endDate: z.string(), name: z.string(), description: z.string() })
   ),
@@ -44,6 +45,7 @@ function toForm(course: Course | null): FormValues {
       image: "",
       isAusbildungskurs: false,
       isBildungsurlaub: false,
+      bildungsurlaubKennziffer: "",
       termine: [],
       includes: [{ value: "" }],
       enables: [{ value: "" }],
@@ -63,6 +65,7 @@ function toForm(course: Course | null): FormValues {
     image: course.image,
     isAusbildungskurs: course.isAusbildungskurs,
     isBildungsurlaub: course.isBildungsurlaub,
+    bildungsurlaubKennziffer: course.bildungsurlaubKennziffer ?? "",
     termine: course.termine.map((t) => ({
       date: t.date,
       endDate: t.endDate ?? "",
@@ -94,6 +97,7 @@ export function CourseEditor({ course, onClose }: { course: Course | null; onClo
   // Drives the "Seminar" vs "Ausbildungskurs" wording in the labels below and,
   // via the saved flag, on the public detail page.
   const isKurs = watch("isAusbildungskurs");
+  const isBildungsurlaub = watch("isBildungsurlaub");
   const enablesLabel = isKurs ? "Der Ausbildungskurs ermöglicht Ihnen…" : "Das Seminar ermöglicht Ihnen…";
 
   const termine = useFieldArray({ control, name: "termine" });
@@ -111,6 +115,7 @@ export function CourseEditor({ course, onClose }: { course: Course | null; onClo
       image: data.image,
       isAusbildungskurs: data.isAusbildungskurs,
       isBildungsurlaub: data.isBildungsurlaub,
+      bildungsurlaubKennziffer: data.isBildungsurlaub ? data.bildungsurlaubKennziffer.trim() : "",
       termine: data.termine
         .map((t) => ({
           date: t.date,
@@ -220,6 +225,23 @@ export function CourseEditor({ course, onClose }: { course: Course | null; onClo
             <input type="checkbox" className="h-4 w-4" {...register("isBildungsurlaub")} />
             Ist anerkannter Bildungsurlaub
           </label>
+          {isBildungsurlaub && (
+            <div className="pl-6">
+              <label className="field-label">Kennziffer</label>
+              <input
+                className="field-input"
+                placeholder="z. B. 8291/0321/27"
+                {...register("bildungsurlaubKennziffer")}
+              />
+              <p className="mt-1 text-xs text-slate">
+                Wird auf der Seminarseite angezeigt („Als Bildungsurlaub mit der Kennziffer … anerkannt!"). Bitte
+                bei Änderung (z. B. jährlich) hier aktualisieren. Leer = Hinweis ohne Kennziffer.
+              </p>
+              {errors.bildungsurlaubKennziffer && (
+                <p className="mt-1 text-sm text-red-700">{errors.bildungsurlaubKennziffer.message}</p>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="space-y-3 rounded-lg border border-line bg-bg-alt/50 p-4">

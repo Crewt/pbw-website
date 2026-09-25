@@ -1,6 +1,7 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Container } from "../components/Container";
+import { BannerBg } from "../components/BannerBg";
 import { getContent, getCourse } from "../../lib/api";
 import type { Course } from "../../lib/types";
 import { fmtDateRange } from "../lib/date";
@@ -181,7 +182,9 @@ function ContactCta({ course }: { course: Course }) {
       </Link>
       {course.isBildungsurlaub && (
         <p className="mt-4 rounded-lg bg-bg-alt px-4 py-3 text-sm font-semibold text-navy">
-          Als Bildungsurlaub mit der Kennziffer 8291/0321/27 anerkannt!
+          {course.bildungsurlaubKennziffer
+            ? `Als Bildungsurlaub mit der Kennziffer ${course.bildungsurlaubKennziffer} anerkannt!`
+            : "Als Bildungsurlaub anerkannt!"}
         </p>
       )}
     </section>
@@ -211,6 +214,11 @@ export function SeminarPage() {
   } = useQuery({ queryKey: ["course", slug], queryFn: () => getCourse(slug!), enabled: !!slug });
   const { data: content } = useQuery({ queryKey: ["content"], queryFn: getContent });
   const headerBg = content?.bilder?.headerBg || FALLBACK_HEADER_BG;
+  const navigate = useNavigate();
+  const location = useLocation();
+  // Back to the page the visitor came from; opened directly (no in-app
+  // history) → fall back to the course overview instead of leaving the site.
+  const goBack = () => (location.key === "default" ? navigate("/kurstermine") : navigate(-1));
 
   if (isLoading) {
     return (
@@ -233,19 +241,16 @@ export function SeminarPage() {
         image={course.image}
       />
       <section className="relative overflow-hidden border-b border-line bg-bg-alt pb-12 pt-16">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-20"
-          style={{ backgroundImage: `url(${JSON.stringify(headerBg)})` }}
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(243,244,244,0.4)_0%,rgba(243,244,244,0.85)_100%)]" />
+        <BannerBg image={headerBg} />
         <Container>
           <div className="relative z-[1]">
-            <Link
-              to="/kurstermine"
-              className="mb-4 inline-flex items-center gap-1.5 text-[13px] font-medium text-slate transition-all hover:gap-2.5 hover:text-navy [&_svg]:size-3.5"
+            <button
+              type="button"
+              onClick={goBack}
+              className="mb-4 inline-flex cursor-pointer items-center gap-1.5 text-[13px] font-medium text-slate transition-all hover:gap-2.5 hover:text-navy [&_svg]:size-3.5"
             >
-              <ChevronLeft /> Alle Kursangebote
-            </Link>
+              <ChevronLeft /> Zurück
+            </button>
             <h1 className="mt-3 text-[48px] font-bold leading-[1.05] tracking-[-1px] text-ink max-[900px]:text-[36px]">
               {course.title}
             </h1>

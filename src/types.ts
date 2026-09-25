@@ -21,6 +21,9 @@ export interface Course {
   isAusbildungskurs: boolean;
   // Whether this offering is a recognised Bildungsurlaub (shows a hint on the page).
   isBildungsurlaub: boolean;
+  // Approval number shown in the Bildungsurlaub hint; maintained by the editor
+  // (it can change yearly). Empty = hint without a number.
+  bildungsurlaubKennziffer: string;
   termine: Termin[];
   includes: string[];
   enables: string[];

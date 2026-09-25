@@ -23,6 +23,7 @@ function assemble(
     image: c.image,
     isAusbildungskurs: !!c.is_ausbildungskurs,
     isBildungsurlaub: !!c.is_bildungsurlaub,
+    bildungsurlaubKennziffer: c.bildungsurlaub_kennziffer ?? "",
     termine,
     includes,
     enables,
@@ -126,6 +127,7 @@ export async function saveCourse(input: Partial<Course>): Promise<Course> {
   const image = String(input.image ?? "").trim();
   const isAusbildungskurs = input.isAusbildungskurs ? 1 : 0;
   const isBildungsurlaub = input.isBildungsurlaub ? 1 : 0;
+  const bildungsurlaubKennziffer = String(input.bildungsurlaubKennziffer ?? "").trim().slice(0, 100);
   const arbeitsweise = String(input.arbeitsweise ?? "").trim();
   const includesHeading = String(input.includesHeading ?? "").trim();
   const enablesHeading = String(input.enablesHeading ?? "").trim();
@@ -139,8 +141,8 @@ export async function saveCourse(input: Partial<Course>): Promise<Course> {
     const exists = (ex as any[]).length > 0;
     if (exists) {
       await conn.query(
-        "UPDATE courses SET slug=?, title=?, subtitle=?, description=?, cost=?, image=?, is_ausbildungskurs=?, is_bildungsurlaub=?, arbeitsweise=?, includes_heading=?, enables_heading=? WHERE id=?",
-        [slug, title, subtitle, description, cost, image, isAusbildungskurs, isBildungsurlaub, arbeitsweise, includesHeading, enablesHeading, id]
+        "UPDATE courses SET slug=?, title=?, subtitle=?, description=?, cost=?, image=?, is_ausbildungskurs=?, is_bildungsurlaub=?, bildungsurlaub_kennziffer=?, arbeitsweise=?, includes_heading=?, enables_heading=? WHERE id=?",
+        [slug, title, subtitle, description, cost, image, isAusbildungskurs, isBildungsurlaub, bildungsurlaubKennziffer, arbeitsweise, includesHeading, enablesHeading, id]
       );
       await conn.query("DELETE FROM course_termine WHERE course_id=?", [id]);
       await conn.query("DELETE FROM course_includes WHERE course_id=?", [id]);
@@ -150,8 +152,8 @@ export async function saveCourse(input: Partial<Course>): Promise<Course> {
       const [mx] = await conn.query("SELECT COALESCE(MAX(sort_order),-1)+1 AS n FROM courses");
       const sort = (mx as any[])[0].n;
       await conn.query(
-        "INSERT INTO courses (id, slug, title, subtitle, description, cost, image, is_ausbildungskurs, is_bildungsurlaub, arbeitsweise, includes_heading, enables_heading, sort_order) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
-        [id, slug, title, subtitle, description, cost, image, isAusbildungskurs, isBildungsurlaub, arbeitsweise, includesHeading, enablesHeading, sort]
+        "INSERT INTO courses (id, slug, title, subtitle, description, cost, image, is_ausbildungskurs, is_bildungsurlaub, bildungsurlaub_kennziffer, arbeitsweise, includes_heading, enables_heading, sort_order) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        [id, slug, title, subtitle, description, cost, image, isAusbildungskurs, isBildungsurlaub, bildungsurlaubKennziffer, arbeitsweise, includesHeading, enablesHeading, sort]
       );
     }
     // Persist termine in chronological order (ISO yyyy-mm-dd sorts lexically),

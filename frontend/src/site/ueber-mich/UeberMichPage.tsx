@@ -43,7 +43,7 @@ export function UeberMichPage() {
         {/* decorative background */}
         <div aria-hidden className="pointer-events-none absolute -left-10 top-0 h-full w-[70%] overflow-hidden">
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-10"
+            className="absolute inset-0 bg-cover bg-center opacity-35"
             style={{ backgroundImage: `url(${JSON.stringify(headerBg)})` }}
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,#f9f9f9_0%,rgba(249,249,249,0.4)_50%,rgba(249,249,249,1)_100%)]" />

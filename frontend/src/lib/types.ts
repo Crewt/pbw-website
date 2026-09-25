@@ -18,6 +18,7 @@ export interface Course {
   image: string; // web path, e.g. "/uploads/abc.jpg"
   isAusbildungskurs: boolean; // false = Seminar (default), true = Ausbildungskurs
   isBildungsurlaub: boolean; // recognised Bildungsurlaub → shows hint on detail page
+  bildungsurlaubKennziffer: string; // editor-maintained approval number (may change yearly); "" = none shown
   termine: Termin[];
   includes: string[];
   enables: string[];

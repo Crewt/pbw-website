@@ -43,3 +43,5 @@ db
 public/uploads/*.webp
 public/uploads/*.pdf
 package-lock.json
+.claude-flow
+.claude
