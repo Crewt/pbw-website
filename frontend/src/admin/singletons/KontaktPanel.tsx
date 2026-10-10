@@ -47,14 +47,14 @@ export function KontaktPanel() {
 
   return (
     <div>
-      <PanelHeader title="Kontakt" description="E-Mail-Adresse, Telefonnummer und Newsletter-Formular für die Kontakt-Seite." />
+      <PanelHeader title="Kontakt" description="E-Mail-Adresse, Telefonnummer und Newsletter-Formular. E-Mail und Telefon erscheinen überall auf der Website (Kontaktseite, Impressum, Datenschutz) und in den Suchmaschinen-Daten. Leere Felder werden nicht angezeigt." />
       <div className="max-w-lg space-y-4 rounded-lg border border-line-soft bg-white p-6">
         <div>
           <label className="field-label">E-Mail-Adresse</label>
           <input
             type="email"
             className="field-input"
-            placeholder="info@pbw-ta.de"
+            placeholder="name@beispiel.de"
             value={email}
             onChange={(e) => {
               dirty.current = true;
@@ -67,7 +67,7 @@ export function KontaktPanel() {
           <input
             type="tel"
             className="field-input"
-            placeholder="+49 (0) 261 671234"
+            placeholder="+49 (0) 261 …"
             value={phone}
             onChange={(e) => {
               dirty.current = true;

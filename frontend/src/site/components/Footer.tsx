@@ -70,12 +70,12 @@ export function Footer() {
           <h4 className="mb-3 text-sm font-bold text-navy">Mehr</h4>
           <ul className="flex flex-col gap-2">
             <li>
-              <a href="#" className={linkCls}>
+              <a href="https://www.dgta.de/" target="_blank" rel="noopener noreferrer" className={linkCls}>
                 DGTA
               </a>
             </li>
             <li>
-              <a href="#" className={linkCls}>
+              <a href="https://www.eatanews.org/" target="_blank" rel="noopener noreferrer" className={linkCls}>
                 EATA
               </a>
             </li>

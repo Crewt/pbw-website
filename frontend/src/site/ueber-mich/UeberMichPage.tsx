@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Container } from "../components/Container";
-import { Seo, SITE_NAME } from "../lib/Seo";
+import { Seo } from "../lib/Seo";
 import { getContent } from "../../lib/api";
 
 const FALLBACK_PORTRAIT = "/assets/portrait.webp";
@@ -36,8 +36,8 @@ export function UeberMichPage() {
   return (
     <Container>
       <Seo
-        title={`Über mich | ${SITE_NAME}`}
-        description="Beatrice Czekalla – Psychologische Beratung & Weiterbildung. Mehr über Ansatz, Haltung und Werdegang."
+        title="Beatrice Czekalla – Beratung, Coaching & Supervision (TA) | PBW"
+        description="Beatrice Czekalla: Master im Coaching, transaktionsanalytische Lehrtrainerin und Lehrsupervisorin (u. S.). Ansatz, Haltung und Werdegang – PBW in Vallendar."
       />
       <section className="relative grid grid-cols-[1.1fr_1fr] items-start gap-16 py-20 max-[960px]:grid-cols-1 max-[960px]:gap-8 max-[960px]:py-12">
         {/* decorative background */}

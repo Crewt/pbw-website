@@ -5,6 +5,7 @@ import { EmptyState, PanelHeader } from "../components/ui";
 import { IconEdit, IconEye, IconTrash } from "../components/icons";
 import { CourseEditor } from "./CourseEditor";
 import type { Course } from "../../lib/types";
+import { coursePath } from "../../site/lib/coursePath";
 
 export function CoursesPanel() {
   const { data: courses, isLoading } = useCourses();
@@ -65,7 +66,7 @@ export function CoursesPanel() {
             <div className="flex items-center gap-2">
               <a
                 className="icon-btn"
-                href={`/seminar/${c.slug || c.id}`}
+                href={coursePath(c)}
                 target="_blank"
                 rel="noreferrer"
                 title="Ansehen"

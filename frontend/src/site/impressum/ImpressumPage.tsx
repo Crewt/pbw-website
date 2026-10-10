@@ -1,5 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
 import { Container } from "../components/Container";
 import { Seo, SITE_NAME } from "../lib/Seo";
+import { getContent } from "../../lib/api";
+import { ADDRESS, telHref } from "../lib/address";
 
 // Shared type conventions for the legal text pages (mirrors the hand-rolled
 // heading/paragraph classes used across the site — there is no prose plugin).
@@ -7,6 +10,12 @@ const h2 = "mb-3 mt-10 text-[24px] font-bold text-ink";
 const p = "text-[16px] leading-[1.65] text-text";
 
 export function ImpressumPage() {
+  // Phone and e-mail come from Admin → Kontakt (empty = omitted); the address is fixed.
+  const { data } = useQuery({ queryKey: ["content"], queryFn: getContent });
+  const k = data?.kontakt;
+  const phone = k?.phone?.trim();
+  const email = k?.email?.trim();
+
   return (
     <Container>
       <Seo
@@ -23,19 +32,30 @@ export function ImpressumPage() {
         <h2 className={h2}>Angaben gemäß § 5 DDG</h2>
         <div className={`${p} space-y-1`}>
           <p>PBW Beatrice Czekalla</p>
-          <p>Düppelstraße 9c</p>
-          <p>56179 Vallendar</p>
+          <p>{ADDRESS.street}</p>
+          <p>
+            {ADDRESS.zip} {ADDRESS.city}
+          </p>
         </div>
 
         <h2 className={h2}>Kontakt</h2>
         <div className={`${p} space-y-1`}>
-          <p>Telefon: 0261 / 39494070</p>
-          <p>
-            E-Mail:{" "}
-            <a href="mailto:beatrice.czekalla@pbw-ta.de" className="text-navy underline underline-offset-2 hover:text-navy-deep">
-              beatrice.czekalla@pbw-ta.de
-            </a>
-          </p>
+          {phone && (
+            <p>
+              Telefon:{" "}
+              <a href={telHref(phone)} className="text-navy underline underline-offset-2 hover:text-navy-deep">
+                {phone}
+              </a>
+            </p>
+          )}
+          {email && (
+            <p>
+              E-Mail:{" "}
+              <a href={`mailto:${email}`} className="text-navy underline underline-offset-2 hover:text-navy-deep">
+                {email}
+              </a>
+            </p>
+          )}
         </div>
 
         <h2 className={h2}>Umsatzsteuer</h2>
@@ -50,8 +70,10 @@ export function ImpressumPage() {
         <h2 className={h2}>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
         <div className={`${p} space-y-1`}>
           <p>Beatrice Czekalla</p>
-          <p>Düppelstraße 9c</p>
-          <p>56179 Vallendar</p>
+          <p>{ADDRESS.street}</p>
+          <p>
+            {ADDRESS.zip} {ADDRESS.city}
+          </p>
         </div>
 
         <h2 className={h2}>Haftung für Inhalte</h2>

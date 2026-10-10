@@ -7,7 +7,7 @@ import { getContent, getCourses } from "../../lib/api";
 import type { Course } from "../../lib/types";
 import { CourseCard } from "./CourseCard";
 import { IconCalendar, IconChat, IconDownload } from "../components/Icons";
-import { Seo, SITE_NAME } from "../lib/Seo";
+import { Seo } from "../lib/Seo";
 
 const FALLBACK_HEADER_BG = "/assets/header-bg.webp";
 const FALLBACK_KURSTERMINE_UNTEN = "/assets/kurstermine-seite-unten.webp";
@@ -115,8 +115,8 @@ export function KursterminePage() {
   return (
     <>
       <Seo
-        title={`Kurstermine & Seminare | ${SITE_NAME}`}
-        description="Aktuelle Kurstermine und Seminare von PBW – Beatrice Czekalla. Themen, Termine und Anmeldung im Überblick."
+        title="Kurstermine: Seminare & TA-Ausbildung in Vallendar | PBW"
+        description="Aktuelle Termine für Seminare, Einführungskurs und Ausbildung in Transaktionsanalyse bei PBW – Beatrice Czekalla in Vallendar bei Koblenz. Mit Kosten und Anmeldung."
       />
       <section className="relative mb-16 overflow-hidden border-b border-line bg-bg-alt pb-16 pt-20">
         <BannerBg image={headerBg} />

@@ -11,6 +11,8 @@ import { adminRouter } from "./routes/admin.routes";
 import { contactRouter } from "./routes/contact.routes";
 import { seoRouter } from "./routes/seo.routes";
 import { renderShell } from "./seo/shell";
+import { ROUTE_META, RENAMED_PATHS, coursePath } from "./seo/meta";
+import { getCourse } from "./repositories/courses.repo";
 import { apiLogger } from "./middleware/log";
 import { cors } from "./middleware/cors";
 
@@ -94,6 +96,13 @@ function securityHeaders(req: Request, res: Response, next: NextFunction): void 
 }
 
 const app = express();
+app.disable("x-powered-by");
+
+// Query string of the request ("" or "?…"), carried over on SEO redirects.
+function queryString(req: Request): string {
+  const i = req.originalUrl.indexOf("?");
+  return i >= 0 ? req.originalUrl.slice(i) : "";
+}
 
 // Behind pm2/Nginx: trust the proxy so req.ip / X-Forwarded-For reflect the real
 // client IP (used by the contact-form rate limiter and API logging).
@@ -148,20 +157,52 @@ app.use("/api", (_req, res) => {
   res.status(404).json({ error: "Nicht gefunden." });
 });
 
+// ---- Trailing slash ----
+// "/kurstermine/" and "/kurstermine" would otherwise be two indexable URLs.
+// Leading slashes/backslashes are collapsed so "//evil.com/" can't become an
+// open redirect to "//evil.com".
+app.use((req, res, next) => {
+  if ((req.method === "GET" || req.method === "HEAD") && req.path.length > 1 && req.path.endsWith("/")) {
+    const clean = "/" + req.path.replace(/^[/\\]+/, "").replace(/\/+$/, "");
+    res.redirect(301, clean + queryString(req));
+    return;
+  }
+  next();
+});
+
 // ---- SEO/GEO (dynamic, DB-backed) ----
 // robots.txt, sitemap.xml, llms.txt, llms-full.txt — must come before the static
 // middleware and SPA catch-all so these non-file paths aren't served the shell.
 app.use(seoRouter);
 
 // ---- Legacy URL redirects ----
-// The old static site used .htm URLs for the legal pages. 301 them to the new
-// React routes so existing links and search-engine entries keep working.
+// The old static site used one .htm page per topic (kontakt.htm,
+// selbsterfahrungsseminar.htm, …) and the prototype used .html files; search
+// engines and external listings still link to them. 301 each to its new route:
+// explicit map first, then a same-named page or seminar, else the homepage.
+// Also catches /index.html, which express.static would serve as a raw shell.
 const LEGACY_REDIRECTS: Record<string, string> = {
-  "/impressum.htm": "/impressum",
-  "/datenschutz.htm": "/datenschutz",
+  "/index.htm": "/",
+  "/index.html": "/",
+  "/mainpage.html": "/",
+  "/seminar.html": "/kurstermine",
+  "/admin.html": "/admin",
 };
-app.get(Object.keys(LEGACY_REDIRECTS), (req, res) => {
-  res.redirect(301, LEGACY_REDIRECTS[req.path]);
+app.get(/\.html?$/i, async (req, res) => {
+  const lower = req.path.toLowerCase();
+  let target = LEGACY_REDIRECTS[lower];
+  if (!target) {
+    const name = lower.replace(/^\/+/, "").replace(/\.html?$/, "");
+    if (RENAMED_PATHS[`/${name}`]) {
+      target = RENAMED_PATHS[`/${name}`];
+    } else if (ROUTE_META[`/${name}`]) {
+      target = `/${name}`;
+    } else if (/^[a-z0-9-]+$/.test(name)) {
+      const course = await getCourse(name).catch(() => null);
+      if (course) target = coursePath(course);
+    }
+  }
+  res.redirect(301, target ?? "/");
 });
 
 // ---- Static files ----
@@ -169,20 +210,60 @@ app.get(Object.keys(LEGACY_REDIRECTS), (req, res) => {
 // the generated favicons/manifest. Both use index:false so "/" (and any dir)
 // falls through to the SPA catch-all below, where renderShell injects SEO meta —
 // otherwise express.static would serve the raw dist/index.html for "/".
-app.use(express.static(config.spaDir, { index: false }));
-app.use(express.static(config.publicDir, { index: false }));
+// Caching: Vite bundles under /app/ carry a content hash in the file name, so
+// they can be cached forever. Uploads get random names on upload (30 days);
+// everything else in public/ (logo, favicons, manifest) may change in place.
+const ONE_YEAR_IMMUTABLE = "public, max-age=31536000, immutable";
+app.use(
+  express.static(config.spaDir, {
+    index: false,
+    setHeaders: (res, filePath) => {
+      if (filePath.startsWith(path.join(config.spaDir, "app") + path.sep)) {
+        res.setHeader("Cache-Control", ONE_YEAR_IMMUTABLE);
+      }
+    },
+  })
+);
+app.use(
+  express.static(config.publicDir, {
+    index: false,
+    maxAge: "1d",
+    setHeaders: (res, filePath) => {
+      if (filePath.startsWith(config.uploadsDir + path.sep)) {
+        res.setHeader("Cache-Control", "public, max-age=2592000");
+      }
+    },
+  })
+);
+
+// Missing files must not fall through to the HTML shell: a 200 text/html for
+// /assets/foo.png or /app/old-bundle.js is a soft 404 for crawlers (and breaks
+// stale bundle loads silently).
+app.use((req, res, next) => {
+  if (/^\/(app|assets|uploads)\//.test(req.path) || /\.[a-z0-9]{2,5}$/i.test(req.path)) {
+    res.status(404).type("text/plain").send("Nicht gefunden.");
+    return;
+  }
+  next();
+});
 
 // ---- SPA fallback ----
 // Any non-API path without a matching static file gets the SPA shell (so React
-// Router can render it), with per-route SEO meta injected server-side. If meta
-// injection fails for any reason, fall back to the raw shell so the app loads.
+// Router can render it), with per-route SEO meta injected server-side. Unknown
+// routes get a real 404 (React renders its not-found page); non-canonical
+// seminar/page URLs are 301'd. If meta injection fails for any reason, fall
+// back to the raw shell so the app loads.
 app.get("*", async (req, res) => {
   try {
-    const { html, noindex } = await renderShell(req.path);
-    // Per-route noindex (admin, past events) via header so it survives client
-    // rendering — Googlebot honours X-Robots-Tag regardless of JS execution.
-    if (noindex) res.setHeader("X-Robots-Tag", "noindex");
-    res.type("html").send(html);
+    const r = await renderShell(req.path);
+    if ("redirect" in r) {
+      res.redirect(301, r.redirect + queryString(req));
+      return;
+    }
+    // Per-route noindex (admin, past events, 404) via header so it survives
+    // client rendering — Googlebot honours X-Robots-Tag regardless of JS execution.
+    if (r.noindex) res.setHeader("X-Robots-Tag", "noindex");
+    res.status(r.status).type("html").send(r.html);
   } catch (e) {
     console.error("[shell]", e);
     res.sendFile(path.join(config.spaDir, "index.html"));
@@ -204,6 +285,14 @@ app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
   if (dbDown) {
     console.error("[db]", req.method, req.path, code, err.sqlMessage || err.message);
     res.status(503).json({ error: "Datenbank nicht erreichbar oder nicht eingerichtet." });
+    return;
+  }
+  // Client errors raised by middleware (e.g. 400 for a malformed %-escape in the
+  // URL from express.static) keep their status instead of becoming a 500.
+  const status = Number(err?.status ?? err?.statusCode);
+  if (status >= 400 && status < 500) {
+    if (req.path.startsWith("/api")) res.status(status).json({ error: "Ungültige Anfrage." });
+    else res.status(status).type("text/plain").send("Ungültige Anfrage.");
     return;
   }
   console.error("[error]", req.method, req.path, err);

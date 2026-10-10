@@ -2,7 +2,7 @@
 //
 // The home page renders one card per slot (see site/home/data.ts). A course can
 // be assigned to one or more of these slots in the admin course editor; the
-// matching card then links to that course's /seminar/<slug> page instead of the
+// matching card then links to that course's page (see site/lib/coursePath.ts) instead of the
 // generic /kurstermine overview. `key` is the stable identifier persisted in the
 // DB (course_homepage_slots.slot_key) — never change an existing key.
 

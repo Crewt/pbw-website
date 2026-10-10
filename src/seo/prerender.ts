@@ -1,7 +1,7 @@
 import { listCourses, getCourse } from "../repositories/courses.repo";
 import { getSingle } from "../repositories/settings.repo";
 import { listCollection } from "../repositories/content.repo";
-import { isCourseExpired, SITE_DESCRIPTION } from "./meta";
+import { ADDRESS_LINE, coursePath, isCourseExpired, ROUTE_META, SITE_DESCRIPTION } from "./meta";
 import type { Course } from "../types";
 
 // Server-side content for the SPA shell body. React (createRoot) replaces #root
@@ -35,7 +35,7 @@ function wrap(inner: string): string {
 function courseLinks(courses: Course[]): string {
   const items = courses.map((c) => {
     const sub = c.subtitle ? ` – ${esc(c.subtitle)}` : "";
-    return `<li><a href="/seminar/${esc(c.slug)}">${esc(c.title)}</a>${sub}</li>`;
+    return `<li><a href="${esc(coursePath(c))}">${esc(c.title)}</a>${sub}</li>`;
   });
   return items.length ? `<ul>${items.join("")}</ul>` : "";
 }
@@ -91,7 +91,7 @@ async function kurstermineBody(): Promise<string> {
   const items = courses.map((c) => {
     const next = c.termine.map((t) => t.date).filter(Boolean).sort()[0];
     const when = next ? ` <em>(ab ${esc(next)})</em>` : "";
-    return `<li><a href="/seminar/${esc(c.slug)}">${esc(c.title)}</a>${when}</li>`;
+    return `<li><a href="${esc(coursePath(c))}">${esc(c.title)}</a>${when}</li>`;
   });
   return wrap(
     `<h1>Kurstermine &amp; Seminare</h1>` +
@@ -100,7 +100,7 @@ async function kurstermineBody(): Promise<string> {
   );
 }
 
-async function empfehlungenBody(): Promise<string> {
+async function kooperationenBody(): Promise<string> {
   let kollegen: any[] = [];
   let zertifikate: any[] = [];
   try {
@@ -114,7 +114,7 @@ async function empfehlungenBody(): Promise<string> {
   const koll = kollegen.map((k) => [k.name, k.role].filter(Boolean).join(" — "));
   const zert = zertifikate.map((z) => [z.name, z.description].filter(Boolean).join(": "));
   return wrap(
-    `<h1>Empfehlungen &amp; Netzwerk</h1>` +
+    `<h1>Kooperation &amp; Austausch</h1>` +
       `<p>Kolleg:innen, Netzwerk und Zertifizierungen von PBW – Beatrice Czekalla.</p>` +
       (koll.length ? `<h2>Kolleg:innen</h2>${ul(koll)}` : "") +
       (zert.length ? `<h2>Zertifikate &amp; Institute</h2>${ul(zert)}` : "")
@@ -131,6 +131,7 @@ async function kontaktBody(): Promise<string> {
   return wrap(
     `<h1>Kontakt</h1>` +
       `<p>Kontakt zu Beatrice Czekalla (PBW) – Psychologische Beratung &amp; Weiterbildung.</p>` +
+      `<p><strong>Adresse:</strong> PBW – Beatrice Czekalla, ${esc(ADDRESS_LINE)}</p>` +
       (k.email ? `<p><strong>E-Mail:</strong> ${esc(k.email)}</p>` : "") +
       (k.phone ? `<p><strong>Telefon:</strong> ${esc(k.phone)}</p>` : "")
   );
@@ -150,17 +151,21 @@ export async function renderBody(pathname: string): Promise<string> {
   try {
     if (pathname === "/admin" || pathname.startsWith("/admin/")) return "";
 
-    const seminar = pathname.match(/^\/seminar\/([^/]+)\/?$/);
-    if (seminar) return await seminarBody(decodeURIComponent(seminar[1]));
-
     const key = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+    // Course pages: "/<slug>" or "/kurstermine/<slug>" (shell.ts only calls this
+    // for the canonical course URL, so the slug is known to exist).
+    if (!ROUTE_META[key]) {
+      const seminar = key.match(/^\/(?:kurstermine\/)?([^/]+)$/);
+      if (seminar) return await seminarBody(decodeURIComponent(seminar[1]));
+    }
+
     switch (key) {
       case "/":
         return await homeBody();
       case "/kurstermine":
         return await kurstermineBody();
-      case "/empfehlungen":
-        return await empfehlungenBody();
+      case "/kooperationen":
+        return await kooperationenBody();
       case "/kontakt":
         return await kontaktBody();
       case "/ueber-mich":

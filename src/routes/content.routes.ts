@@ -8,6 +8,7 @@ import {
   saveItem,
   removeItem,
   moveItem,
+  getContentBundle,
 } from "../repositories/content.repo";
 import { isSingleton, getSingle, saveSingle } from "../repositories/settings.repo";
 
@@ -17,15 +18,7 @@ export const contentRouter = Router();
 contentRouter.get(
   "/",
   wrap(async (_req, res) => {
-    res.json({
-      kollegen: await listCollection("kollegen"),
-      zertifikate: await listCollection("zertifikate"),
-      referenzen: await listCollection("referenzen"),
-      ressourcen: await listCollection("ressourcen"),
-      kontakt: await getSingle("kontakt"),
-      about: await getSingle("about"),
-      bilder: await getSingle("bilder"),
-    });
+    res.json(await getContentBundle());
   })
 );
 

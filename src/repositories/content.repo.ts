@@ -1,6 +1,7 @@
 import { pool, query, withTransaction } from "../db";
 import { uid } from "../util";
 import type { CollectionName } from "../types";
+import { getSingle } from "./settings.repo";
 
 // Generic, raw-SQL access for the four sortable content collections.
 // Table names and column lists come ONLY from this internal whitelist —
@@ -166,4 +167,19 @@ export async function moveItem(coll: CollectionName, id: string, dir: number): P
 export async function clearCollection(coll: CollectionName): Promise<void> {
   const cfg = cfgFor(coll);
   await pool.query(`DELETE FROM \`${cfg.table}\``);
+}
+
+// Everything the public site reads from GET /api/content, in one object. Also
+// embedded into the server-rendered shell so the SPA can render without a fetch.
+export async function getContentBundle() {
+  const [kollegen, zertifikate, referenzen, ressourcen, kontakt, about, bilder] = await Promise.all([
+    listCollection("kollegen"),
+    listCollection("zertifikate"),
+    listCollection("referenzen"),
+    listCollection("ressourcen"),
+    getSingle("kontakt"),
+    getSingle("about"),
+    getSingle("bilder"),
+  ]);
+  return { kollegen, zertifikate, referenzen, ressourcen, kontakt, about, bilder };
 }

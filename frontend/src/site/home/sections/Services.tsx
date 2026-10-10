@@ -4,6 +4,7 @@ import { Container } from "../../components/Container";
 import { ArrowRight, IconEducation } from "../../components/Icons";
 import { getCourses } from "../../../lib/api";
 import { services, type Service } from "../data";
+import { coursePath } from "../../lib/coursePath";
 
 function ServiceCard({ service, to }: { service: Service; to: string }) {
   const Icon = service.icon;
@@ -29,13 +30,12 @@ export function Services() {
   // slot links to its seminar page; unassigned cards fall back to /kurstermine.
   // On collision the last matching course wins.
   const { data: courses } = useQuery({ queryKey: ["courses"], queryFn: getCourses });
-  const slotToSlug = new Map<string, string>();
+  const slotToPath = new Map<string, string>();
   for (const c of courses ?? []) {
-    for (const slot of c.homepageSlots ?? []) slotToSlug.set(slot, c.slug || c.id);
+    for (const slot of c.homepageSlots ?? []) slotToPath.set(slot, coursePath(c));
   }
   const linkFor = (s: Service) => {
-    const slug = slotToSlug.get(s.slot);
-    return slug ? `/seminar/${slug}` : "/kurstermine";
+    return slotToPath.get(s.slot) ?? "/kurstermine";
   };
 
   return (

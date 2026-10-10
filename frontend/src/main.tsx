@@ -25,6 +25,29 @@ queryClient = new QueryClient({
   },
 });
 
+// The server embeds the current page's API data (src/seo/shell.ts, #pbw-data).
+// Seeding the cache lets pages render their final layout on first mount instead
+// of a loading state (no layout shift, no extra round-trip). The data counts as
+// stale immediately, so queries still revalidate in the background.
+function seedQueryCache(qc: QueryClient): void {
+  const el = document.getElementById("pbw-data");
+  if (!el?.textContent) return;
+  try {
+    const data = JSON.parse(el.textContent) as {
+      content?: unknown;
+      courses?: unknown;
+      course?: { slug: string; data: unknown };
+    };
+    if (data.content) qc.setQueryData(["content"], data.content);
+    if (data.courses) qc.setQueryData(["courses"], data.courses);
+    if (data.course) qc.setQueryData(["course", data.course.slug], data.course.data);
+  } catch {
+    /* malformed seed: pages simply fetch as usual */
+  }
+  el.remove();
+}
+seedQueryCache(queryClient);
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>

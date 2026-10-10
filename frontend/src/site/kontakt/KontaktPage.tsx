@@ -1,14 +1,30 @@
+import { lazy, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Container } from "../components/Container";
 import { BannerBg } from "../components/BannerBg";
-import { ContactForm } from "./ContactForm";
 import { ContactInfo } from "./ContactInfo";
 import { MapCard } from "./MapCard";
 import { NewsletterSignup } from "./NewsletterSignup";
 import { getContent } from "../../lib/api";
-import { Seo, SITE_NAME } from "../lib/Seo";
+import { Seo } from "../lib/Seo";
+import { ADDRESS_LINE } from "../lib/address";
 
 const FALLBACK_CONTACT_BG = "/assets/contact-bg.jpg";
+
+
+// The form pulls in react-hook-form + zod (~⅓ of the bundle); load it only on
+// this page instead of shipping it to every visitor.
+const ContactForm = lazy(() => import("./ContactForm").then((m) => ({ default: m.ContactForm })));
+
+// Same box as the form, reserving its height so the page doesn't jump when the
+// chunk arrives.
+function ContactFormPlaceholder() {
+  return (
+    <div className="min-h-[760px] rounded-xl border border-line bg-white p-10 shadow-soft max-[900px]:p-6">
+      <h2 className="mb-8 text-[24px] font-bold text-ink">Schreiben Sie mir</h2>
+    </div>
+  );
+}
 
 export function KontaktPage() {
   const { data } = useQuery({ queryKey: ["content"], queryFn: getContent });
@@ -17,8 +33,8 @@ export function KontaktPage() {
   return (
     <>
       <Seo
-        title={`Kontakt | ${SITE_NAME}`}
-        description="Kontakt zu Beatrice Czekalla (PBW) – Psychologische Beratung & Weiterbildung. Nachricht schreiben oder Termin vereinbaren."
+        title="Kontakt – PBW Beatrice Czekalla in Vallendar bei Koblenz"
+        description={`Kontakt zu Beatrice Czekalla (PBW), ${ADDRESS_LINE}: Nachricht schreiben, anrufen oder ein Erstgespräch vereinbaren.`}
       />
       <section className="relative overflow-hidden bg-bg-alt pb-[72px] pt-24 text-center">
         <BannerBg image={contactBg} />
@@ -35,7 +51,9 @@ export function KontaktPage() {
 
       <Container>
         <div className="mt-16 mb-24 grid grid-cols-[1.3fr_1fr] items-start gap-8 max-[900px]:grid-cols-1">
-          <ContactForm />
+          <Suspense fallback={<ContactFormPlaceholder />}>
+            <ContactForm />
+          </Suspense>
           <div>
             <ContactInfo />
             <MapCard />

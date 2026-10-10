@@ -7,7 +7,7 @@ import type { Kollege, Ressource, Zertifikat } from "../../lib/types";
 import { resolveImg } from "../lib/img";
 import { safeHref } from "../../lib/url";
 import { IconArrowUpRight, IconDownload, IconInstitute, IconLink } from "../components/Icons";
-import { Seo, SITE_NAME } from "../lib/Seo";
+import { Seo } from "../lib/Seo";
 
 const FALLBACK_HEADER_BG = "/assets/header-bg.webp";
 
@@ -21,6 +21,12 @@ function initials(name: string): string {
     .toUpperCase();
 }
 
+// Manual hyphenation points typed in the CMS ("Glöck&shy;ner") become real soft
+// hyphens; React would otherwise print the entity literally.
+function softHyphens(text: string): string {
+  return text.replace(/&shy;/gi, "\u00AD");
+}
+
 function SectionTitle({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <div className={`mb-8 flex items-center gap-6 ${className}`}>
@@ -31,8 +37,11 @@ function SectionTitle({ children, className = "" }: { children: ReactNode; class
   );
 }
 
+// On phones the action ("Profil ansehen") wraps below the text instead of
+// squeezing long names; pl-[60px] aligns it with the text (44px icon + gap).
 const rowCls =
-  "flex items-center gap-4 rounded-[10px] border border-line bg-white px-6 py-[18px] transition hover:-translate-y-px hover:border-navy hover:shadow-soft";
+  "flex items-center gap-4 max-[640px]:flex-wrap rounded-[10px] border border-line bg-white px-6 py-[18px] transition hover:-translate-y-px hover:border-navy hover:shadow-soft";
+const actionWrapCls = "max-[640px]:basis-full max-[640px]:pl-[60px]";
 const goCls = "inline-flex shrink-0 items-center gap-1.5 text-[13px] font-semibold tracking-[0.4px] text-navy [&_svg]:size-3";
 
 function Row({
@@ -53,11 +62,11 @@ function Row({
   const inner = (
     <>
       {icon}
-      <div className="min-w-0 flex-1">
-        <h4 className="text-[16px] font-bold text-navy">{title}</h4>
-        {subtitle && <p className="mt-1 text-sm leading-[1.45] text-text">{subtitle}</p>}
+      <div className="min-w-0 flex-1 hyphens-auto break-words">
+        <h4 className="text-[16px] font-bold text-navy">{softHyphens(title)}</h4>
+        {subtitle && <p className="mt-1 text-sm leading-[1.45] text-text">{softHyphens(subtitle)}</p>}
       </div>
-      {action}
+      {action && <div className={actionWrapCls}>{action}</div>}
     </>
   );
   const safe = safeHref(href);
@@ -181,8 +190,8 @@ export function EmpfehlungenPage() {
   return (
     <>
       <Seo
-        title={`Empfehlungen & Netzwerk | ${SITE_NAME}`}
-        description="Empfehlungen, Kolleg:innen und Zertifizierungen im Netzwerk von PBW – Beatrice Czekalla."
+        title="Kooperation & Netzwerk: DGTA, EATA, EASC | PBW Czekalla"
+        description="Fachverbände (DGTA, EATA, EASC), geschätzte Kolleg:innen und empfohlene Ressourcen zur Transaktionsanalyse – das Netzwerk von PBW – Beatrice Czekalla."
       />
       <section className="relative overflow-hidden py-20 text-center">
         <BannerBg image={headerBg} fade="249,249,249" />

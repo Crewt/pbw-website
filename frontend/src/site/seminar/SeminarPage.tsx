@@ -7,7 +7,9 @@ import type { Course } from "../../lib/types";
 import { fmtDateRange } from "../lib/date";
 import { ChevronLeft, IconCalendar, IconCheckCircle, IconCreditCard } from "../components/Icons";
 import { resolveImg } from "../lib/img";
-import { Seo, SITE_NAME } from "../lib/Seo";
+import { Seo, courseTitle } from "../lib/Seo";
+import { coursePath } from "../lib/coursePath";
+import { NotFoundPage } from "../notfound/NotFoundPage";
 
 const FALLBACK_HEADER_BG = "/assets/header-bg.webp";
 
@@ -72,7 +74,7 @@ function ArticleBody({ course }: { course: Course }) {
 
       {img ? (
         <div className="my-8 aspect-[16/9] overflow-hidden rounded-xl">
-          <img src={img} alt="" className="h-full w-full object-cover" />
+          <img src={img} alt={course.title} className="h-full w-full object-cover" />
         </div>
       ) : (
         <div className="my-8 aspect-[16/9] rounded-xl bg-[linear-gradient(135deg,#d8e3f7,#b6c6e0)]" aria-hidden />
@@ -191,6 +193,14 @@ function ContactCta({ course }: { course: Course }) {
   );
 }
 
+// Mirrors courseDescription() in src/seo/meta.ts (server-injected meta).
+function courseDescription(course: Course): string {
+  const s = (course.subtitle || course.description || `${course.title} bei PBW – Beatrice Czekalla in Vallendar bei Koblenz.`)
+    .replace(/\s+/g, " ")
+    .trim();
+  return s.length <= 160 ? s : s.slice(0, 159).trimEnd() + "…";
+}
+
 function NotFound() {
   return (
     <Container>
@@ -227,7 +237,12 @@ export function SeminarPage() {
       </Container>
     );
   }
-  if (isError || !course) return <NotFound />;
+  if (isError || !course) {
+    // Top-level "/<slug>" is also the catch-all for mistyped URLs: show the
+    // generic 404 there, the course-specific one under /kurstermine/.
+    const isTopLevel = !/^\/(kurstermine|seminar)\//i.test(location.pathname);
+    return isTopLevel ? <NotFoundPage /> : <NotFound />;
+  }
 
   // Without Termine the details box moves full-width below the article instead
   // of sitting in the sticky right column.
@@ -236,9 +251,10 @@ export function SeminarPage() {
   return (
     <>
       <Seo
-        title={`${course.title} | ${SITE_NAME}`}
-        description={(course.subtitle || course.description || "").replace(/\s+/g, " ").trim().slice(0, 160)}
+        title={courseTitle(course.title)}
+        description={courseDescription(course)}
         image={course.image}
+        path={coursePath(course)}
       />
       <section className="relative overflow-hidden border-b border-line bg-bg-alt pb-12 pt-16">
         <BannerBg image={headerBg} />

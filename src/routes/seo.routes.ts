@@ -2,7 +2,16 @@ import { Router } from "express";
 import { listCourses } from "../repositories/courses.repo";
 import { listCollection } from "../repositories/content.repo";
 import { getSingle } from "../repositories/settings.repo";
-import { absUrl, isCourseExpired, SITE_TITLE, SITE_DESCRIPTION, STATIC_PATHS, NOINDEX_PATHS } from "../seo/meta";
+import {
+  absUrl,
+  coursePath,
+  isCourseExpired,
+  ADDRESS_LINE,
+  SITE_TITLE,
+  SITE_DESCRIPTION,
+  STATIC_PATHS,
+  NOINDEX_PATHS,
+} from "../seo/meta";
 import { config } from "../config";
 import type { Course } from "../types";
 
@@ -58,7 +67,7 @@ seoRouter.get("/sitemap.xml", async (_req, res) => {
   }
   for (const c of courses) {
     if (isCourseExpired(c)) continue; // drop past events from the sitemap
-    urls.push({ loc: absUrl(`/seminar/${c.slug}`), lastmod: isoDate(c.updatedAt) });
+    urls.push({ loc: absUrl(coursePath(c)), lastmod: isoDate(c.updatedAt) });
   }
 
   const body =
@@ -86,14 +95,14 @@ seoRouter.get("/llms.txt", async (_req, res) => {
   L.push(`- [Startseite](${absUrl("/")})`);
   L.push(`- [Über mich](${absUrl("/ueber-mich")}): Ansatz, Haltung und Werdegang von Beatrice Czekalla.`);
   L.push(`- [Kurstermine](${absUrl("/kurstermine")}): Alle aktuellen Kurse und Seminare mit Terminen.`);
-  L.push(`- [Empfehlungen](${absUrl("/empfehlungen")}): Netzwerk, Kolleg:innen und Zertifizierungen.`);
+  L.push(`- [Kooperationen](${absUrl("/kooperationen")}): Netzwerk, Kolleg:innen und Zertifizierungen.`);
   L.push(`- [Kontakt](${absUrl("/kontakt")}): Kontaktmöglichkeiten und Anfrage.`);
   L.push("", "## Kurse & Seminare");
   if (!courses.length) L.push("- (derzeit keine Kurse veröffentlicht)");
   for (const c of courses) {
     if (isCourseExpired(c)) continue;
     const sub = c.subtitle ? `: ${c.subtitle}` : "";
-    L.push(`- [${c.title}](${absUrl(`/seminar/${c.slug}`)})${sub}`);
+    L.push(`- [${c.title}](${absUrl(coursePath(c))})${sub}`);
   }
   L.push("");
   res.type("text/plain; charset=utf-8").send(L.join("\n"));
@@ -122,12 +131,13 @@ seoRouter.get("/llms-full.txt", async (_req, res) => {
   L.push(`Website: ${config.siteUrl}`);
   if (kontakt.email) L.push(`E-Mail: ${kontakt.email}`);
   if (kontakt.phone) L.push(`Telefon: ${kontakt.phone}`);
+  L.push(`Adresse: ${ADDRESS_LINE}`);
   L.push("", "## Kurse & Seminare", "");
   if (!courses.length) L.push("(derzeit keine Kurse veröffentlicht)", "");
   for (const c of courses) {
     if (isCourseExpired(c)) continue;
     L.push(`### ${c.title}`);
-    L.push(`URL: ${absUrl(`/seminar/${c.slug}`)}`);
+    L.push(`URL: ${absUrl(coursePath(c))}`);
     if (c.subtitle) L.push(c.subtitle);
     L.push("");
     if (c.description) L.push(c.description, "");
@@ -152,7 +162,7 @@ seoRouter.get("/llms-full.txt", async (_req, res) => {
   }
 
   if (kollegen.length || zertifikate.length) {
-    L.push("## Netzwerk & Empfehlungen", "");
+    L.push("## Kooperationen & Netzwerk", "");
     if (kollegen.length) {
       L.push("Kolleg:innen:");
       for (const k of kollegen) {

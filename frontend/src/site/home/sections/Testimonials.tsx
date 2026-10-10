@@ -49,7 +49,7 @@ export function Testimonials() {
             <h2 className="mt-2 text-[34px] font-bold tracking-[-0.6px] text-ink">Empfehlungen</h2>
           </div>
           <Link
-            to="/empfehlungen"
+            to="/kooperationen"
             className="inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-navy transition-all hover:gap-2.5 [&_svg]:size-4"
           >
             Weiter zu Kooperation & Austausch<ArrowRight />

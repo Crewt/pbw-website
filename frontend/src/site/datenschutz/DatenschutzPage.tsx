@@ -1,6 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
 import { Container } from "../components/Container";
 import { Seo, SITE_NAME } from "../lib/Seo";
 import { useConsent } from "../consent/ConsentContext";
+import { getContent } from "../../lib/api";
+import { ADDRESS, telHref } from "../lib/address";
 
 const h2 = "mb-3 mt-10 text-[24px] font-bold text-ink";
 const p = "text-[16px] leading-[1.65] text-text";
@@ -11,12 +14,17 @@ const linkCls = "text-navy underline underline-offset-2 hover:text-navy-deep";
 
 export function DatenschutzPage() {
   const { status, reopen } = useConsent();
+  // Phone and e-mail come from Admin → Kontakt (empty = omitted); the address is fixed.
+  const { data } = useQuery({ queryKey: ["content"], queryFn: getContent });
+  const k = data?.kontakt;
+  const phone = k?.phone?.trim();
+  const email = k?.email?.trim();
 
   return (
     <Container>
       <Seo
         title={`Datenschutzerklärung | ${SITE_NAME}`}
-        description="Datenschutzerklärung von PBW – Beatrice Czekalla: Verantwortliche, Hosting, Server-Logfiles, Cookies & Einwilligung, Google Fonts, Google Maps, Kontaktformular, Newsletter (CleverReach) und Ihre Rechte."
+        description="Datenschutzerklärung von PBW – Beatrice Czekalla: Verantwortliche, Hosting & E-Mail, Server-Logfiles, Cookies & Einwilligung, Google Fonts, Google Maps, Kontaktformular, Newsletter (CleverReach) und Ihre Rechte."
         noindex
       />
       <section className="max-w-[760px] py-16 max-[960px]:py-10">
@@ -33,24 +41,45 @@ export function DatenschutzPage() {
         <h2 className={h2}>1. Verantwortliche</h2>
         <div className={`${p} space-y-1`}>
           <p>PBW Beatrice Czekalla</p>
-          <p>Düppelstraße 9c</p>
-          <p>56179 Vallendar</p>
-          <p>Telefon: 0261 / 39494070</p>
+          <p>{ADDRESS.street}</p>
           <p>
-            E-Mail:{" "}
-            <a href="mailto:beatrice.czekalla@pbw-ta.de" className={linkCls}>
-              beatrice.czekalla@pbw-ta.de
-            </a>
+            {ADDRESS.zip} {ADDRESS.city}
           </p>
+          {phone && (
+            <p>
+              Telefon:{" "}
+              <a href={telHref(phone)} className={linkCls}>
+                {phone}
+              </a>
+            </p>
+          )}
+          {email && (
+            <p>
+              E-Mail:{" "}
+              <a href={`mailto:${email}`} className={linkCls}>
+                {email}
+              </a>
+            </p>
+          )}
         </div>
 
-        <h2 className={h2}>2. Hosting</h2>
+        <h2 className={h2}>2. Hosting und E-Mail</h2>
         <p className={p}>
-          Diese Website wird bei einem externen Dienstleister gehostet. Anbieter ist die IONOS SE, Elgendorfer Str. 57,
-          56410 Montabaur. Die IONOS SE verarbeitet in unserem Auftrag Daten, die im Zusammenhang mit dem Besuch dieser
-          Website anfallen (insbesondere die nachfolgend beschriebenen Server-Logfiles). Grundlage ist unser berechtigtes
+          Diese Website wird bei einem externen Dienstleister gehostet. Anbieter ist die Hetzner Online GmbH,
+          Industriestr. 25, 91710 Gunzenhausen; die Server stehen in Rechenzentren in Deutschland. Die Hetzner Online
+          GmbH verarbeitet in unserem Auftrag Daten, die im Zusammenhang mit dem Besuch dieser Website anfallen
+          (insbesondere die nachfolgend beschriebenen Server-Logfiles). Grundlage ist unser berechtigtes
           Interesse an einer sicheren und zuverlässigen Bereitstellung der Website (Art. 6 Abs. 1 lit. f DSGVO). Mit dem
           Anbieter besteht ein Vertrag über Auftragsverarbeitung (Art. 28 DSGVO).
+        </p>
+        <p className={`${p} mt-3`}>
+          Domain, DNS und E-Mail-Postfächer von pbw-ta.de werden von der IONOS SE, Elgendorfer Str. 57, 56410
+          Montabaur, bereitgestellt. Wenn Sie mir eine E-Mail schreiben oder das Kontaktformular nutzen (siehe
+          Ziffer 8), werden Ihre Nachricht, Ihre Kontaktdaten und die technischen Angaben der E-Mail (z. B. Absender,
+          Zeitpunkt) auf den Mailservern von IONOS in Deutschland empfangen und in meinem Postfach gespeichert.
+          Rechtsgrundlage ist mein berechtigtes Interesse an der Beantwortung Ihrer Anfrage (Art. 6 Abs. 1 lit. f
+          DSGVO) bzw. – bei Anfragen zu einem Vertrag – Art. 6 Abs. 1 lit. b DSGVO. Mit IONOS besteht ebenfalls ein
+          Vertrag über Auftragsverarbeitung (Art. 28 DSGVO).
         </p>
 
         <h2 className={h2}>3. Server-Logfiles</h2>
@@ -138,7 +167,8 @@ export function DatenschutzPage() {
           Wenn Sie mir über das Kontaktformular Anfragen zukommen lassen, werden Ihre Angaben aus dem Formular
           (Name, E-Mail-Adresse, Telefonnummer, Betreff und Nachricht) zwecks Bearbeitung der Anfrage und für den Fall
           von Anschlussfragen bei mir gespeichert. Die Anfrage wird mir per E-Mail zugestellt; für den Versand nutze ich
-          derzeit einen Mailserver der Hetzner Online GmbH, Industriestr. 25, 91710 Gunzenhausen. Die Verarbeitung
+          derzeit einen Mailserver der Hetzner Online GmbH, Industriestr. 25, 91710 Gunzenhausen; empfangen und
+          gespeichert wird sie in meinem E-Mail-Postfach bei der IONOS SE (siehe Ziffer 2). Die Verarbeitung
           erfolgt auf Grundlage Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO) sowie – sofern Ihre Anfrage auf den
           Abschluss oder die Anbahnung eines Vertrags gerichtet ist – auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO. Diese
           Daten gebe ich nicht ohne Ihre Einwilligung weiter. Sie verbleiben bei mir, bis Sie mich zur Löschung
@@ -236,7 +266,7 @@ export function DatenschutzPage() {
           für den Datenschutz und die Informationsfreiheit Rheinland-Pfalz, Hintere Bleiche 34, 55116 Mainz.
         </p>
 
-        <p className={`${p} mt-10 text-[14px] text-slate`}>Stand: August 2026</p>
+        <p className={`${p} mt-10 text-[14px] text-slate`}>Stand: September 2026</p>
       </section>
     </Container>
   );

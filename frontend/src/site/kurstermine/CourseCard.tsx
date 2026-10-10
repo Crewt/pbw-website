@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import type { Course, Termin } from "../../lib/types";
 import { fmtDateShort } from "../lib/date";
 import { resolveImg } from "../lib/img";
+import { coursePath } from "../lib/coursePath";
 import { IconCalendar, IconEducation } from "../components/Icons";
 
 function termineSummary(termine: Termin[]): string {
@@ -20,12 +21,12 @@ export function CourseCard({ course, year }: { course: Course; year?: number }) 
 
   return (
     <Link
-      to={`/seminar/${course.slug || course.id}`}
+      to={coursePath(course)}
       className="group flex flex-col overflow-hidden rounded-xl border border-line bg-white transition hover:-translate-y-0.5 hover:border-navy hover:shadow-soft"
     >
       {img ? (
         <div className="aspect-[16/9] overflow-hidden bg-bg-alt">
-          <img src={img} alt="" className="h-full w-full object-cover" />
+          <img src={img} alt={course.title} loading="lazy" className="h-full w-full object-cover" />
         </div>
       ) : (
         <div className="flex aspect-[16/9] items-center justify-center bg-[linear-gradient(135deg,#d8e3f7,#b6c6e0)] text-navy [&_svg]:size-12 [&_svg]:opacity-60">

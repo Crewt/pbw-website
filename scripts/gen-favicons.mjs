@@ -64,10 +64,8 @@ async function main() {
   const ico = await pngToIco([await icon(16), await icon(32), await icon(48)]);
   await writeFile(path.join(OUT, "favicon.ico"), ico);
 
-  // favicon.svg: scalable container wrapping the 512 cube PNG (raster source).
-  const b64 = (await icon(512)).toString("base64");
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><image width="512" height="512" href="data:image/png;base64,${b64}"/></svg>\n`;
-  await writeFile(path.join(OUT, "favicon.svg"), svg);
+  // No favicon.svg: the logo is raster-only, and an SVG wrapping a base64 PNG
+  // weighed ~400 KB — downloaded by every modern browser on every visit.
 
   // Default Open Graph image (1200x630): full wordmark centred on the light bg
   // (the wordmark text is dark navy and would vanish on a navy backdrop).
