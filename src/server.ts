@@ -75,10 +75,37 @@ const APP_CSP = [
 // <img src="/uploads/..."> in the app are governed by the app's img-src instead.
 const UPLOADS_CSP = "default-src 'none'; sandbox; base-uri 'none'; form-action 'none'; frame-ancestors 'none'";
 
+// Permissions-Policy: the site uses none of these browser features, so deny them
+// for our pages and every embedded iframe (Google Maps, CleverReach). Only
+// fullscreen stays allowed for our own origin. browsing-topics=() opts out of
+// the Topics API (interest-based ad tracking).
+const PERMISSIONS_POLICY = [
+  "accelerometer=()",
+  "autoplay=()",
+  "browsing-topics=()",
+  "camera=()",
+  "display-capture=()",
+  "encrypted-media=()",
+  "fullscreen=(self)",
+  "geolocation=()",
+  "gyroscope=()",
+  "magnetometer=()",
+  "microphone=()",
+  "midi=()",
+  "payment=()",
+  "picture-in-picture=()",
+  "publickey-credentials-get=()",
+  "screen-wake-lock=()",
+  "serial=()",
+  "usb=()",
+  "xr-spatial-tracking=()",
+].join(", ");
+
 function securityHeaders(req: Request, res: Response, next: NextFunction): void {
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("X-Frame-Options", "DENY");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Permissions-Policy", PERMISSIONS_POLICY);
 
   // HSTS only makes sense once the site is actually served over HTTPS. We reuse
   // config.cookieSecure as the HTTPS/production indicator so HSTS and the Secure
